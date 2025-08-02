@@ -29,11 +29,11 @@ class ConnectionFactory
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ]);
+
         } catch (PDOException $e) {
             $ex = new EnvironmentAwareException($e->getMessage(), $e->getCode());
             throw new Exception($ex->getMessage());
         }
-
         return $pdo;
     }
 }

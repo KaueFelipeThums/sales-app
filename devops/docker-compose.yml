@@ -5,9 +5,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: myapp
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: salesdb
+      MYSQL_USER: salesdb
+      MYSQL_PASSWORD: salesdb
     ports:
       - "3306:3306"
     volumes:
