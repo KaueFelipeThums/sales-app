@@ -1,0 +1,15 @@
+# Composer
+/vendor/
+/composer.lock
+
+# Diretórios de cache e logs
+/cache/
+/logs/
+/tmp/
+/temp/
+
+# Arquivos de configuração locais
+.env
+.env.local
+.env.*.local
+

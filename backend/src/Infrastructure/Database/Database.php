@@ -1,0 +1,39 @@
+<?php
+namespace SalesAppApi\Infrastructure\Database;
+
+use Exception;
+use PDO;
+use PDOException;
+use PDOStatement;
+use SalesAppApi\Shared\Exceptions\EnvironmentAwareException;
+
+class Database {
+    private PDO $dbInstance;
+
+    public function __construct()
+    {
+        $this->dbInstance = ConnectionFactory::make();
+    }
+
+    public function query(string $sqlString, array $parameters = []): PDOStatement
+    {
+        try {
+            $sth = $this->dbInstance->prepare($sqlString);
+            $sth->execute($parameters);
+            return $sth;
+        } catch (PDOException $e) {
+            $ex = new EnvironmentAwareException("Erro ao executar query: " . $e->getMessage(), $e->getCode());
+            throw new Exception($ex->getMessage());
+        }
+    }
+
+    public function fetch(PDOStatement $statement)
+    {
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchAll(PDOStatement $statement): array
+    {
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+}

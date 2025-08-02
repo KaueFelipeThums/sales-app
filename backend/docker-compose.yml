@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: salesapp-api
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8989:80"
+    networks:
+      - sales-app-api-network
+
+networks:
+  sales-app-api-network:
+    external: true
