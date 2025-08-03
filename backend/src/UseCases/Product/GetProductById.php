@@ -17,11 +17,11 @@ class GetProductById{
      * @param int $id
      * @return array
      */
-    public function execute(int $id): array
+    public function execute(int $id): ?array
     {
         $product = $this->productRepository->getProductById($id);
         if(empty($product)){
-            return [];
+            return null;
         }
         return $product->toArray();
     }

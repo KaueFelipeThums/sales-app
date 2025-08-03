@@ -17,11 +17,11 @@ class GetSaleById{
      * @param int $id
      * @return array
      */
-    public function execute(int $id): array
+    public function execute(int $id): ?array
     {
         $sale = $this->saleRepository->getSaleById($id);
         if(empty($sale)){
-            return [];
+            return null;
         }
         return $sale->toArray();
     }

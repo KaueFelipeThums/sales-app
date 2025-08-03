@@ -17,11 +17,11 @@ class GetUserById{
      * @param int $id
      * @return array
      */
-    public function execute(int $id): array
+    public function execute(int $id): ?array
     {
         $user = $this->userRepository->getUserById($id);
         if(empty($user)){
-            return [];
+            return null;
         }
 
         $user->setPassword(null);

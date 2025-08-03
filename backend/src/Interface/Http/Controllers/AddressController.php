@@ -4,7 +4,7 @@ namespace SalesAppApi\Interface\Http\Controllers;
 use Exception;
 use SalesAppApi\Shared\Request;
 use SalesAppApi\Shared\Response;
-use SalesAppApi\UseCases\Auth\GetAddressByCep;
+use SalesAppApi\UseCases\Address\GetAddressByCep;
 
 class AddressController
 {

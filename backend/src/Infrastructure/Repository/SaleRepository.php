@@ -347,7 +347,7 @@ class SaleRepository implements SaleRepositoryInterface
                     created_at,
                     canceled_at,
                     updated_at
-                ),
+                )
             VALUES 
                 (
                     :payment_methods_id,

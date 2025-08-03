@@ -17,11 +17,11 @@ class GetCustomerById{
      * @param int $id
      * @return array
      */
-    public function execute(int $id): array
+    public function execute(int $id): ?array
     {
         $customer = $this->customerRepository->getCustomerById($id);
         if(empty($customer)){
-            return [];
+            return null;
         }
 
         return $customer->toArray();

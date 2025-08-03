@@ -34,11 +34,14 @@ Class Request{
             $fieldIsset = array_key_exists($preparedRule['field'], $this->requestInput);
             $fieldValue = array_key_exists($preparedRule['field'], $this->requestInput) ? $this->requestInput[$preparedRule['field']] : null;
 
-            if(array_key_exists('nullable', $preparedRule['rules']) and $fieldIsset and $fieldValue == null){
+            if (
+                array_key_exists('nullable', $preparedRule['rules']) &&
+                (!$fieldIsset || is_null($fieldValue) || $fieldValue === '')
+            ) {
                 continue;
             }
 
-            if(array_key_exists('required', $preparedRule['rules']) and (!$fieldIsset || empty($fieldValue))){
+            if(array_key_exists('required', $preparedRule['rules']) and (!$fieldIsset || is_null($fieldValue) || $fieldValue === '')){
                 $this->errors[] = "O campo [".$preparedRule['field']."] é requerido";
                 continue;
             }
@@ -74,7 +77,7 @@ Class Request{
     }
 
     public function validateRequired($value){
-        if(empty($value)){
+        if(is_null($value) || $value === ''){
             return false;
         }
         return true;

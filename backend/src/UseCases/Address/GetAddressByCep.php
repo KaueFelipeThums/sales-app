@@ -1,6 +1,6 @@
 <?php
 
-namespace SalesAppApi\UseCases\Auth;
+namespace SalesAppApi\UseCases\Address;
 
 use Exception;
 use GuzzleHttp\Client;
