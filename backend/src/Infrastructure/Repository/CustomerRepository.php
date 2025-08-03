@@ -38,7 +38,6 @@ class CustomerRepository implements CustomerRepositoryInterface
                 users.id AS users_id,
                 users.name AS users_name,
                 users.email AS users_email,
-                users.password AS users_password,
                 users.is_active AS users_is_active,
                 users.created_at AS users_created_at,
                 users.updated_at AS users_updated_at
@@ -81,7 +80,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                     $r['users_id'],
                     $r['users_name'],
                     $r['users_email'],
-                    $r['users_password'],
+                    null,
                     $r['users_is_active'],
                     new DateTime($r['users_created_at']),
                     !empty($r['users_updated_at']) ? new DateTime($r['users_updated_at']) : null
@@ -117,7 +116,6 @@ class CustomerRepository implements CustomerRepositoryInterface
                 users.id AS users_id,
                 users.name AS users_name,
                 users.email AS users_email,
-                users.password AS users_password,
                 users.is_active AS users_is_active,
                 users.created_at AS users_created_at,
                 users.updated_at AS users_updated_at
@@ -160,7 +158,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                     $r['users_id'],
                     $r['users_name'],
                     $r['users_email'],
-                    $r['users_password'],
+                    null,
                     $r['users_is_active'],
                     new DateTime($r['users_created_at']),
                     !empty($r['users_updated_at']) ? new DateTime($r['users_updated_at']) : null
@@ -196,7 +194,6 @@ class CustomerRepository implements CustomerRepositoryInterface
                 users.id AS users_id,
                 users.name AS users_name,
                 users.email AS users_email,
-                users.password AS users_password,
                 users.is_active AS users_is_active,
                 users.created_at AS users_created_at,
                 users.updated_at AS users_updated_at
@@ -234,7 +231,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                 $response['users_id'],
                 $response['users_name'],
                 $response['users_email'],
-                $response['users_password'],
+                null,
                 $response['users_is_active'],
                 new DateTime($response['users_created_at']),
                 !empty($response['users_updated_at']) ? new DateTime($response['users_updated_at']) : null
@@ -243,7 +240,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         );
     }
 
-    public function getCustomerByCpf(int $cpf): ?Customer
+    public function getCustomerByCpf(string $cpf): ?Customer
     {
         $query = $this->database->query(
             "SELECT 
@@ -268,7 +265,6 @@ class CustomerRepository implements CustomerRepositoryInterface
                 users.id AS users_id,
                 users.name AS users_name,
                 users.email AS users_email,
-                users.password AS users_password,
                 users.is_active AS users_is_active,
                 users.created_at AS users_created_at,
                 users.updated_at AS users_updated_at
@@ -306,7 +302,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                 $response['users_id'],
                 $response['users_name'],
                 $response['users_email'],
-                $response['users_password'],
+                null,
                 $response['users_is_active'],
                 new DateTime($response['users_created_at']),
                 !empty($response['users_updated_at']) ? new DateTime($response['users_updated_at']) : null

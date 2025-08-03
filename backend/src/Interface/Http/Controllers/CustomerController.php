@@ -43,7 +43,13 @@ class CustomerController
             ]);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 
@@ -68,7 +74,13 @@ class CustomerController
             ]);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 
@@ -78,7 +90,13 @@ class CustomerController
             $response = $this->getCustomerById->execute($params['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 
@@ -120,7 +138,13 @@ class CustomerController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 
@@ -164,7 +188,13 @@ class CustomerController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 
@@ -183,7 +213,13 @@ class CustomerController
             $response = $this->deleteCustomer->execute($validatedData['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 }

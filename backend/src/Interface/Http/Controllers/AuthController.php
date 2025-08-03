@@ -36,7 +36,13 @@ class AuthController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 
@@ -58,7 +64,13 @@ class AuthController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
         }
     }
 }

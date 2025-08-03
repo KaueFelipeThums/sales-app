@@ -22,8 +22,12 @@ class Database {
             $sth->execute($parameters);
             return $sth;
         } catch (PDOException $e) {
+            if($e->getCode() == 23000) {
+                throw new Exception("Registro já vinculado", 422);
+            }
+
             $ex = new EnvironmentAwareException("Erro ao executar query: " . $e->getMessage(), 500);
-            throw new Exception($ex->getMessage());
+            throw new Exception($ex->getMessage(), 500);
         }
     }
 

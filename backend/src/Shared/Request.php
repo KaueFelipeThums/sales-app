@@ -125,7 +125,7 @@ Class Request{
         $attribute = explode(",",$attribute);
         
         if(count($attribute) != 2){
-            throw new Exception("Filtro decimal inválido", 1);
+            throw new Exception("Filtro decimal inválido", 422);
         }
 
         $value = explode(".",$value);
@@ -141,7 +141,7 @@ Class Request{
         $attribute = explode(",",$attribute);
         
         if(count($attribute) != 2){
-            throw new Exception("Parametros do between inválidos. ex. between:1,10", 1);
+            throw new Exception("Parametros do between inválidos. ex. between:1,10", 422);
         }
 
         if($value <= (float)$attribute[1] and $value >= (float)$attribute[0]){
@@ -177,7 +177,7 @@ Class Request{
 
     public function prepareRules($field,$rules){
         if(empty($field)){
-            throw new Exception("O nome do campo deve ser informado", 1);
+            throw new Exception("O nome do campo deve ser informado", 422);
         }
 
         if(empty($rules)){
@@ -294,13 +294,13 @@ Class Request{
         $ruleValidated = $this->getRuleParams($rule);
 
         if(empty($ruleValidated['method'])){
-            throw new Exception("A validação é inválida ou não suportada [".$rule."]", 1);
+            throw new Exception("A validação é inválida ou não suportada [".$rule."]", 422);
         }
         if($ruleValidated['attribute_required'] and empty($attribute)){
-            throw new Exception("A validação [".$rule."] requer parametros ", 1);
+            throw new Exception("A validação [".$rule."] requer parametros ", 422);
         }
         if(empty($ruleValidated['attribute_required']) and !empty($attribute)){
-            throw new Exception("A validação [".$rule."] não requer parametros ", 1);
+            throw new Exception("A validação [".$rule."] não requer parametros ", 422);
         }   
 
         return true;
