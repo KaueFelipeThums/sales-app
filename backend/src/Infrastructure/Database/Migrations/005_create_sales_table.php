@@ -19,7 +19,6 @@ class CreateSalesTable implements MigrationInterface
                 quantity INT NOT NULL,
                 total_value DECIMAL(14,2) NOT NULL,
                 base_value DECIMAL(14,2) NOT NULL,
-                status ENUM('active', 'canceled') NOT NULL,
                 created_at DATETIME NOT NULL,
                 canceled_at DATETIME NULL,
                 updated_at DATETIME NULL,

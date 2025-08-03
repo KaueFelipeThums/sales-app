@@ -118,6 +118,8 @@ class CustomerController
             'is_active' => 'required|integer'
         ]);
 
+        $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
+
         $errors = $request->getErrors();
         if(count($errors) > 0){
             return Response::json(['errors' => $errors[0]], 422);
@@ -166,6 +168,8 @@ class CustomerController
             'state' => 'nullable',
             'is_active' => 'required|integer'
         ]);
+
+        $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
 
         $errors = $request->getErrors();
         if(count($errors) > 0){

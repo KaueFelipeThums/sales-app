@@ -14,7 +14,6 @@ class Sale
         private int $quantity,
         private float $totalValue,
         private float $baseValue,
-        private string $status, // active, canceled
         private DateTime $createdAt,
         private ?DateTime $canceledAt,
         private ?DateTime $updatedAt,
@@ -136,17 +135,6 @@ class Sale
         return $this;
     }
 
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): Sale
-    {
-        $this->status = $status;
-        return $this;
-    }
-
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -235,7 +223,6 @@ class Sale
             "quantity" => $this->quantity,
             "total_value" => $this->totalValue,
             "base_value" => $this->baseValue,
-            "status" => $this->status,
             "created_at" => $this->createdAt->getDateTime(),
             "canceled_at" => $this->canceledAt ? $this->canceledAt->getDateTime() : null,
             "updated_at" => $this->updatedAt ? $this->updatedAt->getDateTime() : null,

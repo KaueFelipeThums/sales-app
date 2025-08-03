@@ -21,8 +21,7 @@ class SaleRepository implements SaleRepositoryInterface
         int $page = 1, 
         int $pageCount = 10, 
         ?int $customerId = null, 
-        ?int $productId = null, 
-        ?string $status = null
+        ?int $productId = null,
     ): array
     {
         $offset = ($page - 1) * $pageCount;
@@ -36,7 +35,6 @@ class SaleRepository implements SaleRepositoryInterface
                 sales.quantity AS sales_quantity,
                 sales.total_value AS sales_total_value,
                 sales.base_value AS sales_base_value,
-                sales.status AS sales_status,
                 sales.created_at AS sales_created_at,
                 sales.canceled_at AS sales_canceled_at,
                 sales.updated_at AS sales_updated_at,
@@ -118,11 +116,6 @@ class SaleRepository implements SaleRepositoryInterface
             $params['product_id'] = $productId;
         }
 
-        if(!empty($status)) {
-            $sql .= " AND sales.status = :status";
-            $params['status'] = $status;
-        }
-
         $sql .= " ORDER BY sales.id DESC LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
 
         $query = $this->database->query($sql, $params);
@@ -139,7 +132,6 @@ class SaleRepository implements SaleRepositoryInterface
                 $r['sales_quantity'],
                 $r['sales_total_value'],
                 $r['sales_base_value'],
-                $r['sales_status'],
                 new DateTime($r['sales_created_at']),
                 !empty($r['sales_canceled_at']) ? new DateTime($r['sales_canceled_at']) : null,
                 !empty($r['sales_updated_at']) ? new DateTime($r['sales_updated_at']) : null,
@@ -209,7 +201,6 @@ class SaleRepository implements SaleRepositoryInterface
                 sales.quantity AS sales_quantity,
                 sales.total_value AS sales_total_value,
                 sales.base_value AS sales_base_value,
-                sales.status AS sales_status,
                 sales.created_at AS sales_created_at,
                 sales.canceled_at AS sales_canceled_at,
                 sales.updated_at AS sales_updated_at,
@@ -286,7 +277,6 @@ class SaleRepository implements SaleRepositoryInterface
             $response['sales_quantity'],
             $response['sales_total_value'],
             $response['sales_base_value'],
-            $response['sales_status'],
             new DateTime($response['sales_created_at']),
             !empty($response['sales_canceled_at']) ? new DateTime($response['sales_canceled_at']) : null,
             !empty($response['sales_updated_at']) ? new DateTime($response['sales_updated_at']) : null,
@@ -354,7 +344,6 @@ class SaleRepository implements SaleRepositoryInterface
                     quantity,
                     total_value,
                     base_value,
-                    status,
                     created_at,
                     canceled_at,
                     updated_at
@@ -368,7 +357,6 @@ class SaleRepository implements SaleRepositoryInterface
                     :quantity,
                     :total_value,
                     :base_value,
-                    :status,
                     :created_at,
                     :canceled_at,
                     :updated_at
@@ -381,7 +369,6 @@ class SaleRepository implements SaleRepositoryInterface
                 'quantity' => $sale->getQuantity(),
                 'total_value' => $sale->getTotalValue(),
                 'base_value' => $sale->getBaseValue(),
-                'status' => $sale->getStatus(),
                 'created_at' => $sale->getCreatedAt()->getDateTime(),
                 'canceled_at' => null,
                 'updated_at' => null
@@ -402,7 +389,6 @@ class SaleRepository implements SaleRepositoryInterface
                 quantity=:quantity,
                 total_value=:total_value,
                 base_value=:base_value,
-                status=:status,
                 canceled_at=:canceled_at,
                 updated_at=:updated_at
             WHERE 
@@ -416,7 +402,6 @@ class SaleRepository implements SaleRepositoryInterface
                 'quantity' => $sale->getQuantity(),
                 'total_value' => $sale->getTotalValue(),
                 'base_value' => $sale->getBaseValue(),
-                'status' => $sale->getStatus(),
                 'canceled_at' => !empty($sale->getCanceledAt()) ? $sale->getCanceledAt()->getDateTime() : null,
                 'updated_at' => !empty($sale->getUpdatedAt()) ? $sale->getUpdatedAt()->getDateTime() : null,
             ]

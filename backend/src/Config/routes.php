@@ -2,6 +2,7 @@
 namespace SalesAppApi\Config;
 
 use SalesAppApi\Bootstrap\App;
+use SalesAppApi\Interface\Http\Controllers\AddressController;
 use SalesAppApi\Interface\Http\Controllers\AuthController;
 use SalesAppApi\Interface\Http\Controllers\CustomerController;
 use SalesAppApi\Interface\Http\Controllers\PaymentMethodController;
@@ -67,4 +68,9 @@ return function (App $app) {
     $app->addRoute('POST', '/sale/create', [SaleController::class, 'createSale'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/sale/update', [SaleController::class, 'updateSale'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/sale/delete', [SaleController::class, 'deleteSale'], [[AuthMiddleware::class]]);
+
+    /**
+     * Endereço
+     */
+    $app->addRoute('GET', '/address/get/{cep}', [AddressController::class, 'getAddressByCep'], [[AuthMiddleware::class]]);
 };

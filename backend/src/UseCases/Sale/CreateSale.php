@@ -68,7 +68,6 @@ class CreateSale{
             $data['quantity'],
             $product->getPrice() * $data['quantity'],
             $product->getPrice(),
-            'active',
             new DateTime(date('Y-m-d H:i:s')),
             null,
             null,

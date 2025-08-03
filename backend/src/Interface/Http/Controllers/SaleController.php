@@ -29,8 +29,7 @@ class SaleController
             'page' => 'required|integer',
             'page_count' => 'required|integer',
             'customer_id' => 'nullable|integer',
-            'product_id' => 'nullable|integer',
-            'status' => 'nullable|string'
+            'product_id' => 'nullable|integer'
         ]);
         
         $errors = $request->getErrors();
@@ -45,7 +44,6 @@ class SaleController
                 'page_count' => $validatedData['page_count'],
                 'customer_id' => !empty($validatedData['customer_id']) ? $validatedData['customer_id'] : null,
                 'product_id' => !empty($validatedData['product_id']) ? $validatedData['product_id'] : null,
-                'status' => !empty($validatedData['status']) ? $validatedData['status'] : null
             ]);
             
             return Response::json($response, 200);
