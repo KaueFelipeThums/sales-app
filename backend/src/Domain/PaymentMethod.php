@@ -17,9 +17,9 @@ class PaymentMethod
         /**
          * Usuário que criou o registro
          *
-         * @var User
+         * @var User|null
          */
-        private User $user
+        private ?User $user
     ) {}
 
     public function getId(): ?int
@@ -57,7 +57,7 @@ class PaymentMethod
         return $this->updatedAt;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -71,7 +71,7 @@ class PaymentMethod
             "is_active" => $this->isActive,
             "created_at" => $this->createdAt->getDateTime(),
             "updated_at" => $this->updatedAt ? $this->updatedAt->getDateTime() : null,
-            "user" => $this->user->toArray()
+            "user" => !empty($this->user) ? $this->user->toArray() : null
         ];
     }
 }

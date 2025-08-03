@@ -22,30 +22,30 @@ class Sale
         /**
          * Método de pagamento
          *
-         * @var PaymentMethod
+         * @var PaymentMethod|null
          */
-        private PaymentMethod $paymentMethod,
+        private ?PaymentMethod $paymentMethod,
 
         /**
          * Cliente
          *
-         * @var Customer
+         * @var Customer|null
          */
-        private Customer $customer,
+        private ?Customer $customer,
 
         /**
          * Produto
          *
-         * @var Product
+         * @var Product|null
          */
-        private Product $product,
+        private ?Product $product,
 
         /**
          * Usuário que criou o registro
          *
-         * @var User
+         * @var User|null
          */
-        private User $user,
+        private ?User $user,
     ) {}
 
     public function getId(): ?int
@@ -108,22 +108,22 @@ class Sale
         return $this->updatedAt;
     }
 
-    public function getPaymentMethod(): PaymentMethod
+    public function getPaymentMethod(): ?PaymentMethod
     {
         return $this->paymentMethod;
     }
 
-    public function getCustomer(): Customer
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }
 
-    public function getProduct(): Product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -143,10 +143,10 @@ class Sale
             "created_at" => $this->createdAt->getDateTime(),
             "canceled_at" => $this->canceledAt ? $this->canceledAt->getDateTime() : null,
             "updated_at" => $this->updatedAt ? $this->updatedAt->getDateTime() : null,
-            "payment_method" => $this->paymentMethod->toArray(),
-            "customer" => $this->customer->toArray(),
-            "product" => $this->product->toArray(),
-            "user" => $this->user->toArray()
+            "payment_method" => !empty($this->paymentMethod) ? $this->paymentMethod->toArray() : null,
+            "customer" => !empty($this->customer) ? $this->customer->toArray() : null,
+            "product" => !empty($this->product) ? $this->product->toArray() : null,
+            "user" => !empty($this->user) ? $this->user->toArray() : null
         ];
     }
 }
