@@ -20,6 +20,9 @@ class GetProductById{
     public function execute(int $id): array
     {
         $product = $this->productRepository->getProductById($id);
+        if(empty($product)){
+            return [];
+        }
         return $product->toArray();
     }
 }

@@ -4,6 +4,7 @@ namespace SalesAppApi\Config;
 use SalesAppApi\Bootstrap\App;
 use SalesAppApi\Interface\Http\Controllers\AuthController;
 use SalesAppApi\Interface\Http\Controllers\CustomerController;
+use SalesAppApi\Interface\Http\Controllers\PaymentMethodController;
 use SalesAppApi\Interface\Http\Controllers\ProductController;
 use SalesAppApi\Interface\Http\Controllers\UserController;
 use SalesAppApi\Interface\Http\Middlewares\AuthMiddleware;
@@ -16,6 +17,7 @@ return function (App $app) {
      */
     $app->addRoute('POST', '/auth/login', [AuthController::class, 'login']);
     $app->addRoute('POST', '/auth/refresh', [AuthController::class, 'refresh'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/auth/update-password', [AuthController::class, 'updateUserPassword'], [[AuthMiddleware::class]]);
     
     /**
      * Usuário
@@ -45,6 +47,17 @@ return function (App $app) {
     $app->addRoute('POST', '/product/create', [ProductController::class, 'createProduct'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/product/update', [ProductController::class, 'updateProduct'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/product/delete', [ProductController::class, 'deleteProduct'], [[AuthMiddleware::class]]);
+
+    /**
+     * Métodos de Pagamento
+     */
+    $app->addRoute('GET', '/payment-method/get-all', [PaymentMethodController::class, 'getAllPaymentMethods'], [[AuthMiddleware::class]]);
+    $app->addRoute('GET', '/payment-method/get-all-active', [PaymentMethodController::class, 'getAllActiverPaymentMethods'], [[AuthMiddleware::class]]);
+    $app->addRoute('GET', '/payment-method/get/{id}', [PaymentMethodController::class, 'getPaymentMethodById'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/payment-method/create', [PaymentMethodController::class, 'createPaymentMethod'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/payment-method/update', [PaymentMethodController::class, 'updatePaymentMethod'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/payment-method/delete', [PaymentMethodController::class, 'deletePaymentMethod'], [[AuthMiddleware::class]]);
+
 
     // Rotas públicas
     // $app->addRoute('POST', '/users', [UserController::class, 'store']);

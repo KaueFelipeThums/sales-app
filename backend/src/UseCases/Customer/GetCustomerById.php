@@ -20,6 +20,10 @@ class GetCustomerById{
     public function execute(int $id): array
     {
         $customer = $this->customerRepository->getCustomerById($id);
+        if(empty($customer)){
+            return [];
+        }
+
         return $customer->toArray();
     }
 }

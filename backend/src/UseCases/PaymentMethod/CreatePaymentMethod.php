@@ -1,17 +1,17 @@
 <?php
 
-namespace SalesAppApi\UseCases\Product;
+namespace SalesAppApi\UseCases\PaymentMethod;
 
-use SalesAppApi\Domain\Product;
-use SalesAppApi\Domain\ProductRepositoryInterface;
+use SalesAppApi\Domain\PaymentMethod;
+use SalesAppApi\Domain\PaymentMethodRepositoryInterface;
 use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 use SalesAppApi\Shared\Auth\Auth;
 
-class CreateProduct{
+class CreatePaymentMethod{
 
     public function __construct(
-        private ProductRepositoryInterface $productRepository,
+        private PaymentMethodRepositoryInterface $paymentMethodRepository,
         private UserRepositoryInterface $userRepository
     ){}
 
@@ -21,20 +21,18 @@ class CreateProduct{
      * @param array $data
      *  [
      *      'name' => string,
-     *      'quantity' => string,
-     *      'price' => string,
+     *      'installments' => int,
      *      'is_active' => int
      *  ]
      * @return array
      */
     public function execute(array $data): array
     {
-        $newProduct = new Product(
+        $newPaymentMethod = new PaymentMethod(
             null,
             Auth::id(),
             $data['name'],
-            $data['quantity'],
-            $data['price'],
+            $data['installments'],
             $data['is_active'],
             new DateTime(date('Y-m-d H:i:s')),
             null,
@@ -42,9 +40,9 @@ class CreateProduct{
         );
 
 
-        $id = $this->productRepository->create($newProduct);
-        $product = $this->productRepository->getProductById($id)->toArray();
+        $id = $this->paymentMethodRepository->create($newPaymentMethod);
+        $paymentMethod = $this->paymentMethodRepository->getPaymentMethodById($id)->toArray();
 
-        return $product;
+        return $paymentMethod;
     }
 }

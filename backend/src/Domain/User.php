@@ -35,9 +35,10 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(string $password): User
     {
         $this->password = $password;
+        return $this;
     }
 
     public function getIsActive(): int
@@ -53,6 +54,12 @@ class User
     public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTime $updatedAt): User
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
     }
 
     public function toArray(): array
