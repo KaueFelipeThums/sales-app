@@ -7,6 +7,6 @@ interface CustomerRepositoryInterface{
     public function getCustomerById(int $id): ?Customer;
 
     public function update(Customer $customer): void;
-    public function create(Customer $customer): void;
+    public function create(Customer $customer): int;
     public function delete(int $id): void;
 }

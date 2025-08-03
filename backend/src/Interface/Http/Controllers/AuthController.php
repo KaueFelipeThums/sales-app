@@ -19,8 +19,8 @@ class AuthController
     public function login(Request $request): mixed
     {   
         $validatedData = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string'
+            'email' => 'required',
+            'password' => 'required'
         ]);
         
         $errors = $request->getErrors();
@@ -43,7 +43,7 @@ class AuthController
     public function refresh(Request $request): mixed
     {   
         $validatedData = $request->validate([
-            'refresh_token' => 'required|string',
+            'refresh_token' => 'required',
         ]);
         
         $errors = $request->getErrors();

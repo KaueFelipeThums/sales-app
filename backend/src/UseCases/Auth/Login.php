@@ -5,7 +5,6 @@ namespace SalesAppApi\UseCases\Auth;
 use Exception;
 use SalesAppApi\Domain\RefreshToken;
 use SalesAppApi\Domain\RefreshTokenRepositoryInterface;
-use SalesAppApi\Domain\User;
 use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 use SalesAppApi\Shared\Auth\JwtService;

@@ -7,6 +7,6 @@ interface PaymentMethodRepositoryInterface{
     public function getPaymentMethodById(int $id): ?PaymentMethod;
 
     public function update(PaymentMethod $paymentMethod): void;
-    public function create(PaymentMethod $paymentMethod): void;
+    public function create(PaymentMethod $paymentMethod): int;
     public function delete(int $id): void;
 }

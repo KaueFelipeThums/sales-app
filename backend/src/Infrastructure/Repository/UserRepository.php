@@ -20,12 +20,10 @@ class UserRepository implements UserRepositoryInterface
 
         if (!empty($search)) {
             $sql .= " AND (name LIKE :search)";
-            $params['search'] = $search;
+            $params['search'] = "%".$search."%";
         }
 
-        $sql .= " ORDER BY name, id LIMIT :limit OFFSET :offset";
-        $params['limit'] = $pageCount;
-        $params['offset'] = $offset;
+        $sql .= " ORDER BY name, id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
 
         $query = $this->database->query($sql, $params);
 
@@ -48,6 +46,29 @@ class UserRepository implements UserRepositoryInterface
     {
         $query = $this->database->query(
             "SELECT * FROM users WHERE email = :email AND is_active = 1",
+            ['email' => $email]
+        );
+
+        $response = $this->database->fetch($query);
+        if(empty($response)) {
+            return null;
+        }
+
+        return new User(
+            $response['id'],
+            $response['name'],
+            $response['email'],
+            $response['password'],
+            $response['is_active'],
+            new DateTime($response['created_at']),
+            !empty($response['updated_at']) ? new DateTime($response['updated_at']) : null
+        );
+    }
+
+    public function getUserByEmail(string $email): ?User
+    {
+        $query = $this->database->query(
+            "SELECT * FROM users WHERE email = :email",
             ['email' => $email]
         );
 
@@ -90,7 +111,7 @@ class UserRepository implements UserRepositoryInterface
         );
     }
 
-    public function create(User $user): void
+    public function create(User $user): int
     {
         $this->database->query(
             "INSERT INTO
@@ -107,6 +128,8 @@ class UserRepository implements UserRepositoryInterface
                 'updated_at' => null
             ]
         );
+
+        return $this->database->lastInsertId();
     }
 
     public function update(User $user): void

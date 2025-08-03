@@ -27,6 +27,11 @@ class Database {
         }
     }
 
+    public function lastInsertId(): int
+    {
+        return $this->dbInstance->lastInsertId();
+    }
+
     public function fetch(PDOStatement $statement)
     {
         return $statement->fetch(PDO::FETCH_ASSOC);
