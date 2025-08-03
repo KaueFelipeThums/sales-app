@@ -1,6 +1,6 @@
 <?php
 
-namespace SalesAppApi\Infrastructure\Http\Middlewares;
+namespace SalesAppApi\Interface\Http\Middlewares;
 
 use Exception;
 use SalesAppApi\Shared\Auth\Auth;
@@ -14,7 +14,7 @@ class AuthMiddleware
         $authHeader = $request->header('Authorization');
 
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            throw new Exception("Usuário não autorizado", 401);
+            throw new Exception("Usuário não autorizado A", 401);
         }
 
         $token = str_replace('Bearer ', '', $authHeader);
@@ -22,7 +22,7 @@ class AuthMiddleware
         try {
             $decoded = JwtService::validateToken($token);
 
-            if (!isset($decoded->id)) {
+            if (!isset($decoded['id'])) {
                 throw new Exception("Usuário não autorizado", 401);
             }
 

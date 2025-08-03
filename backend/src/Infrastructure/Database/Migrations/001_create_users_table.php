@@ -23,6 +23,24 @@ class CreateUsersTable implements MigrationInterface
             DEFAULT CHARSET=utf8mb4 
             COLLATE=utf8mb4_general_ci;"
         );
+
+        /**
+         * Inserir um usuário padrão
+         *
+         */
+        $db->query(
+            "INSERT INTO 
+                users (name, email, password, is_active, created_at) 
+            VALUES
+                (:name, :email, :password, :is_active, :created_at)",
+            [
+                'name' => 'Admin',
+                'email' => 'test@example.com',
+                'password' => password_hash('123456', PASSWORD_DEFAULT),
+                'is_active' => 1,
+                'created_at' => date('Y-m-d H:i:s')
+            ]
+        );
     }
 
     public function down(Database $db): void

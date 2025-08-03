@@ -38,7 +38,7 @@ Class Request{
                 continue;
             }
 
-            if(array_key_exists('required',$preparedRule['rules']) and !$fieldIsset){
+            if(array_key_exists('required', $preparedRule['rules']) and (!$fieldIsset || empty($fieldValue))){
                 $this->errors[] = "O campo [".$preparedRule['field']."] é requerido";
                 continue;
             }
@@ -73,11 +73,22 @@ Class Request{
         return $this->errors;
     }
 
+    public function validateRequired($value){
+        if(empty($value)){
+            return false;
+        }
+        return true;
+    }
+
     public function validateInt($value){
         if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
             return true;
         }
         return false;
+    }
+
+    public function validateNullable($value){
+        return true;
     }
 
     public function validateMin($value,$attribute){
@@ -265,13 +276,13 @@ Class Request{
                 "validation_message" => "O campo [{{field}}] deve ser uma string.",
             ],
             'nullable' => [
-                "method" => null,
+                "method" => "validateNullable",
                 "attribute_required" => false,
                 "validation_message" => "", // po
             ],
             'required' => [
-                "method" => null,
-                "attribute_required" => true,
+                "method" => "validateRequired",
+                "attribute_required" => false,
                 "validation_message" => "O campo [{{field}}] é obrigatório.",
             ],
         ];
@@ -279,7 +290,7 @@ Class Request{
         return (!empty($validationTypes[$params])) ? $validationTypes[$params] : null;
     }
 
-    public function validateRuleFormat($rule,$attribute){
+    public function validateRuleFormat($rule ,$attribute){
         $ruleValidated = $this->getRuleParams($rule);
 
         if(empty($ruleValidated['method'])){

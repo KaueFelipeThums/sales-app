@@ -1,5 +1,5 @@
 <?php
-namespace SalesAppApi\Infrastructure\Http\Controllers;
+namespace SalesAppApi\Interface\Http\Controllers;
 
 use SalesAppApi\Shared\Response;
 

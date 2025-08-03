@@ -12,6 +12,4 @@ $dependencies($app);
 $routes = require __DIR__ . '/../src/Config/routes.php';
 $routes($app); 
 
-
-
 $response = $app->run();

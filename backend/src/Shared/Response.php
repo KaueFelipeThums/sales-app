@@ -3,7 +3,7 @@ namespace SalesAppApi\Shared;
 
 class Response
 {
-    public static function json(array $arrayObject, int $statusCode = 200): void {
+    public static function json(array $arrayObject = [], int $statusCode = 200): void {
         http_response_code($statusCode);
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($arrayObject, JSON_UNESCAPED_UNICODE);
