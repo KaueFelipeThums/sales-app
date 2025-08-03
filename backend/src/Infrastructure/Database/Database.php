@@ -22,7 +22,7 @@ class Database {
             $sth->execute($parameters);
             return $sth;
         } catch (PDOException $e) {
-            $ex = new EnvironmentAwareException("Erro ao executar query: " . $e->getMessage(), $e->getCode());
+            $ex = new EnvironmentAwareException("Erro ao executar query: " . $e->getMessage(), 500);
             throw new Exception($ex->getMessage());
         }
     }

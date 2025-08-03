@@ -29,7 +29,9 @@ class GetAllUsers{
         $arrayUsers = [];
 
         foreach ($users as $user) {
-            $arrayUsers[] = $user->toArray();
+            $userArray = $user->toArray();
+            $userArray['password'] = null;
+            $arrayUsers[] = $userArray;
         }
 
         return $arrayUsers;

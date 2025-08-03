@@ -46,7 +46,7 @@ class CreateUser{
 
         $id = $this->userRepository->create($newUser);
         $user = $this->userRepository->getUserById($id)->toArray();
-        unset($user['password']);
+        $user['password'] = null;
 
         return $user;
     }

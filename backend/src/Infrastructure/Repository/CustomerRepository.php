@@ -367,7 +367,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                 'state' => $customer->getState(),
                 'is_active' => $customer->getIsActive(),
                 'created_at' => $customer->getCreatedAt()->getDateTime(),
-                'updated_at' => $customer->getUpdatedAt()->getDateTime()
+                'updated_at' => null
             ]
         );
 

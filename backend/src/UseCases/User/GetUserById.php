@@ -20,6 +20,8 @@ class GetUserById{
     public function execute(int $id): array
     {
         $user = $this->userRepository->getUserById($id);
-        return $user->toArray();
+        $userArray = $user->toArray();
+        $userArray['password'] = null;
+        return $userArray;
     }
 }

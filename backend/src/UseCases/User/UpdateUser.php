@@ -53,7 +53,7 @@ class UpdateUser{
 
         $this->userRepository->update($newUser);
         $newUserArray = $newUser->toArray();
-        unset($newUserArray['password']);
+        $user['password'] = null;
 
         return $newUserArray;
     }

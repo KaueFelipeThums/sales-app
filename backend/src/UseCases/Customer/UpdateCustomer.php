@@ -39,7 +39,7 @@ class UpdateCustomer{
         $customer = $this->customerRepository->getCustomerById($data['id']);
 
         if(empty($customer)) {
-            throw new Exception("Usuário não encontrado", 422);
+            throw new Exception("Cliente não encontrado", 422);
         }
 
         $customerCpf = $this->customerRepository->getCustomerByCpf($data['email']);
