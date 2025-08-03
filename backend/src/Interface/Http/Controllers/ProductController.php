@@ -43,7 +43,7 @@ class ProductController
             ]);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -68,7 +68,7 @@ class ProductController
             ]);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -78,7 +78,7 @@ class ProductController
             $response = $this->getProductById->execute($params['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -106,7 +106,7 @@ class ProductController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -136,7 +136,7 @@ class ProductController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -155,7 +155,7 @@ class ProductController
             $response = $this->deleteProduct->execute($validatedData['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 }

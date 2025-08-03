@@ -43,7 +43,7 @@ class UserController
             ]);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -53,7 +53,7 @@ class UserController
             $response = $this->getUserById->execute($params['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -81,7 +81,7 @@ class UserController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -111,7 +111,7 @@ class UserController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -130,7 +130,7 @@ class UserController
             $response = $this->deleteUser->execute($validatedData['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 }

@@ -36,7 +36,7 @@ class AuthController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 
@@ -58,7 +58,7 @@ class AuthController
 
             return Response::json($response, 200);
         } catch(Exception $e){
-            return Response::json(['errors' => $e->getMessage()], 422);
+            return Response::json(['message' => $e->getMessage(), 'code' => $e->getCode()], 422);
         }
     }
 }
