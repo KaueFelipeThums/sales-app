@@ -24,8 +24,7 @@ class GetUserById{
             return [];
         }
 
-        $userArray = $user->toArray();
-        $userArray['password'] = null;
-        return $userArray;
+        $user->setPassword(null);
+        return $user->toArray();
     }
 }

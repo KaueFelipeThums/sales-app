@@ -6,6 +6,7 @@ use SalesAppApi\Interface\Http\Controllers\AuthController;
 use SalesAppApi\Interface\Http\Controllers\CustomerController;
 use SalesAppApi\Interface\Http\Controllers\PaymentMethodController;
 use SalesAppApi\Interface\Http\Controllers\ProductController;
+use SalesAppApi\Interface\Http\Controllers\SaleController;
 use SalesAppApi\Interface\Http\Controllers\UserController;
 use SalesAppApi\Interface\Http\Middlewares\AuthMiddleware;
 
@@ -32,7 +33,7 @@ return function (App $app) {
      * Cliente
      */
     $app->addRoute('GET', '/customer/get-all', [CustomerController::class, 'getAllCustomers'], [[AuthMiddleware::class]]);
-    $app->addRoute('GET', '/customer/get-all-active', [CustomerController::class, 'getAllActiverCustomers'], [[AuthMiddleware::class]]);
+    $app->addRoute('GET', '/customer/get-all-active', [CustomerController::class, 'getAllActiveCustomers'], [[AuthMiddleware::class]]);
     $app->addRoute('GET', '/customer/get/{id}', [CustomerController::class, 'getCustomerById'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/customer/create', [CustomerController::class, 'createCustomer'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/customer/update', [CustomerController::class, 'updateCustomer'], [[AuthMiddleware::class]]);
@@ -42,7 +43,7 @@ return function (App $app) {
      * Produto
      */
     $app->addRoute('GET', '/product/get-all', [ProductController::class, 'getAllProducts'], [[AuthMiddleware::class]]);
-    $app->addRoute('GET', '/product/get-all-active', [ProductController::class, 'getAllActiverProducts'], [[AuthMiddleware::class]]);
+    $app->addRoute('GET', '/product/get-all-active', [ProductController::class, 'getAllActiveProducts'], [[AuthMiddleware::class]]);
     $app->addRoute('GET', '/product/get/{id}', [ProductController::class, 'getProductById'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/product/create', [ProductController::class, 'createProduct'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/product/update', [ProductController::class, 'updateProduct'], [[AuthMiddleware::class]]);
@@ -52,16 +53,18 @@ return function (App $app) {
      * Métodos de Pagamento
      */
     $app->addRoute('GET', '/payment-method/get-all', [PaymentMethodController::class, 'getAllPaymentMethods'], [[AuthMiddleware::class]]);
-    $app->addRoute('GET', '/payment-method/get-all-active', [PaymentMethodController::class, 'getAllActiverPaymentMethods'], [[AuthMiddleware::class]]);
+    $app->addRoute('GET', '/payment-method/get-all-active', [PaymentMethodController::class, 'getAllActivePaymentMethods'], [[AuthMiddleware::class]]);
     $app->addRoute('GET', '/payment-method/get/{id}', [PaymentMethodController::class, 'getPaymentMethodById'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/payment-method/create', [PaymentMethodController::class, 'createPaymentMethod'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/payment-method/update', [PaymentMethodController::class, 'updatePaymentMethod'], [[AuthMiddleware::class]]);
     $app->addRoute('POST', '/payment-method/delete', [PaymentMethodController::class, 'deletePaymentMethod'], [[AuthMiddleware::class]]);
 
-
-    // Rotas públicas
-    // $app->addRoute('POST', '/users', [UserController::class, 'store']);
-
-    // Rota com middleware
-    // $app->addRoute('GET', '/me', [UserController::class, 'profile'], [AuthMiddleware::class]);
+    /**
+     * Venda
+     */
+    $app->addRoute('GET', '/sale/get-all', [SaleController::class, 'getAllSales'], [[AuthMiddleware::class]]);
+    $app->addRoute('GET', '/sale/get/{id}', [SaleController::class, 'getSaleById'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/sale/create', [SaleController::class, 'createSale'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/sale/update', [SaleController::class, 'updateSale'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/sale/delete', [SaleController::class, 'deleteSale'], [[AuthMiddleware::class]]);
 };

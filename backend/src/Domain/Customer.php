@@ -36,9 +36,32 @@ class Customer
         return $this->id;
     }
 
+    public function setId(?int $id): Customer
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getUsersId(): int
+    {
+        return $this->usersId;
+    }
+
+    public function setUsersId(int $usersId): Customer
+    {
+        $this->usersId = $usersId;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setName(string $name): Customer
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getCpf(): string
@@ -46,29 +69,21 @@ class Customer
         return $this->cpf;
     }
 
+    public function setCpf(string $cpf): Customer
+    {
+        $this->cpf = $cpf;
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function getCreatedAt(): DateTime
+    public function setEmail(?string $email): Customer
     {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function getIsActive(): int
-    {
-        return $this->isActive;
+        $this->email = $email;
+        return $this;
     }
 
     public function getZipCode(): ?string
@@ -76,9 +91,21 @@ class Customer
         return $this->zipCode;
     }
 
+    public function setZipCode(?string $zipCode): Customer
+    {
+        $this->zipCode = $zipCode;
+        return $this;
+    }
+
     public function getStreet(): ?string
     {
         return $this->street;
+    }
+
+    public function setStreet(?string $street): Customer
+    {
+        $this->street = $street;
+        return $this;
     }
 
     public function getNumber(): ?string
@@ -86,9 +113,21 @@ class Customer
         return $this->number;
     }
 
+    public function setNumber(?string $number): Customer
+    {
+        $this->number = $number;
+        return $this;
+    }
+
     public function getComplement(): ?string
     {
         return $this->complement;
+    }
+
+    public function setComplement(?string $complement): Customer
+    {
+        $this->complement = $complement;
+        return $this;
     }
 
     public function getNeighborhood(): ?string
@@ -96,9 +135,21 @@ class Customer
         return $this->neighborhood;
     }
 
+    public function setNeighborhood(?string $neighborhood): Customer
+    {
+        $this->neighborhood = $neighborhood;
+        return $this;
+    }
+
     public function getCity(): ?string
     {
         return $this->city;
+    }
+
+    public function setCity(?string $city): Customer
+    {
+        $this->city = $city;
+        return $this;
     }
 
     public function getState(): ?string
@@ -106,9 +157,54 @@ class Customer
         return $this->state;
     }
 
-    public function getUsersId(): int
+    public function setState(?string $state): Customer
     {
-        return $this->usersId;
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getIsActive(): int
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(int $isActive): Customer
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): Customer
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTime $updatedAt): Customer
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): Customer
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function toArray(): array
@@ -132,6 +228,4 @@ class Customer
             "user" => !empty($this->user) ? $this->user->toArray() : null
         ];
     }
-
-
 }

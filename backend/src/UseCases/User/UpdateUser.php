@@ -3,7 +3,6 @@
 namespace SalesAppApi\UseCases\User;
 
 use Exception;
-use SalesAppApi\Domain\User;
 use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 
@@ -41,20 +40,18 @@ class UpdateUser{
             throw new Exception("E-mail ja cadastrado", 422);
         }
 
-        $newUser = new User(
-            $data['id'],
-            $data['name'],
-            $data['email'],
-            !empty($data['password']) ? password_hash($data['password'], PASSWORD_DEFAULT) : $user->getPassword(),
-            $data['is_active'],
-            $user->getCreatedAt(),
-            new DateTime(date('Y-m-d H:i:s')),
-        );
+        $user->setName($data['name'])
+            ->setEmail($data['email'])
+            ->setIsActive($data['is_active'])
+            ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
 
-        $this->userRepository->update($newUser);
-        $newUserArray = $newUser->toArray();
-        $user['password'] = null;
+        if(!empty($data['password'])) {
+            $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
+        }
 
-        return $newUserArray;
+        $this->userRepository->update($user);
+        $user->setPassword(null);
+
+        return $user->toArray();
     }
 }

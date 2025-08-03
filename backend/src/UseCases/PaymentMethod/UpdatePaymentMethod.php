@@ -3,7 +3,6 @@
 namespace SalesAppApi\UseCases\PaymentMethod;
 
 use Exception;
-use SalesAppApi\Domain\PaymentMethod;
 use SalesAppApi\Domain\PaymentMethodRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 
@@ -34,20 +33,13 @@ class UpdatePaymentMethod{
             throw new Exception("Produto não encontrado", 422);
         }
 
-       $newPaymentMethod = new PaymentMethod(
-            $paymentMethod->getId(),
-            $paymentMethod->getUsersId(),
-            $data['name'],
-            $data['installments'],
-            $data['is_active'],
-            $paymentMethod->getCreatedAt(),
-            new DateTime(date('Y-m-d H:i:s')),
-            null
-        );
+        $paymentMethod->setName($data['name'])
+            ->setInstallments($data['installments'])
+            ->setIsActive($data['is_active'])
+            ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
 
-        $this->paymentMethodRepository->update($newPaymentMethod);
-        $newPaymentMethodArray = $newPaymentMethod->toArray();
+        $this->paymentMethodRepository->update($paymentMethod);
 
-        return $newPaymentMethodArray;
+        return $paymentMethod->toArray();
     }
 }

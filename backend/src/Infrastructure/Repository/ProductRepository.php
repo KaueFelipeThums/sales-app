@@ -71,7 +71,6 @@ class ProductRepository implements ProductRepositoryInterface
                     new DateTime($r['users_created_at']),
                     !empty($r['users_updated_at']) ? new DateTime($r['users_updated_at']) : null
                 )
-              
             );
         }
         return $arrayProducts;
@@ -255,7 +254,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'quantity' => $product->getQuantity(),
                 'price' => $product->getPrice(),
                 'is_active' => $product->getIsActive(),
-                'updated_at' => $product->getUpdatedAt()->getDateTime()
+                'updated_at' => !empty($product->getUpdatedAt()) ? $product->getUpdatedAt()->getDateTime() : null
             ]
         );
     }

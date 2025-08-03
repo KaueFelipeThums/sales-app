@@ -149,7 +149,7 @@ class UserRepository implements UserRepositoryInterface
                 'email' => $user->getEmail(),
                 'password' => $user->getPassword(),
                 'is_active' => $user->getIsActive(),
-                'updated_at' => $user->getUpdatedAt()->getDateTime()
+                'updated_at' => !empty($user->getUpdatedAt()) ? $user->getUpdatedAt()->getDateTime() : null
             ]
         );
     }

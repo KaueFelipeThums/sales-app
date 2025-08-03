@@ -3,7 +3,6 @@
 namespace SalesAppApi\UseCases\Product;
 
 use Exception;
-use SalesAppApi\Domain\Product;
 use SalesAppApi\Domain\ProductRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 
@@ -21,8 +20,8 @@ class UpdateProduct{
      *  [
      *      'id' => int,
      *      'name' => string,
-     *      'quantity' => string,
-     *      'price' => string,
+     *      'quantity' => int,
+     *      'price' => float,
      *      'is_active' => int
      *  ]
      * @return array
@@ -35,21 +34,13 @@ class UpdateProduct{
             throw new Exception("Produto não encontrado", 422);
         }
 
-       $newProduct = new Product(
-            $product->getId(),
-            $product->getUsersId(),
-            $data['name'],
-            $data['quantity'],
-            $data['price'],
-            $data['is_active'],
-            $product->getCreatedAt(),
-            new DateTime(date('Y-m-d H:i:s')),
-            null
-        );
+        $product->setName($data['name'])
+            ->setQuantity($data['quantity'])
+            ->setPrice($data['price'])
+            ->setIsActive($data['is_active'])
+            ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
 
-        $this->productRepository->update($newProduct);
-        $newProductArray = $newProduct->toArray();
-
-        return $newProductArray;
+        $this->productRepository->update($product);
+        return $product->toArray();
     }
 }

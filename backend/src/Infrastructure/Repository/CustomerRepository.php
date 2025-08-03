@@ -50,7 +50,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (customers.name LIKE :search)";
+            $sql .= " AND (customers.name LIKE :search OR customers.cpf LIKE :search)";
             $params['search'] = "%".$search."%";
         }
 
@@ -85,7 +85,6 @@ class CustomerRepository implements CustomerRepositoryInterface
                     new DateTime($r['users_created_at']),
                     !empty($r['users_updated_at']) ? new DateTime($r['users_updated_at']) : null
                 )
-              
             );
         }
         return $arrayCustomers;
@@ -403,7 +402,7 @@ class CustomerRepository implements CustomerRepositoryInterface
                 'city' => $customer->getCity(),
                 'state' => $customer->getState(),
                 'is_active' => $customer->getIsActive(),
-                'updated_at' => $customer->getUpdatedAt()->getDateTime()
+                'updated_at' => !empty($customer->getUpdatedAt()) ? $customer->getUpdatedAt()->getDateTime() : null
             ]
         );
     }

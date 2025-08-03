@@ -8,7 +8,7 @@ class Sale
     public function __construct(
         private ?int $id,
         private int $paymentMethodId,
-        private int $userId,
+        private int $usersId,
         private int $productId,
         private int $customerId,
         private int $quantity,
@@ -53,14 +53,32 @@ class Sale
         return $this->id;
     }
 
+    public function setId(?int $id): Sale
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getPaymentMethodId(): int
     {
         return $this->paymentMethodId;
     }
 
-    public function getUserId(): int
+    public function setPaymentMethodId(int $paymentMethodId): Sale
     {
-        return $this->userId;
+        $this->paymentMethodId = $paymentMethodId;
+        return $this;
+    }
+
+    public function getUsersId(): int
+    {
+        return $this->usersId;
+    }
+
+    public function setUsersId(int $usersId): Sale
+    {
+        $this->usersId = $usersId;
+        return $this;
     }
 
     public function getProductId(): int
@@ -68,9 +86,21 @@ class Sale
         return $this->productId;
     }
 
+    public function setProductId(int $productId): Sale
+    {
+        $this->productId = $productId;
+        return $this;
+    }
+
     public function getCustomerId(): int
     {
         return $this->customerId;
+    }
+
+    public function setCustomerId(int $customerId): Sale
+    {
+        $this->customerId = $customerId;
+        return $this;
     }
 
     public function getQuantity(): int
@@ -78,9 +108,21 @@ class Sale
         return $this->quantity;
     }
 
+    public function setQuantity(int $quantity): Sale
+    {
+        $this->quantity = $quantity;
+        return $this;
+    }
+
     public function getTotalValue(): float
     {
         return $this->totalValue;
+    }
+
+    public function setTotalValue(float $totalValue): Sale
+    {
+        $this->totalValue = $totalValue;
+        return $this;
     }
 
     public function getBaseValue(): float
@@ -88,9 +130,21 @@ class Sale
         return $this->baseValue;
     }
 
+    public function setBaseValue(float $baseValue): Sale
+    {
+        $this->baseValue = $baseValue;
+        return $this;
+    }
+
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function setStatus(string $status): Sale
+    {
+        $this->status = $status;
+        return $this;
     }
 
     public function getCreatedAt(): DateTime
@@ -98,9 +152,21 @@ class Sale
         return $this->createdAt;
     }
 
+    public function setCreatedAt(DateTime $createdAt): Sale
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
     public function getCanceledAt(): ?DateTime
     {
         return $this->canceledAt;
+    }
+
+    public function setCanceledAt(?DateTime $canceledAt): Sale
+    {
+        $this->canceledAt = $canceledAt;
+        return $this;
     }
 
     public function getUpdatedAt(): ?DateTime
@@ -108,9 +174,21 @@ class Sale
         return $this->updatedAt;
     }
 
+    public function setUpdatedAt(?DateTime $updatedAt): Sale
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
     public function getPaymentMethod(): ?PaymentMethod
     {
         return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(PaymentMethod $paymentMethod): Sale
+    {
+        $this->paymentMethod = $paymentMethod;
+        return $this;
     }
 
     public function getCustomer(): ?Customer
@@ -118,9 +196,21 @@ class Sale
         return $this->customer;
     }
 
+    public function setCustomer(Customer $customer): Sale
+    {
+        $this->customer = $customer;
+        return $this;
+    }
+
     public function getProduct(): ?Product
     {
         return $this->product;
+    }
+
+    public function setProduct(Product $product): Sale
+    {
+        $this->product = $product;
+        return $this;
     }
 
     public function getUser(): ?User
@@ -128,12 +218,18 @@ class Sale
         return $this->user;
     }
 
+    public function setUser(User $user): Sale
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     public function toArray(): array
     {
         return [
             "id" => $this->id,
             "payment_method_id" => $this->paymentMethodId,
-            "users_id" => $this->userId,
+            "users_id" => $this->usersId,
             "products_id" => $this->productId,
             "customers_id" => $this->customerId,
             "quantity" => $this->quantity,

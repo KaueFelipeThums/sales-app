@@ -6,6 +6,7 @@ use SalesAppApi\Shared\Request;
 use SalesAppApi\Shared\Response;
 use SalesAppApi\UseCases\Customer\CreateCustomer;
 use SalesAppApi\UseCases\Customer\DeleteCustomer;
+use SalesAppApi\UseCases\Customer\GetAllActiveCustomers;
 use SalesAppApi\UseCases\Customer\GetAllCustomers;
 use SalesAppApi\UseCases\Customer\GetCustomerById;
 use SalesAppApi\UseCases\Customer\UpdateCustomer;
@@ -14,6 +15,7 @@ class CustomerController
 {
     public function __construct(
         private GetAllCustomers $getAllCustomers,
+        private GetAllActiveCustomers $getAllActiveCustomers,
         private GetCustomerById $getCustomerById,
         private CreateCustomer $createCustomer,
         private UpdateCustomer $updateCustomer,
@@ -53,7 +55,7 @@ class CustomerController
         }
     }
 
-    public function getAllActiverCustomers(Request $request): mixed
+    public function getAllActiveCustomers(Request $request): mixed
     {
         $validatedData = $request->validate([
             'search' => 'nullable',
@@ -67,7 +69,7 @@ class CustomerController
         }
 
         try {
-            $response = $this->getAllCustomers->execute([
+            $response = $this->getAllActiveCustomers->execute([
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
                 'page_count' => $validatedData['page_count']

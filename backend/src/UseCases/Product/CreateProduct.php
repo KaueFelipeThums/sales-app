@@ -4,7 +4,6 @@ namespace SalesAppApi\UseCases\Product;
 
 use SalesAppApi\Domain\Product;
 use SalesAppApi\Domain\ProductRepositoryInterface;
-use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 use SalesAppApi\Shared\Auth\Auth;
 
@@ -12,7 +11,6 @@ class CreateProduct{
 
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        private UserRepositoryInterface $userRepository
     ){}
 
     /**
@@ -21,8 +19,8 @@ class CreateProduct{
      * @param array $data
      *  [
      *      'name' => string,
-     *      'quantity' => string,
-     *      'price' => string,
+     *      'quantity' => int,
+     *      'price' => float,
      *      'is_active' => int
      *  ]
      * @return array

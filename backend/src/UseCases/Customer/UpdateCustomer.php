@@ -3,7 +3,6 @@
 namespace SalesAppApi\UseCases\Customer;
 
 use Exception;
-use SalesAppApi\Domain\Customer;
 use SalesAppApi\Domain\CustomerRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 
@@ -48,28 +47,21 @@ class UpdateCustomer{
             throw new Exception("CPF ja cadastrado", 422);
         }
 
-       $newCustomer = new Customer(
-            $customer->getId(),
-            $customer->getUsersId(),
-            $data['name'],
-            $data['cpf'],
-            $data['email'],
-            $data['zip_code'],
-            $data['street'],
-            $data['number'],
-            $data['complement'],
-            $data['neighborhood'],
-            $data['city'],
-            $data['state'],
-            $data['is_active'],
-            $customer->getCreatedAt(),
-            new DateTime(date('Y-m-d H:i:s')),
-            null
-        );
+        $customer->setName($data['name'])
+            ->setCpf($data['cpf'])
+            ->setEmail($data['email'])
+            ->setZipCode($data['zip_code'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setComplement($data['complement'])
+            ->setNeighborhood($data['neighborhood'])
+            ->setCity($data['city'])
+            ->setState($data['state'])
+            ->setIsActive($data['is_active'])
+            ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
 
-        $this->customerRepository->update($newCustomer);
-        $newCustomerArray = $newCustomer->toArray();
+        $this->customerRepository->update($customer);
 
-        return $newCustomerArray;
+        return $customer->toArray();
     }
 }

@@ -5,7 +5,6 @@ namespace SalesAppApi\UseCases\Customer;
 use Exception;
 use SalesAppApi\Domain\Customer;
 use SalesAppApi\Domain\CustomerRepositoryInterface;
-use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 use SalesAppApi\Shared\Auth\Auth;
 
@@ -13,7 +12,6 @@ class CreateCustomer{
 
     public function __construct(
         private CustomerRepositoryInterface $customerRepository,
-        private UserRepositoryInterface $userRepository
     ){}
 
     /**

@@ -20,9 +20,21 @@ class User
         return $this->id;
     }
 
+    public function setId(?int $id): User
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setName(string $name): User
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getEmail(): string
@@ -30,12 +42,18 @@ class User
         return $this->email;
     }
 
-    public function getPassword(): string
+    public function setEmail(string $email): User
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(?string $password): User
     {
         $this->password = $password;
         return $this;
@@ -46,9 +64,21 @@ class User
         return $this->isActive;
     }
 
+    public function setIsActive(int $isActive): User
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): User
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     public function getUpdatedAt(): ?DateTime

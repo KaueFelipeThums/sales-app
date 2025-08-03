@@ -244,7 +244,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
                 'name' => $paymentMethod->getName(),
                 'installments' => $paymentMethod->getInstallments(),
                 'is_active' => $paymentMethod->getIsActive(),
-                'updated_at' => $paymentMethod->getUpdatedAt()->getDateTime()
+                'updated_at' => !empty($paymentMethod->getUpdatedAt()) ? $paymentMethod->getUpdatedAt()->getDateTime() : null
             ]
         );
     }

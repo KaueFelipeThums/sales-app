@@ -6,6 +6,7 @@ use SalesAppApi\Shared\Request;
 use SalesAppApi\Shared\Response;
 use SalesAppApi\UseCases\Product\CreateProduct;
 use SalesAppApi\UseCases\Product\DeleteProduct;
+use SalesAppApi\UseCases\Product\GetAllActiveProducts;
 use SalesAppApi\UseCases\Product\GetAllProducts;
 use SalesAppApi\UseCases\Product\GetProductById;
 use SalesAppApi\UseCases\Product\UpdateProduct;
@@ -14,6 +15,7 @@ class ProductController
 {
     public function __construct(
         private GetAllProducts $getAllProducts,
+        private GetAllActiveProducts $getAllActiveProducts,
         private GetProductById $getProductById,
         private CreateProduct $createProduct,
         private UpdateProduct $updateProduct,
@@ -53,7 +55,7 @@ class ProductController
         }
     }
 
-    public function getAllActiverProducts(Request $request): mixed
+    public function getAllActiveProducts(Request $request): mixed
     {
         $validatedData = $request->validate([
             'search' => 'nullable',
@@ -67,7 +69,7 @@ class ProductController
         }
 
         try {
-            $response = $this->getAllProducts->execute([
+            $response = $this->getAllActiveProducts->execute([
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
                 'page_count' => $validatedData['page_count']

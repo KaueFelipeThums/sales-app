@@ -27,9 +27,21 @@ class PaymentMethod
         return $this->id;
     }
 
+    public function setId(?int $id): PaymentMethod
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getUsersId(): int
     {
         return $this->usersId;
+    }
+
+    public function setUsersId(int $usersId): PaymentMethod
+    {
+        $this->usersId = $usersId;
+        return $this;
     }
 
     public function getName(): string
@@ -37,9 +49,21 @@ class PaymentMethod
         return $this->name;
     }
 
+    public function setName(string $name): PaymentMethod
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getInstallments(): int
     {
         return $this->installments;
+    }
+
+    public function setInstallments(int $installments): PaymentMethod
+    {
+        $this->installments = $installments;
+        return $this;
     }
 
     public function getIsActive(): int
@@ -47,9 +71,21 @@ class PaymentMethod
         return $this->isActive;
     }
 
+    public function setIsActive(int $isActive): PaymentMethod
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): PaymentMethod
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     public function getUpdatedAt(): ?DateTime
@@ -57,9 +93,21 @@ class PaymentMethod
         return $this->updatedAt;
     }
 
+    public function setUpdatedAt(?DateTime $updatedAt): PaymentMethod
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    public function setUser(?User $user): PaymentMethod
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function toArray(): array

@@ -18,9 +18,32 @@ class RefreshToken
         return $this->id;
     }
 
+    public function setId(?int $id): RefreshToken
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getUsersId(): int
+    {
+        return $this->usersId;
+    }
+
+    public function setUsersId(int $usersId): RefreshToken
+    {
+        $this->usersId = $usersId;
+        return $this;
+    }
+
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    public function setToken(string $token): RefreshToken
+    {
+        $this->token = $token;
+        return $this;
     }
 
     public function getExpiresAt(): DateTime
@@ -28,14 +51,21 @@ class RefreshToken
         return $this->expiresAt;
     }
 
+    public function setExpiresAt(DateTime $expiresAt): RefreshToken
+    {
+        $this->expiresAt = $expiresAt;
+        return $this;
+    }
+
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    public function getUsersId(): int
+    public function setCreatedAt(DateTime $createdAt): RefreshToken
     {
-        return $this->usersId;
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     public function toArray(): array

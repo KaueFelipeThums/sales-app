@@ -4,32 +4,33 @@ namespace SalesAppApi\Interface\Http\Controllers;
 use Exception;
 use SalesAppApi\Shared\Request;
 use SalesAppApi\Shared\Response;
-use SalesAppApi\UseCases\PaymentMethod\CreatePaymentMethod;
-use SalesAppApi\UseCases\PaymentMethod\DeletePaymentMethod;
-use SalesAppApi\UseCases\PaymentMethod\GetAllActivePaymentMethods;
-use SalesAppApi\UseCases\PaymentMethod\GetAllPaymentMethods;
-use SalesAppApi\UseCases\PaymentMethod\GetPaymentMethodById;
-use SalesAppApi\UseCases\PaymentMethod\UpdatePaymentMethod;
+use SalesAppApi\UseCases\Sale\CreateSale;
+use SalesAppApi\UseCases\Sale\DeleteSale;
+use SalesAppApi\UseCases\Sale\GetAllSales;
+use SalesAppApi\UseCases\Sale\GetSaleById;
+use SalesAppApi\UseCases\Sale\UpdateSale;
 
-class PaymentMethodController
+class SaleController
 {
     public function __construct(
-        private GetAllPaymentMethods $getAllPaymentMethods,
-        private GetAllActivePaymentMethods $getAllActivePaymentMethods,
-        private GetPaymentMethodById $getPaymentMethodById,
-        private CreatePaymentMethod $createPaymentMethod,
-        private UpdatePaymentMethod $updatePaymentMethod,
-        private DeletePaymentMethod $deletePaymentMethod
+        private GetAllSales $getAllSales,
+        private GetSaleById $getSaleById,
+        private CreateSale $createSale,
+        private UpdateSale $updateSale,
+        private DeleteSale $deleteSale
     )
     {
     }
 
-    public function getAllPaymentMethods(Request $request): mixed
+    public function getAllSales(Request $request): mixed
     {
         $validatedData = $request->validate([
             'search' => 'nullable',
             'page' => 'required|integer',
-            'page_count' => 'required|integer'
+            'page_count' => 'required|integer',
+            'customer_id' => 'nullable|integer',
+            'product_id' => 'nullable|integer',
+            'status' => 'nullable|string'
         ]);
         
         $errors = $request->getErrors();
@@ -38,11 +39,15 @@ class PaymentMethodController
         }
 
         try {
-            $response = $this->getAllPaymentMethods->execute([
+            $response = $this->getAllSales->execute([
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
-                'page_count' => $validatedData['page_count']
+                'page_count' => $validatedData['page_count'],
+                'customer_id' => !empty($validatedData['customer_id']) ? $validatedData['customer_id'] : null,
+                'product_id' => !empty($validatedData['product_id']) ? $validatedData['product_id'] : null,
+                'status' => !empty($validatedData['status']) ? $validatedData['status'] : null
             ]);
+            
             return Response::json($response, 200);
         } catch(Exception $e){
             $errorCode = $e->getCode();
@@ -55,41 +60,10 @@ class PaymentMethodController
         }
     }
 
-    public function getAllActivePaymentMethods(Request $request): mixed
-    {
-        $validatedData = $request->validate([
-            'search' => 'nullable',
-            'page' => 'required|integer',
-            'page_count' => 'required|integer'
-        ]);
-        
-        $errors = $request->getErrors();
-        if(count($errors) > 0){
-            return Response::json(['errors' => $errors[0]], 422);
-        }
-
-        try {
-            $response = $this->getAllActivePaymentMethods->execute([
-                'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
-                'page' => $validatedData['page'],
-                'page_count' => $validatedData['page_count']
-            ]);
-            return Response::json($response, 200);
-        } catch(Exception $e){
-            $errorCode = $e->getCode();
-            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
-
-            return Response::json([
-                'message' => $e->getMessage(),
-                'code' => $httpStatus,
-            ], $httpStatus);
-        }
-    }
-
-    public function getPaymentMethodById(Request $request, $params): mixed
+    public function getSaleById(Request $request, $params): mixed
     {
         try {
-            $response = $this->getPaymentMethodById->execute($params['id']);
+            $response = $this->getSaleById->execute($params['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
             $errorCode = $e->getCode();
@@ -102,12 +76,15 @@ class PaymentMethodController
         }
     }
 
-    public function createPaymentMethod(Request $request): mixed
+    public function createSale(Request $request): mixed
     {   
         $validatedData = $request->validate([
-            'name' => 'required',
-            'installments' => 'required|integer',
-            'is_active' => 'required|integer'
+            'payment_method_id' => 'required|integer',
+            'product_id' => 'required|integer',
+            'customer_id' => 'required|integer',
+            'quantity' => 'required|integer',
+            'total_value' => 'required|numeric:14,2',
+            'base_value' => 'required|numeric:14,2'
         ]);
 
         $errors = $request->getErrors();
@@ -116,10 +93,13 @@ class PaymentMethodController
         }
 
         try {
-            $response = $this->createPaymentMethod->execute([
-                'name' => $validatedData['name'],
-                'installments' => $validatedData['installments'],
-                'is_active' => $validatedData['is_active']
+            $response = $this->createSale->execute([
+                'payment_method_id' => $validatedData['payment_method_id'],
+                'product_id' => $validatedData['product_id'],
+                'customer_id' => $validatedData['customer_id'],
+                'quantity' => $validatedData['quantity'],
+                'total_value' => $validatedData['total_value'],
+                'base_value' => $validatedData['base_value']
             ]);
 
             return Response::json($response, 200);
@@ -134,13 +114,16 @@ class PaymentMethodController
         }
     }
 
-    public function updatePaymentMethod(Request $request): mixed
+    public function updateSale(Request $request): mixed
     {   
         $validatedData = $request->validate([
             'id' => 'required|integer',
-            'name' => 'required',
-            'installments' => 'required|integer',
-            'is_active' => 'required|integer'
+            'payment_method_id' => 'required|integer',
+            'product_id' => 'required|integer',
+            'customer_id' => 'required|integer',
+            'quantity' => 'required|integer',
+            'total_value' => 'required|numeric:14,2',
+            'base_value' => 'required|numeric:14,2'
         ]);
 
         $errors = $request->getErrors();
@@ -149,11 +132,14 @@ class PaymentMethodController
         }
 
         try {
-            $response = $this->updatePaymentMethod->execute([
+            $response = $this->updateSale->execute([
                 'id' => $validatedData['id'],
-                'name' => $validatedData['name'],
-                'installments' => $validatedData['installments'],
-                'is_active' => $validatedData['is_active']
+                'payment_method_id' => $validatedData['payment_method_id'],
+                'product_id' => $validatedData['product_id'],
+                'customer_id' => $validatedData['customer_id'],
+                'quantity' => $validatedData['quantity'],
+                'total_value' => $validatedData['total_value'],
+                'base_value' => $validatedData['base_value']
             ]);
 
             return Response::json($response, 200);
@@ -168,7 +154,7 @@ class PaymentMethodController
         }
     }
 
-    public function deletePaymentMethod(Request $request): mixed
+    public function deleteSale(Request $request): mixed
     {   
         $validatedData = $request->validate([
             'id' => 'required|integer',
@@ -180,7 +166,7 @@ class PaymentMethodController
         }
 
         try {
-            $response = $this->deletePaymentMethod->execute($validatedData['id']);
+            $response = $this->deleteSale->execute($validatedData['id']);
             return Response::json($response, 200);
         } catch(Exception $e){
             $errorCode = $e->getCode();

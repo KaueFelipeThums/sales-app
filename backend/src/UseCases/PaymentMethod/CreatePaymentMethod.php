@@ -4,7 +4,6 @@ namespace SalesAppApi\UseCases\PaymentMethod;
 
 use SalesAppApi\Domain\PaymentMethod;
 use SalesAppApi\Domain\PaymentMethodRepositoryInterface;
-use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 use SalesAppApi\Shared\Auth\Auth;
 
@@ -12,7 +11,6 @@ class CreatePaymentMethod{
 
     public function __construct(
         private PaymentMethodRepositoryInterface $paymentMethodRepository,
-        private UserRepositoryInterface $userRepository
     ){}
 
     /**
@@ -38,7 +36,6 @@ class CreatePaymentMethod{
             null,
             null
         );
-
 
         $id = $this->paymentMethodRepository->create($newPaymentMethod);
         $paymentMethod = $this->paymentMethodRepository->getPaymentMethodById($id)->toArray();
