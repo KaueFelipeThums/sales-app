@@ -29,11 +29,8 @@ class SaleRepository implements SaleRepositoryInterface
                 sales.payment_methods_id AS sales_payment_methods_id,
                 sales.users_id AS sales_users_id,
                 sales.customers_id AS sales_customers_id,
-                sales.quantity AS sales_quantity,
                 sales.total_value AS sales_total_value,
-                sales.base_value AS sales_base_value,
                 sales.created_at AS sales_created_at,
-                sales.canceled_at AS sales_canceled_at,
                 sales.updated_at AS sales_updated_at,
 
                 -- User
@@ -107,11 +104,8 @@ class SaleRepository implements SaleRepositoryInterface
                 $r['sales_payment_methods_id'],
                 $r['sales_users_id'],
                 $r['sales_customers_id'],
-                $r['sales_quantity'],
                 $r['sales_total_value'],
-                $r['sales_base_value'],
                 new DateTime($r['sales_created_at']),
-                !empty($r['sales_canceled_at']) ? new DateTime($r['sales_canceled_at']) : null,
                 !empty($r['sales_updated_at']) ? new DateTime($r['sales_updated_at']) : null,
                 new PaymentMethod(
                     $r['payment_methods_id'],
@@ -165,11 +159,8 @@ class SaleRepository implements SaleRepositoryInterface
                 sales.payment_methods_id AS sales_payment_methods_id,
                 sales.users_id AS sales_users_id,
                 sales.customers_id AS sales_customers_id,
-                sales.quantity AS sales_quantity,
                 sales.total_value AS sales_total_value,
-                sales.base_value AS sales_base_value,
                 sales.created_at AS sales_created_at,
-                sales.canceled_at AS sales_canceled_at,
                 sales.updated_at AS sales_updated_at,
 
                 -- User
@@ -228,11 +219,8 @@ class SaleRepository implements SaleRepositoryInterface
             $response['sales_payment_methods_id'],
             $response['sales_users_id'],
             $response['sales_customers_id'],
-            $response['sales_quantity'],
             $response['sales_total_value'],
-            $response['sales_base_value'],
             new DateTime($response['sales_created_at']),
-            !empty($response['sales_canceled_at']) ? new DateTime($response['sales_canceled_at']) : null,
             !empty($response['sales_updated_at']) ? new DateTime($response['sales_updated_at']) : null,
             new PaymentMethod(
                 $response['payment_methods_id'],
@@ -284,11 +272,8 @@ class SaleRepository implements SaleRepositoryInterface
                     payment_methods_id,
                     users_id,
                     customers_id,
-                    quantity,
                     total_value,
-                    base_value,
                     created_at,
-                    canceled_at,
                     updated_at
                 )
             VALUES 
@@ -296,22 +281,16 @@ class SaleRepository implements SaleRepositoryInterface
                     :payment_methods_id,
                     :users_id,
                     :customers_id,
-                    :quantity,
                     :total_value,
-                    :base_value,
                     :created_at,
-                    :canceled_at,
                     :updated_at
                 )",
             [
                 'payment_methods_id' => $sale->getPaymentMethodId(),
                 'users_id' => $sale->getUsersId(),
                 'customers_id' => $sale->getCustomerId(),
-                'quantity' => $sale->getQuantity(),
                 'total_value' => $sale->getTotalValue(),
-                'base_value' => $sale->getBaseValue(),
                 'created_at' => $sale->getCreatedAt()->getDateTime(),
-                'canceled_at' => null,
                 'updated_at' => null
             ]
         );
@@ -326,10 +305,7 @@ class SaleRepository implements SaleRepositoryInterface
                 payment_methods_id=:payment_methods_id,
                 users_id=:users_id,
                 customers_id=:customers_id,
-                quantity=:quantity,
                 total_value=:total_value,
-                base_value=:base_value,
-                canceled_at=:canceled_at,
                 updated_at=:updated_at
             WHERE 
                 id = :id",
@@ -338,10 +314,7 @@ class SaleRepository implements SaleRepositoryInterface
                 'payment_methods_id' => $sale->getPaymentMethodId(),
                 'users_id' => $sale->getUsersId(),
                 'customers_id' => $sale->getCustomerId(),
-                'quantity' => $sale->getQuantity(),
                 'total_value' => $sale->getTotalValue(),
-                'base_value' => $sale->getBaseValue(),
-                'canceled_at' => !empty($sale->getCanceledAt()) ? $sale->getCanceledAt()->getDateTime() : null,
                 'updated_at' => !empty($sale->getUpdatedAt()) ? $sale->getUpdatedAt()->getDateTime() : null,
             ]
         );

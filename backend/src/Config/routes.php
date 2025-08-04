@@ -18,7 +18,8 @@ return function (App $app) {
      * Rotas de autenticação
      */
     $app->addRoute('POST', '/v1/auth/login', [AuthController::class, 'login']);
-    $app->addRoute('POST', '/v1/auth/refresh', [AuthController::class, 'refresh'], [[AuthMiddleware::class]]);
+    $app->addRoute('POST', '/v1/auth/refresh', [AuthController::class, 'refresh']);
+    
     $app->addRoute('POST', '/v1/auth/update-password', [AuthController::class, 'updateUserPassword'], [[AuthMiddleware::class]]);
     $app->addRoute('GET', '/v1/auth/user', [AuthController::class, 'getAuthUser'], [[AuthMiddleware::class]]);
     

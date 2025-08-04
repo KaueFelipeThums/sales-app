@@ -39,6 +39,7 @@
 
 6 - Quais tecnologias você domina?
 
+  Principais Tecnologias
   Linguagens: PHP, JS, TS
   Mobile: React Native
   Frameworks: Laravel, React, Next

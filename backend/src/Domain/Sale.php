@@ -10,11 +10,8 @@ class Sale
         private int $paymentMethodId,
         private int $usersId,
         private int $customerId,
-        private int $quantity,
         private float $totalValue,
-        private float $baseValue,
         private DateTime $createdAt,
-        private ?DateTime $canceledAt,
         private ?DateTime $updatedAt,
 
         /**
@@ -36,7 +33,7 @@ class Sale
          *
          * @var SaleProduct[]
          */
-        private array $saleProducts = [],
+        private array $saleProducts,
 
         /**
          * Usuário que criou o registro
@@ -90,17 +87,6 @@ class Sale
         return $this;
     }
 
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): Sale
-    {
-        $this->quantity = $quantity;
-        return $this;
-    }
-
     public function getTotalValue(): float
     {
         return $this->totalValue;
@@ -112,17 +98,6 @@ class Sale
         return $this;
     }
 
-    public function getBaseValue(): float
-    {
-        return $this->baseValue;
-    }
-
-    public function setBaseValue(float $baseValue): Sale
-    {
-        $this->baseValue = $baseValue;
-        return $this;
-    }
-
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -131,17 +106,6 @@ class Sale
     public function setCreatedAt(DateTime $createdAt): Sale
     {
         $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getCanceledAt(): ?DateTime
-    {
-        return $this->canceledAt;
-    }
-
-    public function setCanceledAt(?DateTime $canceledAt): Sale
-    {
-        $this->canceledAt = $canceledAt;
         return $this;
     }
 
@@ -183,7 +147,7 @@ class Sale
         return $this->saleProducts;
     }
 
-    public function setSaleProducts(SaleProduct $product): Sale
+    public function addSaleProduct(SaleProduct $product): Sale
     {
         $this->saleProducts[] = $product;
         return $this;
@@ -212,15 +176,12 @@ class Sale
             "payment_method_id" => $this->paymentMethodId,
             "users_id" => $this->usersId,
             "customers_id" => $this->customerId,
-            "quantity" => $this->quantity,
             "total_value" => $this->totalValue,
-            "base_value" => $this->baseValue,
             "created_at" => $this->createdAt->getDateTime(),
-            "canceled_at" => $this->canceledAt ? $this->canceledAt->getDateTime() : null,
             "updated_at" => $this->updatedAt ? $this->updatedAt->getDateTime() : null,
             "payment_method" => !empty($this->paymentMethod) ? $this->paymentMethod->toArray() : null,
             "customer" => !empty($this->customer) ? $this->customer->toArray() : null,
-            "products" => $arraySaleProducts,
+            "sale_products" => $arraySaleProducts,
             "user" => !empty($this->user) ? $this->user->toArray() : null
         ];
     }

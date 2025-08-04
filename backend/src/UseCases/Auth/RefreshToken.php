@@ -7,7 +7,6 @@ use SalesAppApi\Domain\RefreshToken as RefreshTokenModel;
 use SalesAppApi\Domain\RefreshTokenRepositoryInterface;
 use SalesAppApi\Domain\UserRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
-use SalesAppApi\Shared\Auth\Auth;
 use SalesAppApi\Shared\Auth\JwtService;
 
 class RefreshToken{
@@ -38,7 +37,7 @@ class RefreshToken{
             throw new Exception("Refresh token expirado", 422);
         }
 
-        $user = $this->userRepository->getUserById(Auth::id());
+        $user = $this->userRepository->getUserById($refreshToken->getUsersId());
 
         $accessToken = JwtService::generateToken([
             'id' => $user->getId(),

@@ -7,6 +7,8 @@ use SalesAppApi\Domain\CustomerRepositoryInterface;
 use SalesAppApi\Domain\PaymentMethodRepositoryInterface;
 use SalesAppApi\Domain\ProductRepositoryInterface;
 use SalesAppApi\Domain\Sale;
+use SalesAppApi\Domain\SaleProduct;
+use SalesAppApi\Domain\SaleProductRepositoryInterface;
 use SalesAppApi\Domain\SaleRepositoryInterface;
 use SalesAppApi\Domain\ValueObjects\DateTime;
 use SalesAppApi\Shared\Auth\Auth;
@@ -17,7 +19,8 @@ class UpdateSale{
         private SaleRepositoryInterface $saleRepository,
         private ProductRepositoryInterface $productRepository,
         private PaymentMethodRepositoryInterface $paymentMethodRepository,
-        private CustomerRepositoryInterface $customerRepository
+        private CustomerRepositoryInterface $customerRepository,
+        private SaleProductRepositoryInterface $saleProductRepository
     ){}
 
  
@@ -26,13 +29,14 @@ class UpdateSale{
      *
      * @param array $data
      *  [
-     *      'id' => int,
      *      'payment_method_id' => int,
-     *      'product_id' => int,
      *      'customer_id' => int,
-     *      'quantity' => int,
      *      'total_value' => float,
-     *      'base_value' => float
+     *      'products' => array
+     *          [
+     *              'product_id' => int,
+     *              'quantity' => int
+     *          ]
      *  ]
      * @return array
      */
@@ -42,11 +46,6 @@ class UpdateSale{
 
         if(empty($sale)) {
             throw new Exception("Venda não encontrada", 422);
-        }
-
-        $product = $this->productRepository->getProductById($data['product_id']);
-        if(empty($product) || $product->getIsActive() == 0) {
-            throw new Exception("Produto não encontrado ou inativo", 422);
         }
 
         $customer = $this->customerRepository->getCustomerById($data['customer_id']);
@@ -59,27 +58,106 @@ class UpdateSale{
             throw new Exception("Forma de pagamento não encontrada ou inativa", 422);
         }
 
-        $productQuantity = $product->getQuantity() + $sale->getQuantity();
         /**
-         * Verificar quantidade
+         * Products to update
          */
-        if($productQuantity < $data['quantity']) {
-            throw new Exception("Quantidade indisponivel", 422);
+        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
+        $arrayProductsUpdate = [];
+
+        foreach ($saleProducts as $saleProduct) {
+            $product = $saleProduct->getProduct();
+            $product->setQuantity($product->getQuantity() + $saleProduct->getQuantity());
+            $arrayProductsUpdate[$product->getId()] = $product;
+        }
+
+        /**
+         * Products to insert
+         */
+        $arraySaleProducts = [];
+        $totalValue = 0;
+
+        foreach ($data['products'] as $selectedProduct) {
+            /**
+             * Check array data
+             */
+            if(empty($selectedProduct['quantity']) || $selectedProduct['quantity'] <= 0) {
+                throw new Exception("Quantidade inválida", 422);
+            }
+
+            if(empty($selectedProduct['product_id'])) {
+                throw new Exception("Produto inválido", 422);
+            }
+
+            if(!empty($arrayProductsUpdate[$selectedProduct['product_id']])) {
+                $product = $arrayProductsUpdate[$selectedProduct['product_id']];
+            } else {
+                $product = $this->productRepository->getProductById($selectedProduct['product_id']);
+            }
+
+
+            if(empty($product) || $product->getIsActive() == 0) {
+                throw new Exception("Produto não encontrado ou inativo", 422);
+            }
+
+            /**
+             * Check quantity
+             */
+            if($product->getQuantity() < $selectedProduct['quantity']) {
+                throw new Exception("Quantidade indisponível do produto {$product->getName()}", 422);
+            }
+            
+            $product->setQuantity($product->getQuantity() - $selectedProduct['quantity']);
+            $arraySaleProducts[] = [
+                'product_id' => $product->getId(),
+                'quantity' => $selectedProduct['quantity'],
+                'base_value' => $product->getPrice(),
+                'product' => $product
+            ];
+            $totalValue += $product->getPrice() * $selectedProduct['quantity'];
+
+            unset($arrayProductsUpdate[$product->getId()]);
         }
 
         $sale->setCustomerId($customer->getId())
-            ->setProductId($product->getId())
             ->setPaymentMethodId($paymentMethod->getId())
-            ->setQuantity($data['quantity'])
-            ->setTotalValue($product->getPrice() * $data['quantity'])
-            ->setBaseValue($product->getPrice())
+            ->setTotalValue($totalValue)
             ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
 
-        $product->setQuantity($productQuantity - $data['quantity'])->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
-        $sale->setProduct($product);
-
         $this->saleRepository->update($sale);
-        $this->productRepository->update($product);
+
+        /**
+         * Reset products
+         */ 
+        $this->saleProductRepository->deleteBySaleId($sale->getId());
+
+        /**
+         * Update removed products
+         */
+        foreach ($arrayProductsUpdate as $product) {
+            $product->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
+            $this->productRepository->update($product);
+        }
+
+        /**
+         * Insert new products
+         */
+        foreach ($arraySaleProducts as $saleProduct) {
+            $newSaleProduct = new SaleProduct(
+                null,
+                $sale->getId(),
+                $saleProduct['product_id'],
+                $saleProduct['quantity'],
+                $saleProduct['base_value'],
+                $saleProduct['product']
+            );
+
+
+            $saleProductId = $this->saleProductRepository->create($newSaleProduct);
+            $newSaleProduct->setId($saleProductId);
+
+            $this->productRepository->update($saleProduct['product']);
+            $sale->addSaleProduct($newSaleProduct);
+        }
 
         return $sale->toArray();
     }

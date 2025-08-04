@@ -4,13 +4,16 @@ namespace SalesAppApi\UseCases\Sale;
 
 use Exception;
 use SalesAppApi\Domain\ProductRepositoryInterface;
+use SalesAppApi\Domain\SaleProductRepositoryInterface;
 use SalesAppApi\Domain\SaleRepositoryInterface;
+use SalesAppApi\Domain\ValueObjects\DateTime;
 
 class DeleteSale{
 
     public function __construct(
         private SaleRepositoryInterface $saleRepository,
-        private ProductRepositoryInterface $productRepository
+        private ProductRepositoryInterface $productRepository,
+        private SaleProductRepositoryInterface $saleProductRepository
     ){}
 
  
@@ -27,10 +30,20 @@ class DeleteSale{
             throw new Exception("Venda nao encontrada", 404);
         }
 
-        $product = $sale->getProduct();
-        $product->setQuantity($product->getQuantity() + $sale->getQuantity());
+        /**
+         * Products to update
+         */
+        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
 
+        foreach ($saleProducts as $saleProduct) {
+            $product = $saleProduct->getProduct();
+            $product->setQuantity($product->getQuantity() + $saleProduct->getQuantity())
+                ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
+
+            $this->productRepository->update($product);
+        }
+
+        $this->saleProductRepository->deleteBySaleId($sale->getId());
         $this->saleRepository->delete($id);
-        $this->productRepository->update($product);
     }
 }

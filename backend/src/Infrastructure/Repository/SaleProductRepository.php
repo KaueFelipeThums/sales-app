@@ -18,11 +18,11 @@ class SaleProductRepository implements SaleProductRepositoryInterface
         $query = $this->database->query(
             "SELECT 
                 -- Sale Product
-                sale_products.id AS sale_products_id,
-                sale_products.sales_id AS sale_products_sales_id,
-                sale_products.products_id AS sale_products_products_id,
-                sale_products.quantity SAS sale_products_quantity,
-                sale_products.base_value AS sale_products_base_value,
+                sales_products.id AS sales_products_id,
+                sales_products.sales_id AS sales_products_sales_id,
+                sales_products.products_id AS sales_products_products_id,
+                sales_products.quantity AS sales_products_quantity,
+                sales_products.base_value AS sales_products_base_value,
 
                 -- Product
                 products.id AS products_id,
@@ -32,24 +32,24 @@ class SaleProductRepository implements SaleProductRepositoryInterface
                 products.price AS products_price,
                 products.is_active AS products_is_active,
                 products.created_at AS products_created_at,
-                products.updated_at AS products_updated_at,
+                products.updated_at AS products_updated_at
             FROM 
-                sale_products
+                sales_products
             LEFT JOIN
-                products ON sale_products.products_id = products.id 
+                products ON sales_products.products_id = products.id 
             WHERE 
-                sale_products.sales_id = :sales_id",
+                sales_products.sales_id = :sales_id",
             ["sales_id" => $saleId]
         );
 
         $arrayProducts = [];
         foreach ($this->database->fetchAll($query) as $r) {
             $arrayProducts[] = new SaleProduct(
-                $r['sale_products_id'],
-                $r['sale_products_sales_id'],
-                $r['sale_products_products_id'],
-                $r['sale_products_quantity'],
-                $r['sale_products_base_value'],
+                $r['sales_products_id'],
+                $r['sales_products_sales_id'],
+                $r['sales_products_products_id'],
+                $r['sales_products_quantity'],
+                $r['sales_products_base_value'],
                 new Product(
                     $r['products_id'],
                     $r['products_users_id'],
@@ -71,11 +71,11 @@ class SaleProductRepository implements SaleProductRepositoryInterface
         $query = $this->database->query(
             "SELECT 
                 -- Sale Product
-                sale_products.id AS sale_products_id,
-                sale_products.sales_id AS sale_products_sales_id,
-                sale_products.products_id AS sale_products_products_id,
-                sale_products.quantity SAS sale_products_quantity,
-                sale_products.base_value AS sale_products_base_value,
+                sales_products.id AS sales_products_id,
+                sales_products.sales_id AS sales_products_sales_id,
+                sales_products.products_id AS sales_products_products_id,
+                sales_products.quantity AS sales_products_quantity,
+                sales_products.base_value AS sales_products_base_value,
 
                 -- Product
                 products.id AS products_id,
@@ -85,13 +85,13 @@ class SaleProductRepository implements SaleProductRepositoryInterface
                 products.price AS products_price,
                 products.is_active AS products_is_active,
                 products.created_at AS products_created_at,
-                products.updated_at AS products_updated_at,
+                products.updated_at AS products_updated_at
             FROM 
-                sale_products
+                sales_products
             LEFT JOIN
-                products ON sale_products.products_id = products.id 
+                products ON sales_products.products_id = products.id 
             WHERE 
-                sale_products.id = :id",
+                sales_products.id = :id",
             ['id' => $id]
         );
 
@@ -101,11 +101,11 @@ class SaleProductRepository implements SaleProductRepositoryInterface
         }
 
         return new SaleProduct(
-            $response['sale_products_id'],
-            $response['sale_products_sales_id'],
-            $response['sale_products_products_id'],
-            $response['sale_products_quantity'],
-            $response['sale_products_base_value'],
+            $response['sales_products_id'],
+            $response['sales_products_sales_id'],
+            $response['sales_products_products_id'],
+            $response['sales_products_quantity'],
+            $response['sales_products_base_value'],
             new Product(
                 $response['products_id'],
                 $response['products_users_id'],
@@ -124,7 +124,7 @@ class SaleProductRepository implements SaleProductRepositoryInterface
     {
         $this->database->query(
             "INSERT INTO
-                products 
+                sales_products 
                 (
                     sales_id,
                     products_id,
@@ -152,7 +152,7 @@ class SaleProductRepository implements SaleProductRepositoryInterface
     public function delete(int $id): void
     {
         $this->database->query(
-            "DELETE FROM sale_products WHERE id = :id",
+            "DELETE FROM sales_products WHERE id = :id",
             ['id' => $id]
         );
     }
@@ -160,7 +160,7 @@ class SaleProductRepository implements SaleProductRepositoryInterface
     public function deleteBySaleId(int $saleId): void
     {
         $this->database->query(
-            "DELETE FROM sale_products WHERE sales_id = :saleId",
+            "DELETE FROM sales_products WHERE sales_id = :saleId",
             ['saleId' => $saleId]
         );
     }

@@ -28,8 +28,7 @@ class SaleController
             'search' => 'nullable',
             'page' => 'required|integer',
             'page_count' => 'required|integer',
-            'customer_id' => 'nullable|integer',
-            'product_id' => 'nullable|integer'
+            'customer_id' => 'nullable|integer'
         ]);
         
         $errors = $request->getErrors();
@@ -42,8 +41,7 @@ class SaleController
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
                 'page_count' => $validatedData['page_count'],
-                'customer_id' => !empty($validatedData['customer_id']) ? $validatedData['customer_id'] : null,
-                'product_id' => !empty($validatedData['product_id']) ? $validatedData['product_id'] : null,
+                'customer_id' => !empty($validatedData['customer_id']) ? $validatedData['customer_id'] : null
             ]);
             
             return Response::json($response, 200);
@@ -78,11 +76,8 @@ class SaleController
     {   
         $validatedData = $request->validate([
             'payment_method_id' => 'required|integer',
-            'product_id' => 'required|integer',
             'customer_id' => 'required|integer',
-            'quantity' => 'required|integer',
-            'total_value' => 'required|numeric:14,2',
-            'base_value' => 'required|numeric:14,2'
+            'products' => 'required|array'
         ]);
 
         $errors = $request->getErrors();
@@ -90,14 +85,15 @@ class SaleController
             return Response::json(['errors' => $errors[0]], 422);
         }
 
+        if(count($validatedData['products']) == 0){
+            return Response::json(['errors' => 'Nenhum produto informado'], 422);
+        }
+
         try {
             $response = $this->createSale->execute([
                 'payment_method_id' => $validatedData['payment_method_id'],
-                'product_id' => $validatedData['product_id'],
                 'customer_id' => $validatedData['customer_id'],
-                'quantity' => $validatedData['quantity'],
-                'total_value' => $validatedData['total_value'],
-                'base_value' => $validatedData['base_value']
+                'products' => $validatedData['products']
             ]);
 
             return Response::json($response, 200);
@@ -117,11 +113,8 @@ class SaleController
         $validatedData = $request->validate([
             'id' => 'required|integer',
             'payment_method_id' => 'required|integer',
-            'product_id' => 'required|integer',
             'customer_id' => 'required|integer',
-            'quantity' => 'required|integer',
-            'total_value' => 'required|numeric:14,2',
-            'base_value' => 'required|numeric:14,2'
+            'products' => 'required|array'
         ]);
 
         $errors = $request->getErrors();
@@ -129,15 +122,16 @@ class SaleController
             return Response::json(['errors' => $errors[0]], 422);
         }
 
+        if(count($validatedData['products']) == 0){
+            return Response::json(['errors' => 'Nenhum produto informado'], 422);
+        }
+
         try {
             $response = $this->updateSale->execute([
                 'id' => $validatedData['id'],
                 'payment_method_id' => $validatedData['payment_method_id'],
-                'product_id' => $validatedData['product_id'],
                 'customer_id' => $validatedData['customer_id'],
-                'quantity' => $validatedData['quantity'],
-                'total_value' => $validatedData['total_value'],
-                'base_value' => $validatedData['base_value']
+                'products' => $validatedData['products']
             ]);
 
             return Response::json($response, 200);

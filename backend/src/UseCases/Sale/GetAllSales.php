@@ -2,12 +2,14 @@
 
 namespace SalesAppApi\UseCases\Sale;
 
+use SalesAppApi\Domain\SaleProductRepositoryInterface;
 use SalesAppApi\Domain\SaleRepositoryInterface;
 
 class GetAllSales{
 
     public function __construct(
         private SaleRepositoryInterface $saleRepository,
+        private SaleProductRepositoryInterface $saleProductRepository
     ){}
 
  
@@ -19,8 +21,7 @@ class GetAllSales{
      *      'search' => string,
      *      'page' => int,
      *      'page_count' => int,
-     *      'customer_id' => int,
-     *      'product_id' => int,
+     *      'customer_id' => int
      *  ]
      * @return array
      */
@@ -30,13 +31,18 @@ class GetAllSales{
             $data['search'], 
             $data['page'], 
             $data['page_count'], 
-            $data['customer_id'],
-            $data['product_id'], 
+            $data['customer_id']
         );
 
         $arraySales = [];
 
         foreach ($sales as $sale) {
+            $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
+
+            foreach($saleProducts as $saleProduct){
+                $sale->addSaleProduct($saleProduct);
+            }
+
             $arraySales[] = $sale->toArray();
         }
 
