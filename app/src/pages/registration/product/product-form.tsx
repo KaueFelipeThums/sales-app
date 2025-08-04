@@ -1,4 +1,3 @@
-import { InputAdornment } from '@coperdia/web-ui-components';
 import React, { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
@@ -12,6 +11,7 @@ import {
   HeaderHiddenButton,
   HeaderTitle,
 } from '@/components/layout/header';
+import { InputBaseAdornment } from '@/core/components/ui/input';
 import { KeyboardAvoidingContent } from '@/core/components/ui/keyboard-avoid-content';
 import { Text } from '@/core/components/ui/text';
 import { toast } from '@/core/components/ui/toast';
@@ -188,9 +188,9 @@ const ProductForm = () => {
               <InputNumber
                 decimals={2}
                 leftAdornment={
-                  <InputAdornment>
+                  <InputBaseAdornment>
                     <Text>R$</Text>
-                  </InputAdornment>
+                  </InputBaseAdornment>
                 }
                 placeholder="Digite o preço..."
                 disabled={loading}

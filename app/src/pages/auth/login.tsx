@@ -73,6 +73,7 @@ const Login = () => {
     (data: LoginType) => {
       startTransition(async () => {
         const response = await loginRequest(data);
+        console.log(response);
         if (response.success) {
           createSession(
             {
