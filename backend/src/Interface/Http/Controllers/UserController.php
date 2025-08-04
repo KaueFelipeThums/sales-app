@@ -109,7 +109,7 @@ class UserController
             'id' => 'required|integer',
             'name' => 'required',
             'email' => 'required',
-            'password' => 'required',
+            'password' => 'nullable',
             'is_active' => 'required|integer'
         ]);
 
@@ -117,7 +117,7 @@ class UserController
         if(count($errors) > 0){
             return Response::json(['errors' => $errors[0]], 422);
         }
-
+        
         try {
             $response = $this->updateUser->execute([
                 'id' => $validatedData['id'],

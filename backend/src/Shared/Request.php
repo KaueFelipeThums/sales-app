@@ -13,7 +13,7 @@ Class Request{
       private $requestInput = []
     )
     {
-        $this->headers = getallheaders();
+        $this->headers = array_change_key_case(getallheaders(), CASE_LOWER);
 
         $this->requestInput = (json_decode(file_get_contents('php://input'),true));
         if(empty($this->requestInput)){

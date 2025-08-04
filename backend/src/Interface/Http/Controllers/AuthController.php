@@ -4,6 +4,7 @@ namespace SalesAppApi\Interface\Http\Controllers;
 use Exception;
 use SalesAppApi\Shared\Request;
 use SalesAppApi\Shared\Response;
+use SalesAppApi\UseCases\Auth\GetAuthUser;
 use SalesAppApi\UseCases\Auth\Login;
 use SalesAppApi\UseCases\Auth\RefreshToken;
 use SalesAppApi\UseCases\Auth\UpdateUserPassword;
@@ -13,7 +14,8 @@ class AuthController
     public function __construct(
         private Login $login,
         private RefreshToken $refresh,
-        private UpdateUserPassword $updateUserPassword
+        private UpdateUserPassword $updateUserPassword,
+        private GetAuthUser $getAuthUser
     )
     {
     }
@@ -51,7 +53,8 @@ class AuthController
     public function updateUserPassword(Request $request): mixed
     {   
         $validatedData = $request->validate([
-            'password' => 'required'
+            'password' => 'required',
+            'new_password' => 'required'
         ]);
         
         $errors = $request->getErrors();
@@ -61,9 +64,26 @@ class AuthController
 
         try {
             $response = $this->updateUserPassword->execute([
-                'password' => $validatedData['password']
+                'password' => $validatedData['password'],
+                'new_password' => $validatedData['new_password']
             ]);
 
+            return Response::json($response, 200);
+        } catch(Exception $e){
+            $errorCode = $e->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+
+            return Response::json([
+                'message' => $e->getMessage(),
+                'code' => $httpStatus,
+            ], $httpStatus);
+        }
+    }
+
+    public function getAuthUser(): mixed
+    {   
+        try {
+            $response = $this->getAuthUser->execute();
             return Response::json($response, 200);
         } catch(Exception $e){
             $errorCode = $e->getCode();

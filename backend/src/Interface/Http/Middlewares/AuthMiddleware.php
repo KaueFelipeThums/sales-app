@@ -11,10 +11,10 @@ class AuthMiddleware
 {
     public function execute(Request $request, array $vars, array $params = []): void
     {
-        $authHeader = $request->header('Authorization');
-
+        $authHeader = $request->header('authorization');
+        
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            throw new Exception("Usuário não autorizado A", 401);
+            throw new Exception("Usuário não autorizado", 401);
         }
 
         $token = str_replace('Bearer ', '', $authHeader);

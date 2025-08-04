@@ -21,7 +21,11 @@ class UpdateUser{
      *      'id' => int,
      *      'name' => string,
      *      'email' => string,
+<<<<<<< HEAD
      *      'password' => string,
+=======
+     *      'password' => string | null,
+>>>>>>> 410b339 (feat: ajustes locais após recriação do repositório)
      *      'is_active' => int,
      *  ]
      * @return array

@@ -51,8 +51,10 @@ class App{
         try{
             $this->router->dispatch($this->DIContainer->getContainer());
         }catch(Throwable $th){
-            $ex = new EnvironmentAwareException($th->getMessage(), $th->getCode());
-            return Response::json(['message' => $ex->getMessage()], 500);
+            $errorCode = $th->getCode();
+            $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
+            $ex = new EnvironmentAwareException($th->getMessage(), $httpStatus);
+            return Response::json(['message' => $ex->getMessage(), 'code' => $httpStatus], 500);
         }
     }
 }
