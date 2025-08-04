@@ -15,14 +15,15 @@ import { usePopConfirm } from '@/core/components/ui-presets/popconfirm';
 import { useStyles } from '@/core/theme/hooks/use-styles';
 import { useTheme } from '@/core/theme/theme-provider/theme-provider';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
+import formaters from '@/functions/formaters';
 import { useSkipInitialFocusEffect } from '@/hooks/use-skip-initial-focus-effect';
 import { useSync } from '@/providers/sync/sync-provider';
-import { useUsersNavigation } from '@/routes/private-routes/stacks/users-stack-routes';
-import { deleteUserRequest, getAllUsersRequest } from '@/services/api/users';
-import { User } from '@/types/user';
+import { useRegistrationNavigation } from '@/routes/private-routes/stacks/registration-stack-routes';
+import { deleteProductRequest, getAllProductsRequest } from '@/services/api/product';
+import type { Product as ProductType } from '@/types/product';
 import { reducer } from '@/utils/reducer';
 
-const usersStyles = ({ sizes, colors }: ThemeValue) =>
+const productStyles = ({ sizes, colors }: ThemeValue) =>
   StyleSheet.create({
     contentContainerList: {
       paddingBottom: sizes.padding.xl,
@@ -53,32 +54,32 @@ const SkeletonList = () => {
   );
 };
 
-const Users = () => {
-  const styles = useStyles(usersStyles);
+const Product = () => {
+  const styles = useStyles(productStyles);
   const confirm = usePopConfirm();
   const [hydrating, setHydrating] = useState<boolean>(true);
   const [loading, startTransition] = useTransition();
   const [paginationLoading, startPaginationTransition] = useTransition();
-  const [users, dispatch] = useReducer(reducer, [] as User[]);
+  const [product, dispatch] = useReducer(reducer, [] as ProductType[]);
   const { sizes } = useTheme();
   const page = useRef<number>(1);
-  const listRef = useRef<FlatList<User>>(null);
+  const listRef = useRef<FlatList<ProductType>>(null);
   const hasMoreRef = useRef<boolean>(true);
   const isLoading = loading || hydrating;
-  const navigation = useUsersNavigation();
+  const navigation = useRegistrationNavigation();
   const { getShouldSync, clearSync } = useSync();
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getAllUsers = useCallback(
+  const getAllProduct = useCallback(
     (pageToLoad: number = 1, search: string = '', append: boolean = false) => {
       const transition = append ? startPaginationTransition : startTransition;
       if (!append) {
         listRef.current?.scrollToOffset({ offset: 0, animated: false });
       }
       transition(async () => {
-        const response = await getAllUsersRequest({
+        const response = await getAllProductsRequest({
           search: search,
           page: pageToLoad,
           page_count: 10,
@@ -92,7 +93,7 @@ const Users = () => {
            * Limpa os dados de sincronização
            */
           if (!append) {
-            clearSync('users');
+            clearSync('product');
           }
         } else {
           hasMoreRef.current = false;
@@ -105,19 +106,19 @@ const Users = () => {
     [clearSync],
   );
 
-  const deleteUser = useCallback(
-    (data: User) => {
+  const deleteProduct = useCallback(
+    (data: ProductType) => {
       startTransition(async () => {
-        const response = await deleteUserRequest(data.id);
+        const response = await deleteProductRequest(data.id);
         if (response.success) {
-          getAllUsers();
+          getAllProduct();
           toast.success({ title: 'Registro deletado com sucesso!' });
         } else {
           toast.error({ title: 'Ops, houve algum erro!', description: response.error?.message });
         }
       });
     },
-    [getAllUsers],
+    [getAllProduct],
   );
 
   useSkipInitialFocusEffect(
@@ -125,17 +126,17 @@ const Users = () => {
       /**
        * Verifica se há a necessidade de sincronizar e recarrega a lista
        */
-      if (getShouldSync('users')) {
+      if (getShouldSync('product')) {
         setSearch('');
         setShowSearch(false);
-        getAllUsers();
+        getAllProduct();
       }
-    }, [getAllUsers, getShouldSync]),
+    }, [getAllProduct, getShouldSync]),
   );
 
   useEffect(() => {
-    getAllUsers();
-  }, [getAllUsers]);
+    getAllProduct();
+  }, [getAllProduct]);
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -145,21 +146,21 @@ const Users = () => {
       }
 
       debounceRef.current = setTimeout(() => {
-        getAllUsers(1, value);
+        getAllProduct(1, value);
       }, 400);
     },
-    [getAllUsers],
+    [getAllProduct],
   );
 
   const toggleSearch = useCallback(
     (show: boolean) => {
       if (!show) {
         setSearch('');
-        getAllUsers();
+        getAllProduct();
       }
       setShowSearch(show);
     },
-    [getAllUsers],
+    [getAllProduct],
   );
 
   return (
@@ -176,14 +177,14 @@ const Users = () => {
           {showSearch ? (
             <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
           ) : (
-            <HeaderTitle align="center">Usuários</HeaderTitle>
+            <HeaderTitle align="center">Produtos</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>
           <HeaderButton
             icon="Plus"
             variant="outline"
-            onPress={() => navigation.navigate('UsersForm', { users: undefined })}
+            onPress={() => navigation.navigate('ProductForm', { product: undefined })}
           />
         </HeaderAdornment>
       </Header>
@@ -196,15 +197,15 @@ const Users = () => {
         onEndReachedThreshold={0}
         onEndReached={() => {
           if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllUsers(page.current + 1, '', true);
+          hasMoreRef.current && !isLoading && getAllProduct(page.current + 1, '', true);
         }}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllUsers(1, '', false)} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllProduct(1, '', false)} />}
         ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}
         contentContainerStyle={[styles.contentContainerList]}
         style={styles.layout}
-        data={!isLoading ? users : []}
+        data={!isLoading ? product : []}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: user }) => {
+        renderItem={({ item: product }) => {
           return (
             <MenuActions
               items={[
@@ -213,7 +214,7 @@ const Users = () => {
                   label: 'Editar',
                   icon: <Icon name="Pen" />,
                   shortcut: <Icon name="ChevronRight" />,
-                  onPress: () => navigation.navigate('UsersForm', { users: user }),
+                  onPress: () => navigation.navigate('ProductForm', { product: product }),
                 },
                 {
                   key: 'publications',
@@ -224,22 +225,22 @@ const Users = () => {
                     confirm.open({
                       title: 'Deseja realmente deletar o registro?',
                       variant: 'destructive',
-                      onConfirm: () => deleteUser(user),
+                      onConfirm: () => deleteProduct(product),
                     }),
                 },
               ]}
             >
               <ItemPressable>
                 <ItemAdornment>
-                  <Icon name="User" size={sizes.fontSize['2xl']} />
+                  <Icon name="Package" size={sizes.fontSize['2xl']} />
                 </ItemAdornment>
                 <ItemContent>
-                  <ItemTitle numberOfLines={1}>{user.name}</ItemTitle>
-                  <ItemDescription numberOfLines={1}>{user.email}</ItemDescription>
+                  <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
+                  <ItemDescription numberOfLines={1}>{product.quantity}</ItemDescription>
                 </ItemContent>
                 <ItemAdornment>
                   <ItemAdornment>
-                    <Icon name="ChevronRight" size={sizes.fontSize.sm} />
+                    <ItemDescription numberOfLines={1}>R$ {formaters.money(product.price, 2)}</ItemDescription>
                   </ItemAdornment>
                 </ItemAdornment>
               </ItemPressable>
@@ -253,7 +254,7 @@ const Users = () => {
             <Button
               variant="ghost"
               loading={isLoading || paginationLoading}
-              onPress={() => getAllUsers(page.current + 1, '', true)}
+              onPress={() => getAllProduct(page.current + 1, '', true)}
             >
               Carregar mais
             </Button>
@@ -264,4 +265,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Product;

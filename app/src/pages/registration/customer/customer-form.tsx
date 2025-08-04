@@ -1,7 +1,8 @@
+import { InputAdornment } from '@coperdia/web-ui-components';
 import React, { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import type { UsersCreateUpdate, UsersForm as UsersFormType } from './users-types';
+import type { ProductCreateUpdate, ProductForm as ProductFormType } from './product-types';
 import { ContainerScrollView } from '@/components/layout/container';
 import {
   Header,
@@ -12,27 +13,33 @@ import {
   HeaderTitle,
 } from '@/components/layout/header';
 import { KeyboardAvoidingContent } from '@/core/components/ui/keyboard-avoid-content';
+import { Text } from '@/core/components/ui/text';
 import { toast } from '@/core/components/ui/toast';
 import { Button } from '@/core/components/ui-presets/button';
 import { FormField } from '@/core/components/ui-presets/form-field';
-import { InputPassword } from '@/core/components/ui-presets/input-password';
+import { InputNumber } from '@/core/components/ui-presets/input-number';
 import { InputText } from '@/core/components/ui-presets/input-text';
 import { Select } from '@/core/components/ui-presets/select';
 import { useStyles } from '@/core/theme/hooks/use-styles';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
+import { parseToFloat, replaceToStringValue } from '@/functions/parsers';
 import validator from '@/functions/validators';
 import { useSync } from '@/providers/sync/sync-provider';
 
-import { useUsersNavigation, useUsersRouteParams } from '@/routes/private-routes/stacks/users-stack-routes';
-import { createUserRequest, updateUserRequest } from '@/services/api/users';
+import {
+  useRegistrationNavigation,
+  useRegistrationRouteParams,
+} from '@/routes/private-routes/stacks/registration-stack-routes';
+import { createProductRequest, updateProductRequest } from '@/services/api/product';
 
 const rules = {
   name: { required: 'O nome é obrigatório!' },
-  email: { required: 'O email é obrigatório!', validate: (value: string) => validator.email(value) },
+  quantity: { required: 'A quantidade é obrigatória!', validate: (value: string) => validator.number(value, 0) },
+  price: { required: 'O preco é obrigatório!', validate: (value: string) => validator.number(value, 0) },
   is_active: { required: 'O status é obrigatório!' },
 };
 
-const usersStyles = ({ sizes }: ThemeValue) =>
+const productStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     contentContainerList: {
       gap: sizes.gap.xl,
@@ -44,29 +51,29 @@ const usersStyles = ({ sizes }: ThemeValue) =>
     },
   });
 
-const UsersForm = () => {
-  const styles = useStyles(usersStyles);
+const ProductForm = () => {
+  const styles = useStyles(productStyles);
   const [loading, startTransition] = useTransition();
-  const { params } = useUsersRouteParams<'UsersForm'>();
-  const users = params.users;
+  const { params } = useRegistrationRouteParams<'ProductForm'>();
+  const product = params.product;
   const { setSync } = useSync();
-  const navigation = useUsersNavigation();
-  const form = useForm<UsersFormType>({
+  const navigation = useRegistrationNavigation();
+  const form = useForm<ProductFormType>({
     defaultValues: {
       id: '',
-      email: '',
-      name: '',
+      price: '',
       is_active: '1',
+      name: '',
+      quantity: '',
     },
   });
 
-  const createUsers = React.useCallback(
-    (data: Omit<UsersCreateUpdate, 'id'>) => {
+  const createProduct = React.useCallback(
+    (data: Omit<ProductCreateUpdate, 'id'>) => {
       startTransition(async () => {
-        const response = await createUserRequest(data);
-
+        const response = await createProductRequest(data);
         if (response.success) {
-          setSync('users');
+          setSync('product');
           toast.success({ title: 'Registro inserido com sucesso!' });
           navigation.goBack();
           form.reset();
@@ -78,12 +85,12 @@ const UsersForm = () => {
     [navigation, setSync, form],
   );
 
-  const updateUsers = React.useCallback(
-    (data: UsersCreateUpdate) => {
+  const updateProduct = React.useCallback(
+    (data: ProductCreateUpdate) => {
       startTransition(async () => {
-        const response = await updateUserRequest(data);
+        const response = await updateProductRequest(data);
         if (response.success) {
-          setSync('users');
+          setSync('product');
           toast.success({ title: 'Registro alterado com sucesso!' });
           navigation.goBack();
           form.reset();
@@ -96,33 +103,34 @@ const UsersForm = () => {
   );
 
   useEffect(() => {
-    if (users) {
-      form.setValue('id', users.id.toString());
-      form.setValue('email', users.email);
-      form.setValue('name', users.name);
-      form.setValue('is_active', users.is_active.toString());
+    if (product) {
+      form.setValue('id', product.id.toString());
+      form.setValue('name', product.name);
+      form.setValue('quantity', product.quantity.toString());
+      form.setValue('price', replaceToStringValue(product.price));
+      form.setValue('is_active', product.is_active.toString());
     }
-  }, [users, form]);
+  }, [product, form]);
 
   const onSubmit = React.useCallback(
-    (formData: UsersFormType) => {
-      const newFormData: Omit<UsersCreateUpdate, 'id'> = {
-        email: formData.email,
+    (formData: ProductFormType) => {
+      const newFormData: Omit<ProductCreateUpdate, 'id'> = {
         name: formData.name,
-        password: formData.password,
+        quantity: Number(formData.quantity),
+        price: parseToFloat(formData.price),
         is_active: Number(formData.is_active),
       };
 
       if (formData.id) {
-        updateUsers({
+        updateProduct({
           ...newFormData,
           id: Number(formData.id),
         });
       } else {
-        createUsers(newFormData);
+        createProduct(newFormData);
       }
     },
-    [createUsers, updateUsers],
+    [createProduct, updateProduct],
   );
 
   return (
@@ -132,7 +140,7 @@ const UsersForm = () => {
           <HeaderButton variant="outline" icon="ChevronLeft" onPress={() => navigation.goBack()} />
         </HeaderAdornment>
         <HeaderContent>
-          <HeaderTitle align="center">{users ? 'Alterar' : 'Adicionar'} Usuário</HeaderTitle>
+          <HeaderTitle align="center">{product ? 'Alterar' : 'Adicionar'} Produto</HeaderTitle>
         </HeaderContent>
         <HeaderAdornment>
           <HeaderHiddenButton />
@@ -157,12 +165,13 @@ const UsersForm = () => {
 
           <FormField
             control={form.control}
-            label="E-mail"
-            name="email"
-            rules={rules.email}
+            label="Quantidade"
+            name="quantity"
+            rules={rules.quantity}
             render={({ field }) => (
-              <InputText
-                placeholder="Digite o e-mail..."
+              <InputNumber
+                decimals={0}
+                placeholder="Digite a quantidade..."
                 disabled={loading}
                 value={field.value}
                 onChangeText={field.onChange}
@@ -172,11 +181,18 @@ const UsersForm = () => {
 
           <FormField
             control={form.control}
-            label="Senha"
-            name="password"
+            label="Preço"
+            name="quantity"
+            rules={rules.quantity}
             render={({ field }) => (
-              <InputPassword
-                placeholder="Digite a senha..."
+              <InputNumber
+                decimals={2}
+                leftAdornment={
+                  <InputAdornment>
+                    <Text>R$</Text>
+                  </InputAdornment>
+                }
+                placeholder="Digite o preço..."
                 disabled={loading}
                 value={field.value}
                 onChangeText={field.onChange}
@@ -212,4 +228,4 @@ const UsersForm = () => {
   );
 };
 
-export default UsersForm;
+export default ProductForm;

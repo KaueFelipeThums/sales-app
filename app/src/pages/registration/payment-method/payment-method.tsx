@@ -17,12 +17,12 @@ import { useTheme } from '@/core/theme/theme-provider/theme-provider';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 import { useSkipInitialFocusEffect } from '@/hooks/use-skip-initial-focus-effect';
 import { useSync } from '@/providers/sync/sync-provider';
-import { useUsersNavigation } from '@/routes/private-routes/stacks/users-stack-routes';
-import { deleteUserRequest, getAllUsersRequest } from '@/services/api/users';
-import { User } from '@/types/user';
+import { useRegistrationNavigation } from '@/routes/private-routes/stacks/registration-stack-routes';
+import { deletePaymentMethodRequest, getAllPaymentMethodsRequest } from '@/services/api/payment-method';
+import type { PaymentMethod as PaymentMethodType } from '@/types/payment-method';
 import { reducer } from '@/utils/reducer';
 
-const usersStyles = ({ sizes, colors }: ThemeValue) =>
+const paymentMethodStyles = ({ sizes, colors }: ThemeValue) =>
   StyleSheet.create({
     contentContainerList: {
       paddingBottom: sizes.padding.xl,
@@ -53,32 +53,32 @@ const SkeletonList = () => {
   );
 };
 
-const Users = () => {
-  const styles = useStyles(usersStyles);
+const PaymentMethod = () => {
+  const styles = useStyles(paymentMethodStyles);
   const confirm = usePopConfirm();
   const [hydrating, setHydrating] = useState<boolean>(true);
   const [loading, startTransition] = useTransition();
   const [paginationLoading, startPaginationTransition] = useTransition();
-  const [users, dispatch] = useReducer(reducer, [] as User[]);
+  const [paymentMethod, dispatch] = useReducer(reducer, [] as PaymentMethodType[]);
   const { sizes } = useTheme();
   const page = useRef<number>(1);
-  const listRef = useRef<FlatList<User>>(null);
+  const listRef = useRef<FlatList<PaymentMethodType>>(null);
   const hasMoreRef = useRef<boolean>(true);
   const isLoading = loading || hydrating;
-  const navigation = useUsersNavigation();
+  const navigation = useRegistrationNavigation();
   const { getShouldSync, clearSync } = useSync();
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getAllUsers = useCallback(
+  const getAllPaymentMethod = useCallback(
     (pageToLoad: number = 1, search: string = '', append: boolean = false) => {
       const transition = append ? startPaginationTransition : startTransition;
       if (!append) {
         listRef.current?.scrollToOffset({ offset: 0, animated: false });
       }
       transition(async () => {
-        const response = await getAllUsersRequest({
+        const response = await getAllPaymentMethodsRequest({
           search: search,
           page: pageToLoad,
           page_count: 10,
@@ -92,7 +92,7 @@ const Users = () => {
            * Limpa os dados de sincronização
            */
           if (!append) {
-            clearSync('users');
+            clearSync('payment-method');
           }
         } else {
           hasMoreRef.current = false;
@@ -105,19 +105,19 @@ const Users = () => {
     [clearSync],
   );
 
-  const deleteUser = useCallback(
-    (data: User) => {
+  const deletePaymentMethod = useCallback(
+    (data: PaymentMethodType) => {
       startTransition(async () => {
-        const response = await deleteUserRequest(data.id);
+        const response = await deletePaymentMethodRequest(data.id);
         if (response.success) {
-          getAllUsers();
+          getAllPaymentMethod();
           toast.success({ title: 'Registro deletado com sucesso!' });
         } else {
           toast.error({ title: 'Ops, houve algum erro!', description: response.error?.message });
         }
       });
     },
-    [getAllUsers],
+    [getAllPaymentMethod],
   );
 
   useSkipInitialFocusEffect(
@@ -125,17 +125,17 @@ const Users = () => {
       /**
        * Verifica se há a necessidade de sincronizar e recarrega a lista
        */
-      if (getShouldSync('users')) {
+      if (getShouldSync('payment-method')) {
         setSearch('');
         setShowSearch(false);
-        getAllUsers();
+        getAllPaymentMethod();
       }
-    }, [getAllUsers, getShouldSync]),
+    }, [getAllPaymentMethod, getShouldSync]),
   );
 
   useEffect(() => {
-    getAllUsers();
-  }, [getAllUsers]);
+    getAllPaymentMethod();
+  }, [getAllPaymentMethod]);
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -145,21 +145,21 @@ const Users = () => {
       }
 
       debounceRef.current = setTimeout(() => {
-        getAllUsers(1, value);
+        getAllPaymentMethod(1, value);
       }, 400);
     },
-    [getAllUsers],
+    [getAllPaymentMethod],
   );
 
   const toggleSearch = useCallback(
     (show: boolean) => {
       if (!show) {
         setSearch('');
-        getAllUsers();
+        getAllPaymentMethod();
       }
       setShowSearch(show);
     },
-    [getAllUsers],
+    [getAllPaymentMethod],
   );
 
   return (
@@ -176,14 +176,14 @@ const Users = () => {
           {showSearch ? (
             <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
           ) : (
-            <HeaderTitle align="center">Usuários</HeaderTitle>
+            <HeaderTitle align="center">Métodos de Pagamento</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>
           <HeaderButton
             icon="Plus"
             variant="outline"
-            onPress={() => navigation.navigate('UsersForm', { users: undefined })}
+            onPress={() => navigation.navigate('PaymentMethodForm', { paymentMethod: undefined })}
           />
         </HeaderAdornment>
       </Header>
@@ -196,15 +196,15 @@ const Users = () => {
         onEndReachedThreshold={0}
         onEndReached={() => {
           if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllUsers(page.current + 1, '', true);
+          hasMoreRef.current && !isLoading && getAllPaymentMethod(page.current + 1, '', true);
         }}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllUsers(1, '', false)} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllPaymentMethod(1, '', false)} />}
         ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}
         contentContainerStyle={[styles.contentContainerList]}
         style={styles.layout}
-        data={!isLoading ? users : []}
+        data={!isLoading ? paymentMethod : []}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: user }) => {
+        renderItem={({ item: paymentMethod }) => {
           return (
             <MenuActions
               items={[
@@ -213,7 +213,7 @@ const Users = () => {
                   label: 'Editar',
                   icon: <Icon name="Pen" />,
                   shortcut: <Icon name="ChevronRight" />,
-                  onPress: () => navigation.navigate('UsersForm', { users: user }),
+                  onPress: () => navigation.navigate('PaymentMethodForm', { paymentMethod: paymentMethod }),
                 },
                 {
                   key: 'publications',
@@ -224,18 +224,18 @@ const Users = () => {
                     confirm.open({
                       title: 'Deseja realmente deletar o registro?',
                       variant: 'destructive',
-                      onConfirm: () => deleteUser(user),
+                      onConfirm: () => deletePaymentMethod(paymentMethod),
                     }),
                 },
               ]}
             >
               <ItemPressable>
                 <ItemAdornment>
-                  <Icon name="User" size={sizes.fontSize['2xl']} />
+                  <Icon name="Package" size={sizes.fontSize['2xl']} />
                 </ItemAdornment>
                 <ItemContent>
-                  <ItemTitle numberOfLines={1}>{user.name}</ItemTitle>
-                  <ItemDescription numberOfLines={1}>{user.email}</ItemDescription>
+                  <ItemTitle numberOfLines={1}>{paymentMethod.name}</ItemTitle>
+                  <ItemDescription numberOfLines={1}>{paymentMethod.installments}</ItemDescription>
                 </ItemContent>
                 <ItemAdornment>
                   <ItemAdornment>
@@ -253,7 +253,7 @@ const Users = () => {
             <Button
               variant="ghost"
               loading={isLoading || paginationLoading}
-              onPress={() => getAllUsers(page.current + 1, '', true)}
+              onPress={() => getAllPaymentMethod(page.current + 1, '', true)}
             >
               Carregar mais
             </Button>
@@ -264,4 +264,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default PaymentMethod;

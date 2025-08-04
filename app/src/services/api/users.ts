@@ -3,13 +3,13 @@ import { ApiResponse } from './request/api-request-types';
 import { UsersCreateUpdate } from '@/pages/users/users-types';
 import { User } from '@/types/user';
 
-type UserPaginationProps = {
+type PaginationProps = {
   search: string | null;
   page: number;
   page_count: number;
 };
 
-const getAllUsersRequest = async (pagination: UserPaginationProps): Promise<ApiResponse<User[]>> => {
+const getAllUsersRequest = async (pagination: PaginationProps): Promise<ApiResponse<User[]>> => {
   const response = await apiRequest<User[]>({
     method: 'GET',
     url: 'v1/user/get-all',

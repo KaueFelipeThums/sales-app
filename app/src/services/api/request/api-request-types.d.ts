@@ -1,31 +1,17 @@
-type ApiErrorCause<TFields = string> = {
-  /** Campo específico relacionado ao erro. */
-  field: TFields;
-
-  /** Mensagem descritiva sobre o problema no campo. */
-  message: string;
-};
-
-type ApiError<TFields = string> = {
+type ApiError = {
   /** Código do erro retornado pela API. */
   code: number;
 
   /** Mensagem descritiva do erro principal. */
   message: string;
-
-  /** Detalhe técnico ou identificador do erro. */
-  error: string;
-
-  /** Lista de causas adicionais relacionadas ao erro. */
-  causes?: ApiErrorCause<TFields>[];
 };
 
-type ErrorResponse<TFields = string> = {
+type ErrorResponse = {
   /** Indica que a resposta não foi bem-sucedida. */
   success: false;
 
   /** Objeto contendo informações detalhadas sobre o erro. */
-  error: ApiError<TFields>;
+  error: ApiError;
 };
 
 type SuccessResponse<T> = {
@@ -36,6 +22,6 @@ type SuccessResponse<T> = {
   data: T;
 };
 
-type ApiResponse<T, TFields = string> = ErrorResponse<TFields> | SuccessResponse<T>;
+type ApiResponse<T> = ErrorResponse | SuccessResponse<T>;
 
 export { ApiResponse, ErrorResponse, SuccessResponse, ApiError, ApiErrorCause };
