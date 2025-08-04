@@ -31,7 +31,7 @@ const Registration = () => {
         </HeaderContent>
       </Header>
       <ContainerScrollView keyboardShouldPersistTaps="handled">
-        <ItemPressable>
+        <ItemPressable onPress={() => navigation.navigate('Customer')}>
           <ItemAdornment>
             <Icon name="Users" size={sizes.fontSize['2xl']} />
           </ItemAdornment>

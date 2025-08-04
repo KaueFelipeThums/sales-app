@@ -6,11 +6,14 @@ import { HeaderRoutes } from '@/components/layout/header-routes';
 import { useStyles } from '@/core/theme/hooks/use-styles';
 import { useTheme } from '@/core/theme/theme-provider/theme-provider';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
+import Customer from '@/pages/registration/customer/customer';
+import CustomerForm from '@/pages/registration/customer/customer-form';
 import PaymentMethod from '@/pages/registration/payment-method/payment-method';
 import PaymentMethodForm from '@/pages/registration/payment-method/payment-method-form';
 import Product from '@/pages/registration/product/product';
 import ProductForm from '@/pages/registration/product/product-form';
 import Registration from '@/pages/registration/registration';
+import type { Customer as CustomerType } from '@/types/customer';
 import type { PaymentMethod as PaymentMethodType } from '@/types/payment-method';
 import type { Product as ProductType } from '@/types/product';
 
@@ -20,6 +23,8 @@ export type RegistrationStackParamList = {
   ProductForm: { product?: ProductType };
   PaymentMethod: undefined;
   PaymentMethodForm: { paymentMethod?: PaymentMethodType };
+  Customer: undefined;
+  CustomerForm: { customer?: CustomerType };
 };
 
 const RegistrationStack = createNativeStackNavigator<RegistrationStackParamList>();
@@ -56,6 +61,9 @@ const RegistrationStackRoutes = () => {
 
       <RegistrationStack.Screen name="PaymentMethod" component={PaymentMethod} />
       <RegistrationStack.Screen name="PaymentMethodForm" component={PaymentMethodForm} />
+
+      <RegistrationStack.Screen name="Customer" component={Customer} />
+      <RegistrationStack.Screen name="CustomerForm" component={CustomerForm} />
     </RegistrationStack.Navigator>
   );
 };

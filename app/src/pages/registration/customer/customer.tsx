@@ -19,11 +19,11 @@ import formaters from '@/functions/formaters';
 import { useSkipInitialFocusEffect } from '@/hooks/use-skip-initial-focus-effect';
 import { useSync } from '@/providers/sync/sync-provider';
 import { useRegistrationNavigation } from '@/routes/private-routes/stacks/registration-stack-routes';
-import { deleteProductRequest, getAllProductsRequest } from '@/services/api/product';
-import type { Product as ProductType } from '@/types/product';
+import { deleteCustomerRequest, getAllCustomersRequest } from '@/services/api/customer';
+import type { Customer as CustomerType } from '@/types/customer';
 import { reducer } from '@/utils/reducer';
 
-const productStyles = ({ sizes, colors }: ThemeValue) =>
+const customerStyles = ({ sizes, colors }: ThemeValue) =>
   StyleSheet.create({
     contentContainerList: {
       paddingBottom: sizes.padding.xl,
@@ -54,16 +54,16 @@ const SkeletonList = () => {
   );
 };
 
-const Product = () => {
-  const styles = useStyles(productStyles);
+const Customer = () => {
+  const styles = useStyles(customerStyles);
   const confirm = usePopConfirm();
   const [hydrating, setHydrating] = useState<boolean>(true);
   const [loading, startTransition] = useTransition();
   const [paginationLoading, startPaginationTransition] = useTransition();
-  const [product, dispatch] = useReducer(reducer, [] as ProductType[]);
+  const [customer, dispatch] = useReducer(reducer, [] as CustomerType[]);
   const { sizes } = useTheme();
   const page = useRef<number>(1);
-  const listRef = useRef<FlatList<ProductType>>(null);
+  const listRef = useRef<FlatList<CustomerType>>(null);
   const hasMoreRef = useRef<boolean>(true);
   const isLoading = loading || hydrating;
   const navigation = useRegistrationNavigation();
@@ -72,14 +72,14 @@ const Product = () => {
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getAllProduct = useCallback(
+  const getAllCustomer = useCallback(
     (pageToLoad: number = 1, search: string = '', append: boolean = false) => {
       const transition = append ? startPaginationTransition : startTransition;
       if (!append) {
         listRef.current?.scrollToOffset({ offset: 0, animated: false });
       }
       transition(async () => {
-        const response = await getAllProductsRequest({
+        const response = await getAllCustomersRequest({
           search: search,
           page: pageToLoad,
           page_count: 10,
@@ -93,7 +93,7 @@ const Product = () => {
            * Limpa os dados de sincronização
            */
           if (!append) {
-            clearSync('product');
+            clearSync('customer');
           }
         } else {
           hasMoreRef.current = false;
@@ -106,19 +106,19 @@ const Product = () => {
     [clearSync],
   );
 
-  const deleteProduct = useCallback(
-    (data: ProductType) => {
+  const deleteCustomer = useCallback(
+    (data: CustomerType) => {
       startTransition(async () => {
-        const response = await deleteProductRequest(data.id);
+        const response = await deleteCustomerRequest(data.id);
         if (response.success) {
-          getAllProduct();
+          getAllCustomer();
           toast.success({ title: 'Registro deletado com sucesso!' });
         } else {
           toast.error({ title: 'Ops, houve algum erro!', description: response.error?.message });
         }
       });
     },
-    [getAllProduct],
+    [getAllCustomer],
   );
 
   useSkipInitialFocusEffect(
@@ -126,17 +126,17 @@ const Product = () => {
       /**
        * Verifica se há a necessidade de sincronizar e recarrega a lista
        */
-      if (getShouldSync('product')) {
+      if (getShouldSync('customer')) {
         setSearch('');
         setShowSearch(false);
-        getAllProduct();
+        getAllCustomer();
       }
-    }, [getAllProduct, getShouldSync]),
+    }, [getAllCustomer, getShouldSync]),
   );
 
   useEffect(() => {
-    getAllProduct();
-  }, [getAllProduct]);
+    getAllCustomer();
+  }, [getAllCustomer]);
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -146,45 +146,42 @@ const Product = () => {
       }
 
       debounceRef.current = setTimeout(() => {
-        getAllProduct(1, value);
+        getAllCustomer(1, value);
       }, 400);
     },
-    [getAllProduct],
+    [getAllCustomer],
   );
 
   const toggleSearch = useCallback(
     (show: boolean) => {
       if (!show) {
         setSearch('');
-        getAllProduct();
+        getAllCustomer();
       }
       setShowSearch(show);
     },
-    [getAllProduct],
+    [getAllCustomer],
   );
 
   return (
     <View style={styles.layout}>
       <Header withInsets variant="ghost">
         <HeaderAdornment>
-          <HeaderButton
-            icon={!showSearch ? 'Search' : 'X'}
-            variant="outline"
-            onPress={() => toggleSearch(!showSearch)}
-          />
+          <HeaderButton icon="ChevronLeft" variant="outline" onPress={() => navigation.goBack()} />
+          <HeaderButton icon={!showSearch ? 'Search' : 'X'} variant="ghost" onPress={() => toggleSearch(!showSearch)} />
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
             <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
           ) : (
-            <HeaderTitle align="center">Produtos</HeaderTitle>
+            <HeaderTitle align="center">Clientes</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>
           <HeaderButton
             icon="Plus"
             variant="outline"
-            onPress={() => navigation.navigate('ProductForm', { product: undefined })}
+            onPress={() => navigation.navigate('CustomerForm', { customer: undefined })}
           />
         </HeaderAdornment>
       </Header>
@@ -197,15 +194,15 @@ const Product = () => {
         onEndReachedThreshold={0}
         onEndReached={() => {
           if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllProduct(page.current + 1, '', true);
+          hasMoreRef.current && !isLoading && getAllCustomer(page.current + 1, search, true);
         }}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllProduct(1, '', false)} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllCustomer(1, '', false)} />}
         ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}
         contentContainerStyle={[styles.contentContainerList]}
         style={styles.layout}
-        data={!isLoading ? product : []}
+        data={!isLoading ? customer : []}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: product }) => {
+        renderItem={({ item: customer }) => {
           return (
             <MenuActions
               items={[
@@ -214,7 +211,7 @@ const Product = () => {
                   label: 'Editar',
                   icon: <Icon name="Pen" />,
                   shortcut: <Icon name="ChevronRight" />,
-                  onPress: () => navigation.navigate('ProductForm', { product: product }),
+                  onPress: () => navigation.navigate('CustomerForm', { customer: customer }),
                 },
                 {
                   key: 'publications',
@@ -225,22 +222,22 @@ const Product = () => {
                     confirm.open({
                       title: 'Deseja realmente deletar o registro?',
                       variant: 'destructive',
-                      onConfirm: () => deleteProduct(product),
+                      onConfirm: () => deleteCustomer(customer),
                     }),
                 },
               ]}
             >
               <ItemPressable>
                 <ItemAdornment>
-                  <Icon name="Package" size={sizes.fontSize['2xl']} />
+                  <Icon name="Users" size={sizes.fontSize['2xl']} />
                 </ItemAdornment>
                 <ItemContent>
-                  <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
-                  <ItemDescription numberOfLines={1}>{product.quantity}</ItemDescription>
+                  <ItemTitle numberOfLines={1}>{customer.name}</ItemTitle>
+                  <ItemDescription numberOfLines={1}>{formaters.cpf(customer.cpf)}</ItemDescription>
                 </ItemContent>
                 <ItemAdornment>
                   <ItemAdornment>
-                    <ItemDescription numberOfLines={1}>R$ {formaters.money(product.price, 2)}</ItemDescription>
+                    <Icon name="ChevronRight" size={sizes.fontSize.sm} />
                   </ItemAdornment>
                 </ItemAdornment>
               </ItemPressable>
@@ -254,7 +251,7 @@ const Product = () => {
             <Button
               variant="ghost"
               loading={isLoading || paginationLoading}
-              onPress={() => getAllProduct(page.current + 1, '', true)}
+              onPress={() => getAllCustomer(page.current + 1, '', true)}
             >
               Carregar mais
             </Button>
@@ -265,4 +262,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default Customer;

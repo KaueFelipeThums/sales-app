@@ -182,8 +182,8 @@ const ProductForm = () => {
           <FormField
             control={form.control}
             label="Preço"
-            name="quantity"
-            rules={rules.quantity}
+            name="price"
+            rules={rules.price}
             render={({ field }) => (
               <InputNumber
                 decimals={2}

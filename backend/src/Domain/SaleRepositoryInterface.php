@@ -2,7 +2,7 @@
 namespace SalesAppApi\Domain;
 
 interface SaleRepositoryInterface{
-    public function getAllSales(string $search, int $page, int $pageCount, ?int $customerId, ?int $productId): array;
+    public function getAllSales(string $search, int $page, int $pageCount, ?int $customerId): array;
     public function getSaleById(int $id): ?Sale;
 
     public function update(Sale $sale): void;

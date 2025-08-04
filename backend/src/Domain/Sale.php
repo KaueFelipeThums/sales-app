@@ -9,7 +9,6 @@ class Sale
         private ?int $id,
         private int $paymentMethodId,
         private int $usersId,
-        private int $productId,
         private int $customerId,
         private int $quantity,
         private float $totalValue,
@@ -33,11 +32,11 @@ class Sale
         private ?Customer $customer,
 
         /**
-         * Produto
+         * Produtos
          *
-         * @var Product|null
+         * @var SaleProduct[]
          */
-        private ?Product $product,
+        private array $saleProducts = [],
 
         /**
          * Usuário que criou o registro
@@ -77,17 +76,6 @@ class Sale
     public function setUsersId(int $usersId): Sale
     {
         $this->usersId = $usersId;
-        return $this;
-    }
-
-    public function getProductId(): int
-    {
-        return $this->productId;
-    }
-
-    public function setProductId(int $productId): Sale
-    {
-        $this->productId = $productId;
         return $this;
     }
 
@@ -190,14 +178,14 @@ class Sale
         return $this;
     }
 
-    public function getProduct(): ?Product
+    public function getSaleProducts(): ?array
     {
-        return $this->product;
+        return $this->saleProducts;
     }
 
-    public function setProduct(Product $product): Sale
+    public function setSaleProducts(SaleProduct $product): Sale
     {
-        $this->product = $product;
+        $this->saleProducts[] = $product;
         return $this;
     }
 
@@ -214,11 +202,15 @@ class Sale
 
     public function toArray(): array
     {
+        $arraySaleProducts = [];
+        foreach ($this->saleProducts as $saleProduct) {
+            $arraySaleProducts[] = $saleProduct->toArray();
+        }
+
         return [
             "id" => $this->id,
             "payment_method_id" => $this->paymentMethodId,
             "users_id" => $this->usersId,
-            "products_id" => $this->productId,
             "customers_id" => $this->customerId,
             "quantity" => $this->quantity,
             "total_value" => $this->totalValue,
@@ -228,7 +220,7 @@ class Sale
             "updated_at" => $this->updatedAt ? $this->updatedAt->getDateTime() : null,
             "payment_method" => !empty($this->paymentMethod) ? $this->paymentMethod->toArray() : null,
             "customer" => !empty($this->customer) ? $this->customer->toArray() : null,
-            "product" => !empty($this->product) ? $this->product->toArray() : null,
+            "products" => $arraySaleProducts,
             "user" => !empty($this->user) ? $this->user->toArray() : null
         ];
     }

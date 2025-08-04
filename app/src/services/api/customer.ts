@@ -1,5 +1,6 @@
 import apiRequest from './request/api-request';
 import { ApiResponse } from './request/api-request-types';
+import { CustomerCreateUpdate } from '@/pages/registration/customer/customer-types';
 import { Customer } from '@/types/customer';
 
 type PaginationProps = {
@@ -21,4 +22,35 @@ const getAllCustomersRequest = async (pagination: PaginationProps): Promise<ApiR
   return response;
 };
 
-export { getAllCustomersRequest };
+type CreateCustomerProps = Omit<CustomerCreateUpdate, 'id'>;
+
+const createCustomerRequest = async (data: CreateCustomerProps): Promise<ApiResponse<Customer>> => {
+  const response = await apiRequest<Customer>({
+    method: 'POST',
+    url: 'v1/customer/create',
+    data: data,
+  });
+  return response;
+};
+
+type UpateCustomerProps = CustomerCreateUpdate;
+
+const updateCustomerRequest = async (date: UpateCustomerProps): Promise<ApiResponse<Customer>> => {
+  const response = await apiRequest<Customer>({
+    method: 'POST',
+    url: 'v1/customer/update',
+    data: date,
+  });
+  return response;
+};
+
+const deleteCustomerRequest = async (id: number): Promise<ApiResponse<unknown>> => {
+  const response = await apiRequest<unknown>({
+    method: 'POST',
+    url: 'v1/customer/delete',
+    data: { id: id },
+  });
+  return response;
+};
+
+export { getAllCustomersRequest, createCustomerRequest, updateCustomerRequest, deleteCustomerRequest };

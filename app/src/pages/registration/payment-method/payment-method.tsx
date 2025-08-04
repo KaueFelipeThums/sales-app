@@ -194,7 +194,7 @@ const PaymentMethod = () => {
         onEndReachedThreshold={0}
         onEndReached={() => {
           if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllPaymentMethod(page.current + 1, '', true);
+          hasMoreRef.current && !isLoading && getAllPaymentMethod(page.current + 1, search, true);
         }}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllPaymentMethod(1, '', false)} />}
         ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}
@@ -229,7 +229,7 @@ const PaymentMethod = () => {
             >
               <ItemPressable>
                 <ItemAdornment>
-                  <Icon name="Package" size={sizes.fontSize['2xl']} />
+                  <Icon name="CreditCard" size={sizes.fontSize['2xl']} />
                 </ItemAdornment>
                 <ItemContent>
                   <ItemTitle numberOfLines={1}>{paymentMethod.name}</ItemTitle>

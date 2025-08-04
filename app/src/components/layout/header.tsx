@@ -19,7 +19,7 @@ const headerStyles = ({ sizes, colors }: ThemeValue) =>
     header: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: sizes.gap.xl,
+      gap: sizes.gap.sm,
       overflow: 'hidden',
       paddingHorizontal: sizes.padding.xl,
       paddingVertical: sizes.padding.lg,
@@ -66,7 +66,7 @@ const itemAdornmentStyles = ({ sizes }: ThemeValue) =>
     itemAdornment: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: sizes.gap.md,
+      gap: sizes.gap.sm,
     },
   });
 

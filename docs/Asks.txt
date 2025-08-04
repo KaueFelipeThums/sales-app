@@ -1,0 +1,115 @@
+## Perguntas
+
+1 - Qual o maior problema técnico que você resolveu? Como?
+
+  Na empresa onde trabalho, desenvolvemos muitos apps, e um problema que sempre aparecia era a 
+  incompatibilidade entre bibliotecas e componentes, principalmente quando precisava atualizar alguma dependência. 
+  Muitas vezes, uma simples atualização quebrava várias partes do app, e isso tomava um tempo enorme pra resolver.
+  Pra evitar que isso continuasse acontecendo, tomei a iniciativa de criar uma biblioteca própria de componentes nativos, 
+  tentando usar o mínimo possível de dependências externas, a ideia era ter algo mais controlável e estável.
+  Com isso, o time passou a ter bem menos dor de cabeça com manutenção, as atualizações ficaram mais seguras e 
+  conseguimos manter uma padronização entre os apps, sem depender tanto de mudanças externas. Foi algo que fez muita diferença no nosso dia a dia.
+
+2 - Qual maior problema técnico que você não conseguiu resolver?
+
+  Um dos maiores desafios que não consegui resolver completamente foi durante a refatoração de um sistema antigo. 
+  A ideia era modernizar a estrutura e migrar os dados para um novo formato, fiz uma análise inicial e parecia viável, 
+  mas na prática surgiram várias incompatibilidades que tornaram a migração automatizada muito complexa e arriscada. 
+  No fim, optei por fazer os ajustes manualmente, o que foi mais seguro naquele momento. Apesar de não ter seguido com a solução ideal, 
+  foi uma experiência que me ensinou muito sobre como mudanças estruturais exigem análises ainda mais profundas.
+
+3 - Qual o projeto atual que você está trabalhando, quais problemas enfrenta e como você os resolveria?
+
+  No momento, estou trabalhando em um app para os eventos realizados por cooperativas do grupo Sescoop. 
+  O app tem algumas funcionalidades como acompanhar os esportes, ver postagens e acessar informações sobre o evento.
+  Um dos problemas que enfrentei foi no carregamento das mídias dessas postagens. Como elas vinham direto da API e em grande quantidade, 
+  isso acabava pesando muito na memória do celular, em alguns casos o app até travava. A solução que encontrei foi usar carregamento paginado e 
+  também armazenar essas mídias localmente, pra evitar que precisasse baixar tudo de novo a cada acesso. Isso melhorou bastante a performance e 
+  deixou a navegação bem mais fluida.
+
+4 - Se hoje você tivesse a missão de desenvolver um sistema fiscal, como você faria? Desde o entendimento do domínio até a decisão de tecnologias.
+
+5 - Como funciona o processo de uma requisição HTTP?
+
+  Quando um cliente como um navegador ou aplicativo faz uma requisição HTTP, 
+  ele envia uma mensagem que contém três partes principais: o método (GET, POST, PUT ou DELETE), 
+  os headers (trazem informações sobre a requisição, como tipo de conteúdo, autenticação, etc.) e o body (corpo da requisição, usado para enviar dados).
+  O servidor recebe essa requisição, interpreta o método e a URL, executa a lógica necessária (consultar um banco de dados ou processar dados) e gera uma resposta.
+  Esse ciclo de requisição e resposta permite que clientes e servidores troquem informações.
+
+6 - Quais tecnologias você domina?
+
+  Linguagens: PHP, JS, TS
+  Mobile: React Native
+  Frameworks: Laravel, React, Next
+  DevOps: Git, Docker, Ubuntu
+  Design: Figma
+  Banco de Dados: MySQL, SQLite, PostgreSQL
+
+7 - Utiliza testes unitários no seu dia a dia?
+
+  No meu dia a dia de trabalho atual eu não utilizo testes unitários. 
+  Porém já tive experiências com testes em projetos pessoais, principalmente no front-end, usando ferramentas como Jest.
+
+8 - Conhece os principios S.O.L.I.D, clean code e clean architecture?
+
+  Sim, conheço os princípios S.O.L.I.D, Clean Code e Clean Architecture, e aplico com frequência nos meus projetos.
+
+8.1    - Como você utiliza inversão de dependencias no dia a dia?
+
+  No meu dia a dia, utilizo o princípio da inversão de dependências para deixar o código mais flexível.
+  Por exemplo, em projetos PHP, costumo depender de interfaces ou contratos em vez de classes concretas, 
+  isso permite trocar implementações sem afetar o restante do sistema.
+  No front-end, em React, aplico inversão de dependências ao desacoplar componentes através de props, hooks e contextos.
+
+8.2    - Como você define responsabilidade única?
+
+  Pra mim responsabilidade única é basicamente garantir que cada módulo, classe ou função seja responsável por uma única coisa.
+  Isso ajuda muito a evitar bagunça, porque quando um componente ou função tenta fazer várias coisas, fica difícil de entender, manter e mudar.
+  No dia a dia, tento criar componentes que cuidem só da interface, e deixo a lógica de negócio ou manipulação de dados para outros arquivos, como hooks ou serviços. 
+
+8.3    - Por que você acha clean architecture uma boa abordagem?
+
+  Acredito que a Clean Architecture é uma ótima abordagem porque ela ajuda a manter o código organizado e fácil de entender, mesmo em projetos grandes e complexos.
+  Ela separa bem as responsabilidades deixando a lógica de negócio independente de detalhes como banco de dados ou interface, o que facilita testar, 
+  evoluir e dar manutenção no sistema sem quebrar outras partes.
+
+9 - Quais os seus conhecimentos em infraestrutura?
+
+  Eu trabalho com Linux e conheço servidores web como NGINX e Apache, também uso Docker.
+  Infraestrutura não é uma parte que eu trabalho diariamente.
+
+9.1    - Como você faz o deploy de suas aplicações?
+
+  Normalmente faço o deploy das minhas aplicações configurando o ambiente de produção em servidores Linux (Ubuntu).
+  Utilizo ferramentas como Docker para criar containers.
+  Para projetos web, costumo fazer o deploy via SSH, copiando os arquivos ou usando scripts automatizados.
+
+9.2    - Quais plataformas você tem conhecimento (aws, azure, google cloud)?
+
+  Ainda não tive a oportunidade de trabalhar diretamente com plataformas de nuvem como AWS,
+  Azure ou Google Cloud, mas tenho interesse em aprender.
+
+9.3    - Orquestrador de containers já utilizou algum?
+
+  Ainda não utilizei orquestradores de containers como Kubernetes ou Docker Swarm em projetos.
+
+10 - Que assuntos e com qual frequencia você estuda?
+
+  Atualmente estou concluindo minha faculdade, mas gosto muito de estudar por conta própria, 
+  normalmente foco em assuntos que me interessam ou que podem ajudar em projetos pessoais e no trabalho.
+  Por exemplo, recentemente com a alta das IAs, comecei a estudar integrações com a OpenAI e estou desenvolvendo um projeto particular usando essas tecnologias.
+  Tento estudar de forma contínua, mesmo que aos poucos, busco assuntos que possam agregar ao meu dia a dia.
+
+## Seniors
+
+11 - Como você faria o processo de migração de um contexto do monolíto para micro serviço?
+
+12 - Qual sua experiencia com deploy's?
+
+  No meu trabalho, os únicos deploys que faço são relacionados a configuração e publicação dos apps na Apple Store e Google Play.
+  Fora isso não costumo fazer deploys de backend ou servidores, só em projetos pessoais mais simples.
+
+13 - Já usou alguma ferramenta de monitoramento?
+
+  Não, até agora não tive oportunidade de usar ferramentas de monitoramento.

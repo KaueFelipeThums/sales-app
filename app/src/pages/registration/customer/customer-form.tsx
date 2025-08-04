@@ -1,8 +1,7 @@
-import { InputAdornment } from '@coperdia/web-ui-components';
 import React, { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import type { ProductCreateUpdate, ProductForm as ProductFormType } from './product-types';
+import type { CustomerCreateUpdate, CustomerForm as CustomerFormType } from './customer-types';
 import { ContainerScrollView } from '@/components/layout/container';
 import {
   Header,
@@ -13,33 +12,61 @@ import {
   HeaderTitle,
 } from '@/components/layout/header';
 import { KeyboardAvoidingContent } from '@/core/components/ui/keyboard-avoid-content';
-import { Text } from '@/core/components/ui/text';
 import { toast } from '@/core/components/ui/toast';
 import { Button } from '@/core/components/ui-presets/button';
 import { FormField } from '@/core/components/ui-presets/form-field';
+import { InputMask } from '@/core/components/ui-presets/input-mask';
 import { InputNumber } from '@/core/components/ui-presets/input-number';
 import { InputText } from '@/core/components/ui-presets/input-text';
 import { Select } from '@/core/components/ui-presets/select';
 import { useStyles } from '@/core/theme/hooks/use-styles';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
-import { parseToFloat, replaceToStringValue } from '@/functions/parsers';
 import validator from '@/functions/validators';
 import { useSync } from '@/providers/sync/sync-provider';
-
 import {
   useRegistrationNavigation,
   useRegistrationRouteParams,
 } from '@/routes/private-routes/stacks/registration-stack-routes';
-import { createProductRequest, updateProductRequest } from '@/services/api/product';
+import { getAddressRequest } from '@/services/api/address';
+import { createCustomerRequest, updateCustomerRequest } from '@/services/api/customer';
+
+const stateOptions = [
+  { label: 'Acre', value: 'AC' },
+  { label: 'Alagoas', value: 'AL' },
+  { label: 'Amapá', value: 'AP' },
+  { label: 'Amazonas', value: 'AM' },
+  { label: 'Bahia', value: 'BA' },
+  { label: 'Ceará', value: 'CE' },
+  { label: 'Distrito Federal', value: 'DF' },
+  { label: 'Espírito Santo', value: 'ES' },
+  { label: 'Goiás', value: 'GO' },
+  { label: 'Maranhão', value: 'MA' },
+  { label: 'Mato Grosso', value: 'MT' },
+  { label: 'Mato Grosso do Sul', value: 'MS' },
+  { label: 'Minas Gerais', value: 'MG' },
+  { label: 'Pará', value: 'PA' },
+  { label: 'Paraíba', value: 'PB' },
+  { label: 'Paraná', value: 'PR' },
+  { label: 'Pernambuco', value: 'PE' },
+  { label: 'Piauí', value: 'PI' },
+  { label: 'Rio de Janeiro', value: 'RJ' },
+  { label: 'Rio Grande do Norte', value: 'RN' },
+  { label: 'Rio Grande do Sul', value: 'RS' },
+  { label: 'Rondônia', value: 'RO' },
+  { label: 'Roraima', value: 'RR' },
+  { label: 'Santa Catarina', value: 'SC' },
+  { label: 'São Paulo', value: 'SP' },
+  { label: 'Sergipe', value: 'SE' },
+  { label: 'Tocantins', value: 'TO' },
+];
 
 const rules = {
   name: { required: 'O nome é obrigatório!' },
-  quantity: { required: 'A quantidade é obrigatória!', validate: (value: string) => validator.number(value, 0) },
-  price: { required: 'O preco é obrigatório!', validate: (value: string) => validator.number(value, 0) },
+  cpf: { required: 'O CPF é obrigatório!', validate: (value: string) => validator.cpf(value) },
   is_active: { required: 'O status é obrigatório!' },
 };
 
-const productStyles = ({ sizes }: ThemeValue) =>
+const customerStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     contentContainerList: {
       gap: sizes.gap.xl,
@@ -51,29 +78,37 @@ const productStyles = ({ sizes }: ThemeValue) =>
     },
   });
 
-const ProductForm = () => {
-  const styles = useStyles(productStyles);
+const CustomerForm = () => {
+  const styles = useStyles(customerStyles);
   const [loading, startTransition] = useTransition();
-  const { params } = useRegistrationRouteParams<'ProductForm'>();
-  const product = params.product;
+  const [loadingAddress, startAddressTransition] = useTransition();
+  const { params } = useRegistrationRouteParams<'CustomerForm'>();
+  const customer = params.customer;
   const { setSync } = useSync();
   const navigation = useRegistrationNavigation();
-  const form = useForm<ProductFormType>({
+  const form = useForm<CustomerFormType>({
     defaultValues: {
       id: '',
-      price: '',
-      is_active: '1',
       name: '',
-      quantity: '',
+      city: '',
+      cpf: '',
+      email: '',
+      neighborhood: '',
+      number: '',
+      state: '',
+      street: '',
+      zip_code: '',
+      complement: '',
+      is_active: '',
     },
   });
 
-  const createProduct = React.useCallback(
-    (data: Omit<ProductCreateUpdate, 'id'>) => {
+  const createCustomer = React.useCallback(
+    (data: Omit<CustomerCreateUpdate, 'id'>) => {
       startTransition(async () => {
-        const response = await createProductRequest(data);
+        const response = await createCustomerRequest(data);
         if (response.success) {
-          setSync('product');
+          setSync('customer');
           toast.success({ title: 'Registro inserido com sucesso!' });
           navigation.goBack();
           form.reset();
@@ -85,12 +120,12 @@ const ProductForm = () => {
     [navigation, setSync, form],
   );
 
-  const updateProduct = React.useCallback(
-    (data: ProductCreateUpdate) => {
+  const updateCustomer = React.useCallback(
+    (data: CustomerCreateUpdate) => {
       startTransition(async () => {
-        const response = await updateProductRequest(data);
+        const response = await updateCustomerRequest(data);
         if (response.success) {
-          setSync('product');
+          setSync('customer');
           toast.success({ title: 'Registro alterado com sucesso!' });
           navigation.goBack();
           form.reset();
@@ -102,35 +137,64 @@ const ProductForm = () => {
     [navigation, setSync, form],
   );
 
+  const getAddressByCep = React.useCallback(
+    async (cep: string) => {
+      startAddressTransition(async () => {
+        const response = await getAddressRequest(cep.replace(/\D/g, ''));
+        if (response.success) {
+          form.setValue('street', response.data.logradouro ?? '');
+          form.setValue('neighborhood', response.data.bairro ?? '');
+          form.setValue('city', response.data.localidade ?? '');
+          form.setValue('state', response.data.uf ?? '');
+        }
+      });
+    },
+    [form],
+  );
+
   useEffect(() => {
-    if (product) {
-      form.setValue('id', product.id.toString());
-      form.setValue('name', product.name);
-      form.setValue('quantity', product.quantity.toString());
-      form.setValue('price', replaceToStringValue(product.price));
-      form.setValue('is_active', product.is_active.toString());
+    if (customer) {
+      form.setValue('id', customer.id.toString());
+      form.setValue('name', customer.name);
+      form.setValue('city', customer.city ? customer.city : '');
+      form.setValue('cpf', customer.cpf);
+      form.setValue('email', customer.email ? customer.email : '');
+      form.setValue('neighborhood', customer.neighborhood ? customer.neighborhood : '');
+      form.setValue('number', customer.number ? customer.number : '');
+      form.setValue('state', customer.state ? customer.state : '');
+      form.setValue('street', customer.street ? customer.street : '');
+      form.setValue('zip_code', customer.zip_code ? customer.zip_code : '');
+      form.setValue('complement', customer.complement ? customer.complement : '');
+      form.setValue('is_active', customer.is_active.toString());
     }
-  }, [product, form]);
+  }, [customer, form]);
 
   const onSubmit = React.useCallback(
-    (formData: ProductFormType) => {
-      const newFormData: Omit<ProductCreateUpdate, 'id'> = {
+    (formData: CustomerFormType) => {
+      const newFormData: Omit<CustomerCreateUpdate, 'id'> = {
         name: formData.name,
-        quantity: Number(formData.quantity),
-        price: parseToFloat(formData.price),
+        city: formData.city,
+        cpf: formData.cpf.replace(/\D/g, ''),
+        email: formData.email,
+        neighborhood: formData.neighborhood,
+        number: formData.number,
+        state: formData.state,
+        street: formData.street,
+        zip_code: formData.zip_code,
+        complement: formData.complement,
         is_active: Number(formData.is_active),
       };
 
       if (formData.id) {
-        updateProduct({
+        updateCustomer({
           ...newFormData,
           id: Number(formData.id),
         });
       } else {
-        createProduct(newFormData);
+        createCustomer(newFormData);
       }
     },
-    [createProduct, updateProduct],
+    [createCustomer, updateCustomer],
   );
 
   return (
@@ -140,7 +204,7 @@ const ProductForm = () => {
           <HeaderButton variant="outline" icon="ChevronLeft" onPress={() => navigation.goBack()} />
         </HeaderAdornment>
         <HeaderContent>
-          <HeaderTitle align="center">{product ? 'Alterar' : 'Adicionar'} Produto</HeaderTitle>
+          <HeaderTitle align="center">{customer ? 'Alterar' : 'Adicionar'} Cliente</HeaderTitle>
         </HeaderContent>
         <HeaderAdornment>
           <HeaderHiddenButton />
@@ -158,20 +222,25 @@ const ProductForm = () => {
                 placeholder="Digite o nome..."
                 disabled={loading}
                 value={field.value}
-                onChangeText={field.onChange}
+                onChangeText={(value) => {
+                  if (value.length === 9) {
+                    getAddressByCep(value);
+                  }
+                  field.onChange(value);
+                }}
               />
             )}
           />
 
           <FormField
             control={form.control}
-            label="Quantidade"
-            name="quantity"
-            rules={rules.quantity}
+            label="CPF"
+            name="cpf"
+            rules={rules.cpf}
             render={({ field }) => (
-              <InputNumber
-                decimals={0}
-                placeholder="Digite a quantidade..."
+              <InputMask
+                mask="cpf"
+                placeholder="Digite o CPF..."
                 disabled={loading}
                 value={field.value}
                 onChangeText={field.onChange}
@@ -181,18 +250,112 @@ const ProductForm = () => {
 
           <FormField
             control={form.control}
-            label="Preço"
-            name="quantity"
-            rules={rules.quantity}
+            label="E-mail"
+            name="email"
+            render={({ field }) => (
+              <InputText
+                placeholder="Digite o e-mail..."
+                disabled={loading}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="CEP"
+            name="zip_code"
+            render={({ field }) => (
+              <InputMask
+                mask="cep"
+                placeholder="Digite o CEP..."
+                disabled={loading || loadingAddress}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="Cidade"
+            name="city"
+            render={({ field }) => (
+              <InputText
+                placeholder="Digite a cidade..."
+                disabled={loading}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="Estado"
+            name="state"
+            render={({ field }) => (
+              <Select
+                options={stateOptions}
+                placeholder="Selecione o estado..."
+                disabled={loading}
+                value={field.value}
+                onValueChange={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="Bairro"
+            name="neighborhood"
+            render={({ field }) => (
+              <InputText
+                placeholder="Digite o bairro..."
+                disabled={loading}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="Rua"
+            name="street"
+            render={({ field }) => (
+              <InputText
+                placeholder="Digite a rua..."
+                disabled={loading}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="Número"
+            name="number"
             render={({ field }) => (
               <InputNumber
-                decimals={2}
-                leftAdornment={
-                  <InputAdornment>
-                    <Text>R$</Text>
-                  </InputAdornment>
-                }
-                placeholder="Digite o preço..."
+                decimals={0}
+                placeholder="Digite o número..."
+                disabled={loading}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            label="Complemento"
+            name="complement"
+            render={({ field }) => (
+              <InputText
+                placeholder="Digite o complemento..."
                 disabled={loading}
                 value={field.value}
                 onChangeText={field.onChange}
@@ -228,4 +391,4 @@ const ProductForm = () => {
   );
 };
 
-export default ProductForm;
+export default CustomerForm;

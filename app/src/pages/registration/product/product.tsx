@@ -167,11 +167,8 @@ const Product = () => {
     <View style={styles.layout}>
       <Header withInsets variant="ghost">
         <HeaderAdornment>
-          <HeaderButton
-            icon={!showSearch ? 'Search' : 'X'}
-            variant="outline"
-            onPress={() => toggleSearch(!showSearch)}
-          />
+          <HeaderButton icon="ChevronLeft" variant="outline" onPress={() => navigation.goBack()} />
+          <HeaderButton icon={!showSearch ? 'Search' : 'X'} variant="ghost" onPress={() => toggleSearch(!showSearch)} />
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
@@ -197,7 +194,7 @@ const Product = () => {
         onEndReachedThreshold={0}
         onEndReached={() => {
           if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllProduct(page.current + 1, '', true);
+          hasMoreRef.current && !isLoading && getAllProduct(page.current + 1, search, true);
         }}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllProduct(1, '', false)} />}
         ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}

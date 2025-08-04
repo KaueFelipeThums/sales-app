@@ -3,7 +3,6 @@ namespace SalesAppApi\Infrastructure\Repository;
 
 use SalesAppApi\Domain\Customer;
 use SalesAppApi\Domain\PaymentMethod;
-use SalesAppApi\Domain\Product;
 use SalesAppApi\Domain\Sale;
 use SalesAppApi\Domain\SaleRepositoryInterface;
 use SalesAppApi\Domain\User;
@@ -20,8 +19,7 @@ class SaleRepository implements SaleRepositoryInterface
         string $search = '', 
         int $page = 1, 
         int $pageCount = 10, 
-        ?int $customerId = null, 
-        ?int $productId = null,
+        ?int $customerId = null,
     ): array
     {
         $offset = ($page - 1) * $pageCount;
@@ -30,7 +28,6 @@ class SaleRepository implements SaleRepositoryInterface
                 sales.id AS sales_id,
                 sales.payment_methods_id AS sales_payment_methods_id,
                 sales.users_id AS sales_users_id,
-                sales.products_id AS sales_products_id,
                 sales.customers_id AS sales_customers_id,
                 sales.quantity AS sales_quantity,
                 sales.total_value AS sales_total_value,
@@ -56,16 +53,6 @@ class SaleRepository implements SaleRepositoryInterface
                 payment_methods.created_at AS payment_methods_created_at,
                 payment_methods.updated_at AS payment_methods_updated_at,
 
-                -- Product
-                products.id AS products_id,
-                products.users_id AS products_users_id,
-                products.name AS products_name,
-                products.quantity AS products_quantity,
-                products.price AS products_price,
-                products.is_active AS products_is_active,
-                products.created_at AS products_created_at,
-                products.updated_at AS products_updated_at,
-
                 -- Customer
                 customers.id AS customers_id,
                 customers.users_id AS customers_users_id,
@@ -89,8 +76,6 @@ class SaleRepository implements SaleRepositoryInterface
             LEFT JOIN
                 payment_methods ON sales.payment_methods_id = payment_methods.id
             LEFT JOIN
-                products ON sales.products_id = products.id
-            LEFT JOIN
                 customers ON sales.customers_id = customers.id
             WHERE 
                 1=1";
@@ -100,7 +85,6 @@ class SaleRepository implements SaleRepositoryInterface
             $sql .= " AND (
                 customers.name LIKE :search OR 
                 customers.cpf LIKE :search OR 
-                products.name LIKE :search OR
                 payment_methods.name LIKE :search
             )";
             $params['search'] = "%".$search."%";
@@ -109,11 +93,6 @@ class SaleRepository implements SaleRepositoryInterface
         if(!empty($customerId)) {
             $sql .= " AND sales.customers_id = :customer_id";
             $params['customer_id'] = $customerId;
-        }
-
-        if(!empty($productId)) {
-            $sql .= " AND sales.products_id = :product_id";
-            $params['product_id'] = $productId;
         }
 
         $sql .= " ORDER BY sales.id DESC LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
@@ -127,7 +106,6 @@ class SaleRepository implements SaleRepositoryInterface
                 $r['sales_id'],
                 $r['sales_payment_methods_id'],
                 $r['sales_users_id'],
-                $r['sales_products_id'],
                 $r['sales_customers_id'],
                 $r['sales_quantity'],
                 $r['sales_total_value'],
@@ -163,17 +141,7 @@ class SaleRepository implements SaleRepositoryInterface
                     !empty($r['customers_updated_at']) ? new DateTime($r['customers_updated_at']) : null,
                     null
                 ),
-                new Product(
-                    $r['products_id'],
-                    $r['products_users_id'],
-                    $r['products_name'],
-                    $r['products_quantity'],
-                    $r['products_price'],
-                    $r['products_is_active'],
-                    new DateTime($r['products_created_at']),
-                    !empty($r['products_updated_at']) ? new DateTime($r['products_updated_at']) : null,
-                    null
-                ),
+                [],
                 new User(
                     $r['users_id'],
                     $r['users_name'],
@@ -196,7 +164,6 @@ class SaleRepository implements SaleRepositoryInterface
                 sales.id AS sales_id,
                 sales.payment_methods_id AS sales_payment_methods_id,
                 sales.users_id AS sales_users_id,
-                sales.products_id AS sales_products_id,
                 sales.customers_id AS sales_customers_id,
                 sales.quantity AS sales_quantity,
                 sales.total_value AS sales_total_value,
@@ -222,16 +189,6 @@ class SaleRepository implements SaleRepositoryInterface
                 payment_methods.created_at AS payment_methods_created_at,
                 payment_methods.updated_at AS payment_methods_updated_at,
 
-                -- Product
-                products.id AS products_id,
-                products.users_id AS products_users_id,
-                products.name AS products_name,
-                products.quantity AS products_quantity,
-                products.price AS products_price,
-                products.is_active AS products_is_active,
-                products.created_at AS products_created_at,
-                products.updated_at AS products_updated_at,
-
                 -- Customer
                 customers.id AS customers_id,
                 customers.users_id AS customers_users_id,
@@ -255,8 +212,6 @@ class SaleRepository implements SaleRepositoryInterface
             LEFT JOIN
                 payment_methods ON sales.payment_methods_id = payment_methods.id
             LEFT JOIN
-                products ON sales.products_id = products.id
-            LEFT JOIN
                 customers ON sales.customers_id = customers.id
             WHERE 
                 sales.id = :id",
@@ -272,7 +227,6 @@ class SaleRepository implements SaleRepositoryInterface
             $response['sales_id'],
             $response['sales_payment_methods_id'],
             $response['sales_users_id'],
-            $response['sales_products_id'],
             $response['sales_customers_id'],
             $response['sales_quantity'],
             $response['sales_total_value'],
@@ -308,17 +262,7 @@ class SaleRepository implements SaleRepositoryInterface
                 !empty($response['customers_updated_at']) ? new DateTime($response['customers_updated_at']) : null,
                 null
             ),
-            new Product(
-                $response['products_id'],
-                $response['products_users_id'],
-                $response['products_name'],
-                $response['products_quantity'],
-                $response['products_price'],
-                $response['products_is_active'],
-                new DateTime($response['products_created_at']),
-                !empty($response['products_updated_at']) ? new DateTime($response['products_updated_at']) : null,
-                null
-            ),
+            [],
             new User(
                 $response['users_id'],
                 $response['users_name'],
@@ -339,7 +283,6 @@ class SaleRepository implements SaleRepositoryInterface
                 (
                     payment_methods_id,
                     users_id,
-                    products_id,
                     customers_id,
                     quantity,
                     total_value,
@@ -352,7 +295,6 @@ class SaleRepository implements SaleRepositoryInterface
                 (
                     :payment_methods_id,
                     :users_id,
-                    :products_id,
                     :customers_id,
                     :quantity,
                     :total_value,
@@ -364,7 +306,6 @@ class SaleRepository implements SaleRepositoryInterface
             [
                 'payment_methods_id' => $sale->getPaymentMethodId(),
                 'users_id' => $sale->getUsersId(),
-                'products_id' => $sale->getProductId(),
                 'customers_id' => $sale->getCustomerId(),
                 'quantity' => $sale->getQuantity(),
                 'total_value' => $sale->getTotalValue(),
@@ -384,7 +325,6 @@ class SaleRepository implements SaleRepositoryInterface
             "UPDATE sales SET 
                 payment_methods_id=:payment_methods_id,
                 users_id=:users_id,
-                products_id=:products_id,
                 customers_id=:customers_id,
                 quantity=:quantity,
                 total_value=:total_value,
@@ -397,7 +337,6 @@ class SaleRepository implements SaleRepositoryInterface
                 'id' => $sale->getId(),
                 'payment_methods_id' => $sale->getPaymentMethodId(),
                 'users_id' => $sale->getUsersId(),
-                'products_id' => $sale->getProductId(),
                 'customers_id' => $sale->getCustomerId(),
                 'quantity' => $sale->getQuantity(),
                 'total_value' => $sale->getTotalValue(),
