@@ -166,17 +166,14 @@ const PaymentMethod = () => {
     <View style={styles.layout}>
       <Header withInsets variant="ghost">
         <HeaderAdornment>
-          <HeaderButton
-            icon={!showSearch ? 'Search' : 'X'}
-            variant="outline"
-            onPress={() => toggleSearch(!showSearch)}
-          />
+          <HeaderButton icon="ChevronLeft" variant="outline" onPress={() => navigation.goBack()} />
+          <HeaderButton icon={!showSearch ? 'Search' : 'X'} variant="ghost" onPress={() => toggleSearch(!showSearch)} />
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
             <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
           ) : (
-            <HeaderTitle align="center">Métodos de Pagamento</HeaderTitle>
+            <HeaderTitle align="center">Mét. de Pagamento</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>
@@ -187,6 +184,7 @@ const PaymentMethod = () => {
           />
         </HeaderAdornment>
       </Header>
+
       <FlatList
         scrollEventThrottle={16}
         initialNumToRender={10}
