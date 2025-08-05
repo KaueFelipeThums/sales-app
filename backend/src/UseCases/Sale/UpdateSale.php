@@ -65,11 +65,13 @@ class UpdateSale{
              */
             $saleProducts = $this->saleProductRepository->getAllSaleProductsBySalesId($sale->getId());
             $arrayProductsUpdate = [];
+            $arraySaleProductsUpdate = [];
 
             foreach ($saleProducts as $saleProduct) {
                 $product = $saleProduct->getProduct();
                 $product->setQuantity($product->getQuantity() + $saleProduct->getQuantity());
                 $arrayProductsUpdate[$product->getId()] = $product;
+                $arraySaleProductsUpdate[$product->getId()] = $saleProduct;
             }
 
             /**
@@ -92,10 +94,11 @@ class UpdateSale{
 
                 if(!empty($arrayProductsUpdate[$selectedProduct['products_id']])) {
                     $product = $arrayProductsUpdate[$selectedProduct['products_id']];
+                    $insertedSaleProduct = $arraySaleProductsUpdate[$selectedProduct['products_id']];
                 } else {
                     $product = $this->productRepository->getProductById($selectedProduct['products_id']);
+                    $insertedSaleProduct = null;
                 }
-
 
                 if(empty($product) || $product->getIsActive() == 0) {
                     throw new Exception("Produto não encontrado ou inativo", 422);
@@ -107,15 +110,17 @@ class UpdateSale{
                 if($product->getQuantity() < $selectedProduct['quantity']) {
                     throw new Exception("Quantidade indisponível do produto {$product->getName()}", 422);
                 }
+
+                $value = !empty($insertedSaleProduct) ? $insertedSaleProduct->getBaseValue() : $product->getPrice();
                 
                 $product->setQuantity($product->getQuantity() - $selectedProduct['quantity']);
                 $arraySaleProducts[] = [
                     'products_id' => $product->getId(),
                     'quantity' => $selectedProduct['quantity'],
-                    'base_value' => $product->getPrice(),
+                    'base_value' => $value,
                     'product' => $product
                 ];
-                $totalValue += $product->getPrice() * $selectedProduct['quantity'];
+                $totalValue += $value * $selectedProduct['quantity'];
 
                 unset($arrayProductsUpdate[$product->getId()]);
             }

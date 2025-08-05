@@ -91,6 +91,8 @@ const ProductForm = () => {
         const response = await updateProductRequest(data);
         if (response.success) {
           setSync('product');
+          setSync('sale');
+          setSync('saleProduct');
           toast.success({ title: 'Registro alterado com sucesso!' });
           navigation.goBack();
           form.reset();

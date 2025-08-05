@@ -13,6 +13,7 @@ import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 import formaters from '@/functions/formaters';
 import { getAllActiveProductsRequest } from '@/services/api/product';
 import { Product } from '@/types/product';
+import { SaleProduct } from '@/types/sale-product';
 
 const saleFormProductSelectStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
@@ -46,6 +47,7 @@ type SaleFormProductSelectProps = {
   onOpenChange: (open: boolean) => void;
   open?: boolean;
   selectedArrayId?: number[];
+  saleProducts?: SaleProduct[];
 };
 
 const SaleFormProductSelect = ({
@@ -54,6 +56,7 @@ const SaleFormProductSelect = ({
   onProductSelect,
   open,
   selectedArrayId = [],
+  saleProducts = [],
 }: SaleFormProductSelectProps) => {
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const styles = useStyles(saleFormProductSelectStyles);
@@ -107,24 +110,36 @@ const SaleFormProductSelect = ({
           {loadingProducts && <SkeletonList />}
           {products.length === 0 && <Empty title="Nenhum produto encontrado!" />}
           {!loadingProducts &&
-            products.map((product) => (
-              <ItemPressable
-                disabled={!open || selectedArrayId.includes(product.id)}
-                key={product.id}
-                onPress={() => onProductSelect(product)}
-              >
-                <ItemAdornment>
-                  <Icon name="Package" />
-                </ItemAdornment>
-                <ItemContent>
-                  <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
-                  <ItemDescription numberOfLines={1}>R$ {formaters.money(product.price)}</ItemDescription>
-                </ItemContent>
-                <ItemAdornment>
-                  <Icon name={selectedArrayId.includes(product.id) ? 'Check' : 'Plus'} />
-                </ItemAdornment>
-              </ItemPressable>
-            ))}
+            products.map((product) => {
+              const saleProduct = saleProducts.find((saleProduct) => saleProduct.product.id === product.id);
+
+              return (
+                <ItemPressable
+                  disabled={!open || selectedArrayId.includes(product.id)}
+                  key={product.id}
+                  onPress={() =>
+                    onProductSelect({
+                      ...product,
+                      quantity: product.quantity + (saleProduct ? saleProduct.quantity : 0),
+                      price: saleProduct ? saleProduct.base_value : product.price,
+                    })
+                  }
+                >
+                  <ItemAdornment>
+                    <Icon name="Package" />
+                  </ItemAdornment>
+                  <ItemContent>
+                    <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
+                    <ItemDescription numberOfLines={1}>
+                      R$ {formaters.money(saleProduct ? saleProduct.base_value : product.price)}
+                    </ItemDescription>
+                  </ItemContent>
+                  <ItemAdornment>
+                    <Icon name={selectedArrayId.includes(product.id) ? 'Check' : 'Plus'} />
+                  </ItemAdornment>
+                </ItemPressable>
+              );
+            })}
         </DialogBodyScroll>
       </DialogContent>
     </Dialog>

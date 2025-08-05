@@ -99,7 +99,7 @@ const SaleCustomerList = () => {
            * Limpa os dados de sincronização
            */
           if (!append) {
-            clearSync('sale');
+            clearSync('saleProduct');
           }
         } else {
           hasMoreRef.current = false;
@@ -117,7 +117,7 @@ const SaleCustomerList = () => {
       /**
        * Verifica se há a necessidade de sincronizar e recarrega a lista
        */
-      if (getShouldSync('sale')) {
+      if (getShouldSync('saleProduct')) {
         setSearch('');
         setShowSearch(false);
         getAllSale();

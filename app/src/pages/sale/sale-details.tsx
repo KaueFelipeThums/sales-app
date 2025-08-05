@@ -106,9 +106,9 @@ const SaleDetails = () => {
                 <ItemContent>
                   <ItemTitle numberOfLines={1}>{field.product.name}</ItemTitle>
                   <ItemDescription>
-                    R$ {formaters.money(field.product.price)}{' '}
+                    R$ {formaters.money(field.base_value)}{' '}
                     <ItemDescription weight="bold" numberOfLines={1}>
-                      (R$ {formaters.money(parseToInt(field.quantity) * field.product.price)})
+                      (R$ {formaters.money(parseToInt(field.quantity) * field.base_value)})
                     </ItemDescription>
                   </ItemDescription>
                 </ItemContent>

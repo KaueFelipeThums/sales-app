@@ -98,6 +98,8 @@ const SaleForm = () => {
         const response = await createSaleRequest(data);
         if (response.success) {
           setSync('sale');
+          setSync('saleProduct');
+          setSync('product');
           toast.success({ title: 'Registro inserido com sucesso!' });
           navigation.goBack();
           form.reset();
@@ -115,6 +117,8 @@ const SaleForm = () => {
         const response = await updateSaleRequest(data);
         if (response.success) {
           setSync('sale');
+          setSync('saleProduct');
+          setSync('product');
           toast.success({ title: 'Registro alterado com sucesso!' });
           navigation.goBack();
           form.reset();
@@ -136,7 +140,7 @@ const SaleForm = () => {
         products_id: saleProduct.products_id.toString(),
         quantity: saleProduct.quantity.toString(),
         products_name: saleProduct.product.name,
-        products_price: saleProduct.product.price,
+        products_price: saleProduct.base_value,
         products_quantity: saleProduct.product.quantity + saleProduct.quantity,
       }));
       form.setValue('products', products);
@@ -179,25 +183,16 @@ const SaleForm = () => {
       }
 
       debounceRef.current = setTimeout(() => {
-        let quantity = product.quantity;
-
-        if (sale) {
-          const productExists = sale.sale_products.find((sale_product) => sale_product.product.id === product.id);
-          if (productExists) {
-            quantity = productExists.product.quantity + productExists.quantity;
-          }
-        }
-
         append({
           products_id: product.id.toString(),
           quantity: '1',
           products_name: product.name,
           products_price: product.price,
-          products_quantity: quantity,
+          products_quantity: product.quantity,
         });
       }, 200);
     },
-    [append, sale],
+    [append],
   );
 
   const products = form.watch('products');
@@ -249,6 +244,7 @@ const SaleForm = () => {
             </ItemContent>
             <ItemAdornment>
               <SaleFormProductSelect
+                saleProducts={sale?.sale_products}
                 selectedArrayId={products.map((product) => parseToInt(product.products_id))}
                 open={open}
                 onOpenChange={setOpen}

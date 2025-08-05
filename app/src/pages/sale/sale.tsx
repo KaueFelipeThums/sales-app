@@ -69,7 +69,7 @@ const Sale = () => {
   const hasMoreRef = useRef<boolean>(true);
   const isLoading = loading || hydrating;
   const navigation = useSaleNavigation();
-  const { getShouldSync, clearSync } = useSync();
+  const { getShouldSync, clearSync, setSync } = useSync();
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -115,13 +115,15 @@ const Sale = () => {
         const response = await deleteSaleRequest(data.id);
         if (response.success) {
           getAllSale();
+          setSync('product');
+          setSync('saleProduct');
           toast.success({ title: 'Registro deletado com sucesso!' });
         } else {
           toast.error({ title: 'Ops, houve algum erro!', description: response.error?.message });
         }
       });
     },
-    [getAllSale],
+    [getAllSale, setSync],
   );
 
   useSkipInitialFocusEffect(
