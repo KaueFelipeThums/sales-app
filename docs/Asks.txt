@@ -2,13 +2,14 @@
 
 1 - Qual o maior problema técnico que você resolveu? Como?
 
-  Na empresa onde trabalho, desenvolvemos muitos apps, e um problema que sempre aparecia era a 
+  Na empresa onde trabalho, desenvolvemos muitos apps e um problema que sempre aparecia era a 
   incompatibilidade entre bibliotecas e componentes, principalmente quando precisava atualizar alguma dependência. 
   Muitas vezes, uma simples atualização quebrava várias partes do app, e isso tomava um tempo enorme pra resolver.
   Pra evitar que isso continuasse acontecendo, tomei a iniciativa de criar uma biblioteca própria de componentes nativos, 
   tentando usar o mínimo possível de dependências externas, a ideia era ter algo mais controlável e estável.
   Com isso, o time passou a ter bem menos dor de cabeça com manutenção, as atualizações ficaram mais seguras e 
-  conseguimos manter uma padronização entre os apps, sem depender tanto de mudanças externas. Foi algo que fez muita diferença no nosso dia a dia.
+  conseguimos manter uma padronização entre os apps sem depender tanto de mudanças externas. 
+  Foi algo que fez muita diferença no nosso dia a dia.
 
 2 - Qual maior problema técnico que você não conseguiu resolver?
 
@@ -28,6 +29,17 @@
   deixou a navegação bem mais fluida.
 
 4 - Se hoje você tivesse a missão de desenvolver um sistema fiscal, como você faria? Desde o entendimento do domínio até a decisão de tecnologias.
+
+  Primeiro eu começaria entendendo bem o domínio fiscal conversando com quem realmente entende da área, como contadores ou especialistas fiscais. 
+  A ideia seria levantar as regras, obrigações legais, cálculos, integrações com sistemas e tudo o que o sistema precisa atender.
+  Depois de entender o que o sistema precisa resolver, eu separaria os módulos principais como emissão de notas fiscais, apuração de impostos, relatórios, etc. 
+  Com isso já daria pra pensar em uma arquitetura mais escalável, talvez começando com uma abordagem modular e dependendo da complexidade até microserviços.
+
+  Sobre as tecnologias eu usaria o que já domino e que oferece um bom equilíbrio entre produtividade e qualidade. 
+  No backend seguiria os princípios do Clean Architecture e SOLID, usando PHP, que é uma linguagem que tenho bastante familiaridade. 
+  No frontend usaria React que também conheço bem. 
+  O banco seria um relacional, como PostgreSQL, por ser confiável e atender bem esse tipo de sistema. 
+  Além disso, desde o início pensaria em autenticação segura já que um sistema fiscal precisa ser extremamente estável e confiável.
 
 5 - Como funciona o processo de uma requisição HTTP?
 
@@ -105,6 +117,13 @@
 ## Seniors
 
 11 - Como você faria o processo de migração de um contexto do monolíto para micro serviço?
+
+  Eu começaria escolhendo uma parte do sistema que seja bem definida e mais isolada. 
+  A ideia é tirar esse pedaço do monolito e transformá-lo em um microserviço com sua própria API e banco de dados.
+  Faria isso de forma gradual, sem quebrar nada no sistema atual. Enquanto o microserviço vai assumindo as responsabilidades, 
+  o monolito continua rodando normalmente. Também cuidaria bem da comunicação entre eles e manteria tudo bem monitorado. 
+  Pra mim o mais importante é garantir que a transição seja segura e que a experiência 
+  do usuário não seja afetada durante o processo.
 
 12 - Qual sua experiencia com deploy's?
 
