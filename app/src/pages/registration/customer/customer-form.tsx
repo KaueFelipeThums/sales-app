@@ -141,7 +141,6 @@ const CustomerForm = () => {
     async (cep: string) => {
       startAddressTransition(async () => {
         const response = await getAddressRequest(cep.replace(/\D/g, ''));
-        console.log(response);
         if (response.success) {
           if (!response.data) return;
           form.setValue('street', response.data.logradouro ?? '');

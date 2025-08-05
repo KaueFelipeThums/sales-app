@@ -65,8 +65,6 @@ const SaleFormProductSelect = ({
       const response = await getAllActiveProductsRequest({ page: 1, page_count: 10, search });
       if (response.success) {
         setProducts(response.data);
-      } else {
-        console.log(response);
       }
     });
   }, []);
