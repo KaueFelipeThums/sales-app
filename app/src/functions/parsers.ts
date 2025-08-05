@@ -38,7 +38,10 @@ const replaceToFloatValue = (value: number | string): number => {
  * @returns {string}
  */
 const replaceToStringValue = (value: number | string): string => {
-  return value?.toString()?.replace('.', ',');
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  return value.toString().replace('.', ',');
 };
 
 export { parseToInt, parseToFloat, replaceToFloatValue, replaceToStringValue };

@@ -88,6 +88,8 @@ const PrivateRoutes = () => {
       initialRouteName="Sale"
       screenOptions={{
         headerShown: false,
+        freezeOnBlur: false,
+
         sceneStyle: [styles.navigation, { paddingRight: right, paddingLeft: left }],
       }}
     >

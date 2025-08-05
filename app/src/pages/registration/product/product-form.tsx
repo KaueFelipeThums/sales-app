@@ -22,7 +22,7 @@ import { InputText } from '@/core/components/ui-presets/input-text';
 import { Select } from '@/core/components/ui-presets/select';
 import { useStyles } from '@/core/theme/hooks/use-styles';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
-import { parseToFloat, replaceToStringValue } from '@/functions/parsers';
+import { replaceToFloatValue, replaceToStringValue } from '@/functions/parsers';
 import validator from '@/functions/validators';
 import { useSync } from '@/providers/sync/sync-provider';
 
@@ -117,7 +117,7 @@ const ProductForm = () => {
       const newFormData: Omit<ProductCreateUpdate, 'id'> = {
         name: formData.name,
         quantity: Number(formData.quantity),
-        price: parseToFloat(formData.price),
+        price: replaceToFloatValue(formData.price),
         is_active: Number(formData.is_active),
       };
 

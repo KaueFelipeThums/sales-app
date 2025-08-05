@@ -25,13 +25,19 @@ const maskMoney = (value: number | string, digits: number = 2): string => {
  * @returns {string}
  */
 const maskCpf = (value: number | string): string => {
-  return value
-    ?.toString()
-    ?.replace(/\D/g, '')
-    ?.replace(/(\d{3})(\d)/, '$1.$2')
-    ?.replace(/(\d{3})(\d)/, '$1.$2')
-    ?.replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    ?.replace(/(-\d{2})\d+?$/, '$1');
+  const str = value?.toString().replace(/\D/g, '') || '';
+  if (str.length <= 9) {
+    // Se tiver menos que 11 dígitos, tenta formatar até onde dá, adicionando o traço no final
+    return str
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})?$/, '$1-');
+  }
+  return str
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+    .replace(/(-\d{2})\d+?$/, '$1');
 };
 
 /**
