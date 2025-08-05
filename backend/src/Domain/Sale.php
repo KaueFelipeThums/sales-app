@@ -7,9 +7,9 @@ class Sale
 {
     public function __construct(
         private ?int $id,
-        private int $paymentMethodId,
+        private int $paymentMethodsId,
         private int $usersId,
-        private int $customerId,
+        private int $customersId,
         private float $totalValue,
         private DateTime $createdAt,
         private ?DateTime $updatedAt,
@@ -54,14 +54,14 @@ class Sale
         return $this;
     }
 
-    public function getPaymentMethodId(): int
+    public function getPaymentMethodsId(): int
     {
-        return $this->paymentMethodId;
+        return $this->paymentMethodsId;
     }
 
-    public function setPaymentMethodId(int $paymentMethodId): Sale
+    public function setPaymentMethodsId(int $paymentMethodsId): Sale
     {
-        $this->paymentMethodId = $paymentMethodId;
+        $this->paymentMethodsId = $paymentMethodsId;
         return $this;
     }
 
@@ -76,14 +76,14 @@ class Sale
         return $this;
     }
 
-    public function getCustomerId(): int
+    public function getCustomersId(): int
     {
-        return $this->customerId;
+        return $this->customersId;
     }
 
-    public function setCustomerId(int $customerId): Sale
+    public function setCustomersId(int $customersId): Sale
     {
-        $this->customerId = $customerId;
+        $this->customersId = $customersId;
         return $this;
     }
 
@@ -173,9 +173,9 @@ class Sale
 
         return [
             "id" => $this->id,
-            "payment_method_id" => $this->paymentMethodId,
+            "payment_methods_id" => $this->paymentMethodsId,
             "users_id" => $this->usersId,
-            "customers_id" => $this->customerId,
+            "customers_id" => $this->customersId,
             "total_value" => $this->totalValue,
             "created_at" => $this->createdAt->getDateTime(),
             "updated_at" => $this->updatedAt ? $this->updatedAt->getDateTime() : null,

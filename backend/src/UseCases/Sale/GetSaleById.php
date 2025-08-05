@@ -27,7 +27,7 @@ class GetSaleById{
             return null;
         }
 
-        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
+        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySalesId($sale->getId());
 
         foreach($saleProducts as $saleProduct){
             $sale->addSaleProduct($saleProduct);

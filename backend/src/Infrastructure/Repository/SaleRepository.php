@@ -19,7 +19,7 @@ class SaleRepository implements SaleRepositoryInterface
         string $search = '', 
         int $page = 1, 
         int $pageCount = 10, 
-        ?int $customerId = null,
+        ?int $customersId = null,
     ): array
     {
         $offset = ($page - 1) * $pageCount;
@@ -87,9 +87,9 @@ class SaleRepository implements SaleRepositoryInterface
             $params['search'] = "%".$search."%";
         }
 
-        if(!empty($customerId)) {
-            $sql .= " AND sales.customers_id = :customer_id";
-            $params['customer_id'] = $customerId;
+        if(!empty($customersId)) {
+            $sql .= " AND sales.customers_id = :customers_dd";
+            $params['customers_dd'] = $customersId;
         }
 
         $sql .= " ORDER BY sales.id DESC LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
@@ -286,9 +286,9 @@ class SaleRepository implements SaleRepositoryInterface
                     :updated_at
                 )",
             [
-                'payment_methods_id' => $sale->getPaymentMethodId(),
+                'payment_methods_id' => $sale->getPaymentMethodsId(),
                 'users_id' => $sale->getUsersId(),
-                'customers_id' => $sale->getCustomerId(),
+                'customers_id' => $sale->getCustomersId(),
                 'total_value' => $sale->getTotalValue(),
                 'created_at' => $sale->getCreatedAt()->getDateTime(),
                 'updated_at' => null
@@ -311,9 +311,9 @@ class SaleRepository implements SaleRepositoryInterface
                 id = :id",
             [
                 'id' => $sale->getId(),
-                'payment_methods_id' => $sale->getPaymentMethodId(),
+                'payment_methods_id' => $sale->getPaymentMethodsId(),
                 'users_id' => $sale->getUsersId(),
-                'customers_id' => $sale->getCustomerId(),
+                'customers_id' => $sale->getCustomersId(),
                 'total_value' => $sale->getTotalValue(),
                 'updated_at' => !empty($sale->getUpdatedAt()) ? $sale->getUpdatedAt()->getDateTime() : null,
             ]

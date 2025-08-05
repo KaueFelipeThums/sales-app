@@ -5,8 +5,8 @@ class SaleProduct
 {
     public function __construct(
         private ?int $id,
-        private int $saleId,
-        private int $productId,
+        private int $salesId,
+        private int $productsId,
         private int $quantity,
         private float $baseValue,
         private ?Product $product
@@ -23,25 +23,25 @@ class SaleProduct
         return $this;
     }
 
-    public function getSaleId(): int
+    public function getSalesId(): int
     {
-        return $this->saleId;
+        return $this->salesId;
     }
 
-    public function setSaleId(int $saleId): self
+    public function setSalesId(int $salesId): self
     {
-        $this->saleId = $saleId;
+        $this->salesId = $salesId;
         return $this;
     }
 
-    public function getProductId(): int
+    public function getProductsId(): int
     {
-        return $this->productId;
+        return $this->productsId;
     }
 
-    public function setProductId(int $productId): self
+    public function setProductsId(int $productsId): self
     {
-        $this->productId = $productId;
+        $this->productsId = $productsId;
         return $this;
     }
 
@@ -82,8 +82,8 @@ class SaleProduct
     {
         return [
             'id' => $this->id,
-            'sale_id' => $this->saleId,
-            'product_id' => $this->productId,
+            'sales_id' => $this->salesId,
+            'products_id' => $this->productsId,
             'quantity' => $this->quantity,
             'base_value' => $this->baseValue,
             'product' => !empty($this->product) ? $this->product->toArray() : null,

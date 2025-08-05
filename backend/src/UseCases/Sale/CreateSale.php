@@ -27,11 +27,11 @@ class CreateSale{
      *
      * @param array $data
      *  [
-     *      'payment_method_id' => int,
-     *      'customer_id' => int,
+     *      'payment_methods_id' => int,
+     *      'customers_dd' => int,
      *      'products' => array
      *          [
-     *              'product_id' => int,
+     *              'products_id' => int,
      *              'quantity' => int
      *          ]
      *  ]
@@ -39,12 +39,12 @@ class CreateSale{
      */
     public function execute(array $data): array
     {
-        $customer = $this->customerRepository->getCustomerById($data['customer_id']);
+        $customer = $this->customerRepository->getCustomerById($data['customers_dd']);
         if(empty($customer) || $customer->getIsActive() == 0) {
             throw new Exception("Cliente não encontrado ou inativo", 422);
         }
 
-        $paymentMethod = $this->paymentMethodRepository->getPaymentMethodById($data['payment_method_id']);
+        $paymentMethod = $this->paymentMethodRepository->getPaymentMethodById($data['payment_methods_id']);
         if(empty($paymentMethod) || $paymentMethod->getIsActive() == 0) {
             throw new Exception("Forma de pagamento não encontrada ou inativa", 422);
         }
@@ -61,11 +61,11 @@ class CreateSale{
                 throw new Exception("Quantidade inválida", 422);
             }
 
-            if(empty($selectedProduct['product_id'])) {
+            if(empty($selectedProduct['products_id'])) {
                 throw new Exception("Produto inválido", 422);
             }
 
-            $product = $this->productRepository->getProductById($selectedProduct['product_id']);
+            $product = $this->productRepository->getProductById($selectedProduct['products_id']);
             if(empty($product) || $product->getIsActive() == 0) {
                 throw new Exception("Produto não encontrado ou inativo", 422);
             }
@@ -79,7 +79,7 @@ class CreateSale{
             
             $product->setQuantity($product->getQuantity() - $selectedProduct['quantity']);
             $arraySaleProducts[] = [
-                'product_id' => $product->getId(),
+                'products_id' => $product->getId(),
                 'quantity' => $selectedProduct['quantity'],
                 'base_value' => $product->getPrice(),
                 'product' => $product
@@ -108,15 +108,15 @@ class CreateSale{
             $newSaleProduct = new SaleProduct(
                 null,
                 $sale->getId(),
-                $saleProduct['product_id'],
+                $saleProduct['products_id'],
                 $saleProduct['quantity'],
                 $saleProduct['base_value'],
                 $saleProduct['product']
             );
 
 
-            $saleProductId = $this->saleProductRepository->create($newSaleProduct);
-            $newSaleProduct->setId($saleProductId);
+            $saleProductsId = $this->saleProductRepository->create($newSaleProduct);
+            $newSaleProduct->setId($saleProductsId);
 
             $this->productRepository->update($saleProduct['product']);
             $sale->addSaleProduct($newSaleProduct);

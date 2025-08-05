@@ -21,7 +21,7 @@ class GetAllSales{
      *      'search' => string,
      *      'page' => int,
      *      'page_count' => int,
-     *      'customer_id' => int
+     *      'customers_dd' => int
      *  ]
      * @return array
      */
@@ -31,13 +31,13 @@ class GetAllSales{
             $data['search'], 
             $data['page'], 
             $data['page_count'], 
-            $data['customer_id']
+            $data['customers_dd']
         );
 
         $arraySales = [];
 
         foreach ($sales as $sale) {
-            $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
+            $saleProducts = $this->saleProductRepository->getAllSaleProductsBySalesId($sale->getId());
 
             foreach($saleProducts as $saleProduct){
                 $sale->addSaleProduct($saleProduct);

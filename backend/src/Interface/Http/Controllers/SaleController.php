@@ -28,7 +28,7 @@ class SaleController
             'search' => 'nullable',
             'page' => 'required|integer',
             'page_count' => 'required|integer',
-            'customer_id' => 'nullable|integer'
+            'customers_dd' => 'nullable|integer'
         ]);
         
         $errors = $request->getErrors();
@@ -41,7 +41,7 @@ class SaleController
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
                 'page_count' => $validatedData['page_count'],
-                'customer_id' => !empty($validatedData['customer_id']) ? $validatedData['customer_id'] : null
+                'customers_dd' => !empty($validatedData['customers_dd']) ? $validatedData['customers_dd'] : null
             ]);
             
             return Response::json($response, 200);
@@ -75,8 +75,8 @@ class SaleController
     public function createSale(Request $request): mixed
     {   
         $validatedData = $request->validate([
-            'payment_method_id' => 'required|integer',
-            'customer_id' => 'required|integer',
+            'payment_methods_id' => 'required|integer',
+            'customers_dd' => 'required|integer',
             'products' => 'required|array'
         ]);
 
@@ -91,8 +91,8 @@ class SaleController
 
         try {
             $response = $this->createSale->execute([
-                'payment_method_id' => $validatedData['payment_method_id'],
-                'customer_id' => $validatedData['customer_id'],
+                'payment_methods_id' => $validatedData['payment_methods_id'],
+                'customers_dd' => $validatedData['customers_dd'],
                 'products' => $validatedData['products']
             ]);
 
@@ -112,8 +112,8 @@ class SaleController
     {   
         $validatedData = $request->validate([
             'id' => 'required|integer',
-            'payment_method_id' => 'required|integer',
-            'customer_id' => 'required|integer',
+            'payment_methods_id' => 'required|integer',
+            'customers_dd' => 'required|integer',
             'products' => 'required|array'
         ]);
 
@@ -129,8 +129,8 @@ class SaleController
         try {
             $response = $this->updateSale->execute([
                 'id' => $validatedData['id'],
-                'payment_method_id' => $validatedData['payment_method_id'],
-                'customer_id' => $validatedData['customer_id'],
+                'payment_methods_id' => $validatedData['payment_methods_id'],
+                'customers_dd' => $validatedData['customers_dd'],
                 'products' => $validatedData['products']
             ]);
 

@@ -33,7 +33,7 @@ class DeleteSale{
         /**
          * Products to update
          */
-        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
+        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySalesId($sale->getId());
 
         foreach ($saleProducts as $saleProduct) {
             $product = $saleProduct->getProduct();
@@ -43,7 +43,7 @@ class DeleteSale{
             $this->productRepository->update($product);
         }
 
-        $this->saleProductRepository->deleteBySaleId($sale->getId());
+        $this->saleProductRepository->deleteBySalesId($sale->getId());
         $this->saleRepository->delete($id);
     }
 }

@@ -13,7 +13,7 @@ class SaleProductRepository implements SaleProductRepositoryInterface
     {
     }
 
-    public function getAllSaleProductsBySaleId(int $saleId): array
+    public function getAllSaleProductsBySalesId(int $salesId): array
     {
         $query = $this->database->query(
             "SELECT 
@@ -39,7 +39,7 @@ class SaleProductRepository implements SaleProductRepositoryInterface
                 products ON sales_products.products_id = products.id 
             WHERE 
                 sales_products.sales_id = :sales_id",
-            ["sales_id" => $saleId]
+            ["sales_id" => $salesId]
         );
 
         $arrayProducts = [];
@@ -139,8 +139,8 @@ class SaleProductRepository implements SaleProductRepositoryInterface
                     :base_value
                 )",
             [
-                'sales_id' => $saleProduct->getSaleId(),
-                'products_id' => $saleProduct->getProductId(),
+                'sales_id' => $saleProduct->getSalesId(),
+                'products_id' => $saleProduct->getProductsId(),
                 'quantity' => $saleProduct->getQuantity(),
                 'base_value' => $saleProduct->getBaseValue()
             ]
@@ -157,11 +157,11 @@ class SaleProductRepository implements SaleProductRepositoryInterface
         );
     }
 
-    public function deleteBySaleId(int $saleId): void
+    public function deleteBySalesId(int $salesId): void
     {
         $this->database->query(
-            "DELETE FROM sales_products WHERE sales_id = :saleId",
-            ['saleId' => $saleId]
+            "DELETE FROM sales_products WHERE sales_id = :salesId",
+            ['salesId' => $salesId]
         );
     }
 }

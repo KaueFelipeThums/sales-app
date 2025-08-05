@@ -29,12 +29,12 @@ class UpdateSale{
      *
      * @param array $data
      *  [
-     *      'payment_method_id' => int,
-     *      'customer_id' => int,
+     *      'payment_methods_id' => int,
+     *      'customers_dd' => int,
      *      'total_value' => float,
      *      'products' => array
      *          [
-     *              'product_id' => int,
+     *              'products_id' => int,
      *              'quantity' => int
      *          ]
      *  ]
@@ -48,12 +48,12 @@ class UpdateSale{
             throw new Exception("Venda não encontrada", 422);
         }
 
-        $customer = $this->customerRepository->getCustomerById($data['customer_id']);
+        $customer = $this->customerRepository->getCustomerById($data['customers_dd']);
         if(empty($customer) || $customer->getIsActive() == 0) {
             throw new Exception("Cliente não encontrado ou inativo", 422);
         }
 
-        $paymentMethod = $this->paymentMethodRepository->getPaymentMethodById($data['payment_method_id']);
+        $paymentMethod = $this->paymentMethodRepository->getPaymentMethodById($data['payment_methods_id']);
         if(empty($paymentMethod) || $paymentMethod->getIsActive() == 0) {
             throw new Exception("Forma de pagamento não encontrada ou inativa", 422);
         }
@@ -61,7 +61,7 @@ class UpdateSale{
         /**
          * Products to update
          */
-        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySaleId($sale->getId());
+        $saleProducts = $this->saleProductRepository->getAllSaleProductsBySalesId($sale->getId());
         $arrayProductsUpdate = [];
 
         foreach ($saleProducts as $saleProduct) {
@@ -84,14 +84,14 @@ class UpdateSale{
                 throw new Exception("Quantidade inválida", 422);
             }
 
-            if(empty($selectedProduct['product_id'])) {
+            if(empty($selectedProduct['products_id'])) {
                 throw new Exception("Produto inválido", 422);
             }
 
-            if(!empty($arrayProductsUpdate[$selectedProduct['product_id']])) {
-                $product = $arrayProductsUpdate[$selectedProduct['product_id']];
+            if(!empty($arrayProductsUpdate[$selectedProduct['products_id']])) {
+                $product = $arrayProductsUpdate[$selectedProduct['products_id']];
             } else {
-                $product = $this->productRepository->getProductById($selectedProduct['product_id']);
+                $product = $this->productRepository->getProductById($selectedProduct['products_id']);
             }
 
 
@@ -108,7 +108,7 @@ class UpdateSale{
             
             $product->setQuantity($product->getQuantity() - $selectedProduct['quantity']);
             $arraySaleProducts[] = [
-                'product_id' => $product->getId(),
+                'products_id' => $product->getId(),
                 'quantity' => $selectedProduct['quantity'],
                 'base_value' => $product->getPrice(),
                 'product' => $product
@@ -118,8 +118,8 @@ class UpdateSale{
             unset($arrayProductsUpdate[$product->getId()]);
         }
 
-        $sale->setCustomerId($customer->getId())
-            ->setPaymentMethodId($paymentMethod->getId())
+        $sale->setCustomersId($customer->getId())
+            ->setPaymentMethodsId($paymentMethod->getId())
             ->setTotalValue($totalValue)
             ->setUpdatedAt(new DateTime(date('Y-m-d H:i:s')));
 
@@ -128,7 +128,7 @@ class UpdateSale{
         /**
          * Reset products
          */ 
-        $this->saleProductRepository->deleteBySaleId($sale->getId());
+        $this->saleProductRepository->deleteBySalesId($sale->getId());
 
         /**
          * Update removed products
@@ -145,15 +145,15 @@ class UpdateSale{
             $newSaleProduct = new SaleProduct(
                 null,
                 $sale->getId(),
-                $saleProduct['product_id'],
+                $saleProduct['products_id'],
                 $saleProduct['quantity'],
                 $saleProduct['base_value'],
                 $saleProduct['product']
             );
 
 
-            $saleProductId = $this->saleProductRepository->create($newSaleProduct);
-            $newSaleProduct->setId($saleProductId);
+            $saleProductsId = $this->saleProductRepository->create($newSaleProduct);
+            $newSaleProduct->setId($saleProductsId);
 
             $this->productRepository->update($saleProduct['product']);
             $sale->addSaleProduct($newSaleProduct);
