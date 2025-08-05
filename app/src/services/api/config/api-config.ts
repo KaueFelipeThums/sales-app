@@ -41,8 +41,6 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      console.log(error.response?.status);
-
       const refreshToken = await storage.get('sales-app-refresh-token');
 
       if (!refreshToken) {

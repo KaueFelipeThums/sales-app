@@ -1,3 +1,4 @@
+import { format, parseISO } from 'date-fns';
 import { useCallback, useEffect, useReducer, useRef, useState, useTransition } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { CardSkeleton } from '@/components/layout/card-skeleton';
@@ -6,25 +7,27 @@ import { Header, HeaderAdornment, HeaderButton, HeaderContent, HeaderTitle } fro
 
 import { RefreshControl } from '@/components/layout/refresh-control';
 import { Icon } from '@/core/components/ui/icon';
-import { ItemAdornment, ItemContent, ItemDescription, ItemPressable, ItemTitle } from '@/core/components/ui/item';
+import { Item, ItemAdornment, ItemContent, ItemDescription, ItemPressable, ItemTitle } from '@/core/components/ui/item';
 import { KeyboardAvoidingContent } from '@/core/components/ui/keyboard-avoid-content';
+import { Separator } from '@/core/components/ui/separator';
 import { toast } from '@/core/components/ui/toast';
 import { Button } from '@/core/components/ui-presets/button';
 import { InputText } from '@/core/components/ui-presets/input-text';
-import { MenuActions } from '@/core/components/ui-presets/menu-actions';
-import { usePopConfirm } from '@/core/components/ui-presets/popconfirm';
 import { useStyles } from '@/core/theme/hooks/use-styles';
 import { useTheme } from '@/core/theme/theme-provider/theme-provider';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 import formaters from '@/functions/formaters';
 import { useSkipInitialFocusEffect } from '@/hooks/use-skip-initial-focus-effect';
 import { useSync } from '@/providers/sync/sync-provider';
-import { useRegistrationNavigation } from '@/routes/private-routes/stacks/registration-stack-routes';
-import { deleteCustomerRequest, getAllCustomersRequest } from '@/services/api/customer';
-import type { Customer as CustomerType } from '@/types/customer';
+import {
+  useRegistrationNavigation,
+  useRegistrationRouteParams,
+} from '@/routes/private-routes/stacks/registration-stack-routes';
+import { getAllSalesRequest } from '@/services/api/sale';
+import type { Sale as SaleType } from '@/types/sale';
 import { reducer } from '@/utils/reducer';
 
-const customerStyles = ({ sizes, colors }: ThemeValue) =>
+const saleStyles = ({ sizes, colors }: ThemeValue) =>
   StyleSheet.create({
     contentContainerList: {
       paddingBottom: sizes.padding.xl,
@@ -55,16 +58,17 @@ const SkeletonList = () => {
   );
 };
 
-const Customer = () => {
-  const styles = useStyles(customerStyles);
-  const confirm = usePopConfirm();
+const SaleCustomerList = () => {
+  const styles = useStyles(saleStyles);
   const [hydrating, setHydrating] = useState<boolean>(true);
   const [loading, startTransition] = useTransition();
   const [paginationLoading, startPaginationTransition] = useTransition();
-  const [customer, dispatch] = useReducer(reducer, [] as CustomerType[]);
+  const { params } = useRegistrationRouteParams<'SaleCustomerList'>();
+  const customer = params.customer;
+  const [sale, dispatch] = useReducer(reducer, [] as SaleType[]);
   const { sizes } = useTheme();
   const page = useRef<number>(1);
-  const listRef = useRef<FlatList<CustomerType>>(null);
+  const listRef = useRef<FlatList<SaleType>>(null);
   const hasMoreRef = useRef<boolean>(true);
   const isLoading = loading || hydrating;
   const navigation = useRegistrationNavigation();
@@ -73,17 +77,18 @@ const Customer = () => {
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getAllCustomer = useCallback(
+  const getAllSale = useCallback(
     (pageToLoad: number = 1, search: string = '', append: boolean = false) => {
       const transition = append ? startPaginationTransition : startTransition;
       if (!append) {
         listRef.current?.scrollToOffset({ offset: 0, animated: false });
       }
       transition(async () => {
-        const response = await getAllCustomersRequest({
+        const response = await getAllSalesRequest({
           search: search,
           page: pageToLoad,
           page_count: 10,
+          customers_id: customer.id,
         });
 
         if (response.success) {
@@ -94,7 +99,7 @@ const Customer = () => {
            * Limpa os dados de sincronização
            */
           if (!append) {
-            clearSync('customer');
+            clearSync('sale');
           }
         } else {
           hasMoreRef.current = false;
@@ -104,22 +109,7 @@ const Customer = () => {
         setHydrating(false);
       });
     },
-    [clearSync],
-  );
-
-  const deleteCustomer = useCallback(
-    (data: CustomerType) => {
-      startTransition(async () => {
-        const response = await deleteCustomerRequest(data.id);
-        if (response.success) {
-          getAllCustomer();
-          toast.success({ title: 'Registro deletado com sucesso!' });
-        } else {
-          toast.error({ title: 'Ops, houve algum erro!', description: response.error?.message });
-        }
-      });
-    },
-    [getAllCustomer],
+    [clearSync, customer.id],
   );
 
   useSkipInitialFocusEffect(
@@ -127,17 +117,17 @@ const Customer = () => {
       /**
        * Verifica se há a necessidade de sincronizar e recarrega a lista
        */
-      if (getShouldSync('customer')) {
+      if (getShouldSync('sale')) {
         setSearch('');
         setShowSearch(false);
-        getAllCustomer();
+        getAllSale();
       }
-    }, [getAllCustomer, getShouldSync]),
+    }, [getAllSale, getShouldSync]),
   );
 
   useEffect(() => {
-    getAllCustomer();
-  }, [getAllCustomer]);
+    getAllSale();
+  }, [getAllSale]);
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -147,21 +137,21 @@ const Customer = () => {
       }
 
       debounceRef.current = setTimeout(() => {
-        getAllCustomer(1, value);
+        getAllSale(1, value);
       }, 400);
     },
-    [getAllCustomer],
+    [getAllSale],
   );
 
   const toggleSearch = useCallback(
     (show: boolean) => {
       if (!show && search !== '') {
         setSearch('');
-        getAllCustomer();
+        getAllSale();
       }
       setShowSearch(show);
     },
-    [getAllCustomer, search],
+    [getAllSale, search],
   );
 
   return (
@@ -181,17 +171,20 @@ const Customer = () => {
               onChangeText={handleSearch}
             />
           ) : (
-            <HeaderTitle align="left">Clientes</HeaderTitle>
+            <HeaderTitle align="left">Vendas</HeaderTitle>
           )}
         </HeaderContent>
-        <HeaderAdornment>
-          <HeaderButton
-            icon="Plus"
-            variant="default"
-            onPress={() => navigation.navigate('CustomerForm', { customer: undefined })}
-          />
-        </HeaderAdornment>
       </Header>
+      <Item>
+        <ItemAdornment>
+          <Icon name="User" />
+        </ItemAdornment>
+        <ItemContent>
+          <ItemTitle>{customer.name}</ItemTitle>
+          <ItemDescription>Cliente</ItemDescription>
+        </ItemContent>
+      </Item>
+      <Separator />
       <KeyboardAvoidingContent>
         <FlatList
           scrollEventThrottle={16}
@@ -202,61 +195,30 @@ const Customer = () => {
           onEndReachedThreshold={0}
           onEndReached={() => {
             if (isLoading || paginationLoading) return;
-            hasMoreRef.current && !isLoading && getAllCustomer(page.current + 1, search, true);
+            hasMoreRef.current && !isLoading && getAllSale(page.current + 1, search, true);
           }}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllCustomer(1, '', false)} />}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllSale(1, '', false)} />}
           ListEmptyComponent={!isLoading ? <Empty title="Nenhum registro encontrado!" /> : null}
           contentContainerStyle={[styles.contentContainerList]}
           style={styles.layout}
-          data={!isLoading ? customer : []}
+          data={!isLoading ? sale : []}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item: customer }) => {
+          renderItem={({ item: sale }) => {
             return (
-              <MenuActions
-                items={[
-                  {
-                    key: 'sales',
-                    label: 'Vendas',
-                    icon: <Icon name="ShoppingCart" />,
-                    shortcut: <Icon name="ChevronRight" />,
-                    onPress: () => navigation.navigate('SaleCustomerList', { customer: customer }),
-                  },
-                  {
-                    key: 'edit',
-                    label: 'Editar',
-                    icon: <Icon name="Pen" />,
-                    shortcut: <Icon name="ChevronRight" />,
-                    onPress: () => navigation.navigate('CustomerForm', { customer: customer }),
-                  },
-                  {
-                    key: 'delete',
-                    label: 'Deletar',
-                    icon: <Icon name="Trash" />,
-                    shortcut: <Icon name="ChevronRight" />,
-                    onPress: () =>
-                      confirm.open({
-                        title: 'Deseja realmente deletar o registro?',
-                        variant: 'destructive',
-                        onConfirm: () => deleteCustomer(customer),
-                      }),
-                  },
-                ]}
-              >
-                <ItemPressable>
+              <ItemPressable onPress={() => navigation.navigate('SaleCustomerDetails', { sale: sale })}>
+                <ItemAdornment>
+                  <Icon name="ShoppingCart" size={sizes.fontSize['2xl']} />
+                </ItemAdornment>
+                <ItemContent>
+                  <ItemTitle numberOfLines={1}>{format(parseISO(sale.created_at), 'dd/MM/yyyy')}</ItemTitle>
+                  <ItemDescription numberOfLines={1}>{sale.sale_products.length} produtos</ItemDescription>
+                </ItemContent>
+                <ItemAdornment>
                   <ItemAdornment>
-                    <Icon name="Users" size={sizes.fontSize['2xl']} />
+                    <ItemDescription numberOfLines={1}>R$ {formaters.money(sale.total_value, 2)}</ItemDescription>
                   </ItemAdornment>
-                  <ItemContent>
-                    <ItemTitle numberOfLines={1}>{customer.name}</ItemTitle>
-                    <ItemDescription numberOfLines={1}>{formaters.cpf(customer.cpf)}</ItemDescription>
-                  </ItemContent>
-                  <ItemAdornment>
-                    <ItemAdornment>
-                      <Icon name="ChevronRight" size={sizes.fontSize.sm} />
-                    </ItemAdornment>
-                  </ItemAdornment>
-                </ItemPressable>
-              </MenuActions>
+                </ItemAdornment>
+              </ItemPressable>
             );
           }}
           ListFooterComponent={
@@ -266,7 +228,7 @@ const Customer = () => {
               <Button
                 variant="ghost"
                 loading={isLoading || paginationLoading}
-                onPress={() => getAllCustomer(page.current + 1, '', true)}
+                onPress={() => getAllSale(page.current + 1, '', true)}
               >
                 Carregar mais
               </Button>
@@ -278,4 +240,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default SaleCustomerList;

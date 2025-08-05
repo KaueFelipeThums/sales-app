@@ -13,9 +13,12 @@ import PaymentMethodForm from '@/pages/registration/payment-method/payment-metho
 import Product from '@/pages/registration/product/product';
 import ProductForm from '@/pages/registration/product/product-form';
 import Registration from '@/pages/registration/registration';
+import SaleCustomerList from '@/pages/sale-customer/sale';
+import SaleCustomerDetails from '@/pages/sale-customer/sale-details';
 import type { Customer as CustomerType } from '@/types/customer';
 import type { PaymentMethod as PaymentMethodType } from '@/types/payment-method';
 import type { Product as ProductType } from '@/types/product';
+import type { Sale as SaleType } from '@/types/sale';
 
 export type RegistrationStackParamList = {
   RegistrationList: undefined;
@@ -25,6 +28,9 @@ export type RegistrationStackParamList = {
   PaymentMethodForm: { paymentMethod?: PaymentMethodType };
   Customer: undefined;
   CustomerForm: { customer?: CustomerType };
+
+  SaleCustomerList: { customer: CustomerType };
+  SaleCustomerDetails: { sale: SaleType };
 };
 
 const RegistrationStack = createNativeStackNavigator<RegistrationStackParamList>();
@@ -64,6 +70,9 @@ const RegistrationStackRoutes = () => {
 
       <RegistrationStack.Screen name="Customer" component={Customer} />
       <RegistrationStack.Screen name="CustomerForm" component={CustomerForm} />
+
+      <RegistrationStack.Screen name="SaleCustomerList" component={SaleCustomerList} />
+      <RegistrationStack.Screen name="SaleCustomerDetails" component={SaleCustomerDetails} />
     </RegistrationStack.Navigator>
   );
 };

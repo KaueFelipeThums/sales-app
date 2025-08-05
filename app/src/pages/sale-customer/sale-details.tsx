@@ -18,7 +18,10 @@ import { useStyles } from '@/core/theme/hooks/use-styles';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 import formaters from '@/functions/formaters';
 import { parseToInt } from '@/functions/parsers';
-import { useSaleNavigation, useSaleRouteParams } from '@/routes/private-routes/stacks/sale-stack-routes';
+import {
+  useRegistrationNavigation,
+  useRegistrationRouteParams,
+} from '@/routes/private-routes/stacks/registration-stack-routes';
 
 const saleDetailsStyles = ({ sizes, colors }: ThemeValue) =>
   StyleSheet.create({
@@ -44,10 +47,10 @@ const saleDetailsStyles = ({ sizes, colors }: ThemeValue) =>
     },
   });
 
-const SaleDetails = () => {
+const SaleCustomerDetails = () => {
   const styles = useStyles(saleDetailsStyles);
-  const { params } = useSaleRouteParams<'SaleDetails'>();
-  const navigation = useSaleNavigation();
+  const { params } = useRegistrationRouteParams<'SaleCustomerDetails'>();
+  const navigation = useRegistrationNavigation();
   const sale = params.sale;
 
   return (
@@ -136,4 +139,4 @@ const SaleDetails = () => {
   );
 };
 
-export default SaleDetails;
+export default SaleCustomerDetails;
