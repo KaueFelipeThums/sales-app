@@ -127,7 +127,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (customers.name LIKE :search)";
+            $sql .= " AND (customers.name LIKE :search OR customers.cpf LIKE :search)";
             $params['search'] = "%".$search."%";
         }
 

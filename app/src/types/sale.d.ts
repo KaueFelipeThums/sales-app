@@ -1,5 +1,6 @@
 import { Customer } from './customer';
 import { PaymentMethod } from './payment-method';
+import { SaleProduct } from './sale-product';
 import { User } from './user';
 
 type Sale = {
@@ -12,5 +13,8 @@ type Sale = {
   updated_at: string | null;
   payment_method: PaymentMethod;
   customer: Customer;
+  sale_products: SaleProduct[];
   user: User | null;
 };
+
+export { Sale };

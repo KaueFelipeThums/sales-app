@@ -22,6 +22,21 @@ const getAllPaymentMethodsRequest = async (pagination: PaginationProps): Promise
   return response;
 };
 
+const getAllActivePaymentMethodsRequest = async (
+  pagination: PaginationProps,
+): Promise<ApiResponse<PaymentMethod[]>> => {
+  const response = await apiRequest<PaymentMethod[]>({
+    method: 'GET',
+    url: 'v1/payment-method/get-all-active',
+    params: {
+      search: pagination.search,
+      page: pagination.page,
+      page_count: pagination.page_count,
+    },
+  });
+  return response;
+};
+
 type CreatePaymentMethodProps = Omit<PaymentMethodCreateUpdate, 'id'>;
 
 const createPaymentMethodRequest = async (data: CreatePaymentMethodProps): Promise<ApiResponse<PaymentMethod>> => {
@@ -58,4 +73,5 @@ export {
   createPaymentMethodRequest,
   updatePaymentMethodRequest,
   deletePaymentMethodRequest,
+  getAllActivePaymentMethodsRequest,
 };

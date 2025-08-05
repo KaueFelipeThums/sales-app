@@ -20,7 +20,7 @@ export type PrivateTabsParamList = {
 };
 
 const privateTabsIcons: Record<keyof PrivateTabsParamList, IconName> = {
-  Sale: 'DollarSign',
+  Sale: 'ShoppingCart',
   Registrations: 'CirclePlus',
   Users: 'UserPlus',
   Profile: 'User',

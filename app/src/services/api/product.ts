@@ -22,6 +22,19 @@ const getAllProductsRequest = async (pagination: PaginationProps): Promise<ApiRe
   return response;
 };
 
+const getAllActiveProductsRequest = async (pagination: PaginationProps): Promise<ApiResponse<Product[]>> => {
+  const response = await apiRequest<Product[]>({
+    method: 'GET',
+    url: 'v1/product/get-all-active',
+    params: {
+      search: pagination.search,
+      page: pagination.page,
+      page_count: pagination.page_count,
+    },
+  });
+  return response;
+};
+
 type CreateProductProps = Omit<ProductCreateUpdate, 'id'>;
 
 const createProductRequest = async (data: CreateProductProps): Promise<ApiResponse<Product>> => {
@@ -53,4 +66,10 @@ const deleteProductRequest = async (id: number): Promise<ApiResponse<unknown>> =
   return response;
 };
 
-export { getAllProductsRequest, createProductRequest, updateProductRequest, deleteProductRequest };
+export {
+  getAllProductsRequest,
+  createProductRequest,
+  updateProductRequest,
+  deleteProductRequest,
+  getAllActiveProductsRequest,
+};

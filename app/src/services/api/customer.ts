@@ -22,6 +22,19 @@ const getAllCustomersRequest = async (pagination: PaginationProps): Promise<ApiR
   return response;
 };
 
+const getAllActiveCustomersRequest = async (pagination: PaginationProps): Promise<ApiResponse<Customer[]>> => {
+  const response = await apiRequest<Customer[]>({
+    method: 'GET',
+    url: 'v1/customer/get-all-active',
+    params: {
+      search: pagination.search,
+      page: pagination.page,
+      page_count: pagination.page_count,
+    },
+  });
+  return response;
+};
+
 type CreateCustomerProps = Omit<CustomerCreateUpdate, 'id'>;
 
 const createCustomerRequest = async (data: CreateCustomerProps): Promise<ApiResponse<Customer>> => {
@@ -53,4 +66,10 @@ const deleteCustomerRequest = async (id: number): Promise<ApiResponse<unknown>> 
   return response;
 };
 
-export { getAllCustomersRequest, createCustomerRequest, updateCustomerRequest, deleteCustomerRequest };
+export {
+  getAllCustomersRequest,
+  createCustomerRequest,
+  updateCustomerRequest,
+  deleteCustomerRequest,
+  getAllActiveCustomersRequest,
+};

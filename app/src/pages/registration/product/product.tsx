@@ -7,6 +7,7 @@ import { Header, HeaderAdornment, HeaderButton, HeaderContent, HeaderTitle } fro
 import { RefreshControl } from '@/components/layout/refresh-control';
 import { Icon } from '@/core/components/ui/icon';
 import { ItemAdornment, ItemContent, ItemDescription, ItemPressable, ItemTitle } from '@/core/components/ui/item';
+import { KeyboardAvoidingContent } from '@/core/components/ui/keyboard-avoid-content';
 import { toast } from '@/core/components/ui/toast';
 import { Button } from '@/core/components/ui-presets/button';
 import { InputText } from '@/core/components/ui-presets/input-text';
@@ -186,84 +187,86 @@ const Product = () => {
         <HeaderAdornment>
           <HeaderButton
             icon="Plus"
-            variant="outline"
+            variant="default"
             onPress={() => navigation.navigate('ProductForm', { product: undefined })}
           />
         </HeaderAdornment>
       </Header>
-      <FlatList
-        scrollEventThrottle={16}
-        initialNumToRender={10}
-        removeClippedSubviews
-        ref={listRef}
-        maxToRenderPerBatch={5}
-        onEndReachedThreshold={0}
-        onEndReached={() => {
-          if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllProduct(page.current + 1, search, true);
-        }}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllProduct(1, '', false)} />}
-        ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}
-        contentContainerStyle={[styles.contentContainerList]}
-        style={styles.layout}
-        data={!isLoading ? product : []}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: product }) => {
-          return (
-            <MenuActions
-              items={[
-                {
-                  key: 'game-schedule',
-                  label: 'Editar',
-                  icon: <Icon name="Pen" />,
-                  shortcut: <Icon name="ChevronRight" />,
-                  onPress: () => navigation.navigate('ProductForm', { product: product }),
-                },
-                {
-                  key: 'publications',
-                  label: 'Deletar',
-                  icon: <Icon name="Trash" />,
-                  shortcut: <Icon name="ChevronRight" />,
-                  onPress: () =>
-                    confirm.open({
-                      title: 'Deseja realmente deletar o registro?',
-                      variant: 'destructive',
-                      onConfirm: () => deleteProduct(product),
-                    }),
-                },
-              ]}
-            >
-              <ItemPressable>
-                <ItemAdornment>
-                  <Icon name="Package" size={sizes.fontSize['2xl']} />
-                </ItemAdornment>
-                <ItemContent>
-                  <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
-                  <ItemDescription numberOfLines={1}>{product.quantity}</ItemDescription>
-                </ItemContent>
-                <ItemAdornment>
+      <KeyboardAvoidingContent>
+        <FlatList
+          scrollEventThrottle={16}
+          initialNumToRender={10}
+          removeClippedSubviews
+          ref={listRef}
+          maxToRenderPerBatch={5}
+          onEndReachedThreshold={0}
+          onEndReached={() => {
+            if (isLoading || paginationLoading) return;
+            hasMoreRef.current && !isLoading && getAllProduct(page.current + 1, search, true);
+          }}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllProduct(1, '', false)} />}
+          ListEmptyComponent={!isLoading ? <Empty title="Nenhum registro encontrado!" /> : null}
+          contentContainerStyle={[styles.contentContainerList]}
+          style={styles.layout}
+          data={!isLoading ? product : []}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item: product }) => {
+            return (
+              <MenuActions
+                items={[
+                  {
+                    key: 'edit',
+                    label: 'Editar',
+                    icon: <Icon name="Pen" />,
+                    shortcut: <Icon name="ChevronRight" />,
+                    onPress: () => navigation.navigate('ProductForm', { product: product }),
+                  },
+                  {
+                    key: 'delete',
+                    label: 'Deletar',
+                    icon: <Icon name="Trash" />,
+                    shortcut: <Icon name="ChevronRight" />,
+                    onPress: () =>
+                      confirm.open({
+                        title: 'Deseja realmente deletar o registro?',
+                        variant: 'destructive',
+                        onConfirm: () => deleteProduct(product),
+                      }),
+                  },
+                ]}
+              >
+                <ItemPressable>
                   <ItemAdornment>
-                    <ItemDescription numberOfLines={1}>R$ {formaters.money(product.price, 2)}</ItemDescription>
+                    <Icon name="Package" size={sizes.fontSize['2xl']} />
                   </ItemAdornment>
-                </ItemAdornment>
-              </ItemPressable>
-            </MenuActions>
-          );
-        }}
-        ListFooterComponent={
-          isLoading ? (
-            <SkeletonList />
-          ) : hasMoreRef.current ? (
-            <Button
-              variant="ghost"
-              loading={isLoading || paginationLoading}
-              onPress={() => getAllProduct(page.current + 1, '', true)}
-            >
-              Carregar mais
-            </Button>
-          ) : null
-        }
-      />
+                  <ItemContent>
+                    <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
+                    <ItemDescription numberOfLines={1}>{product.quantity}</ItemDescription>
+                  </ItemContent>
+                  <ItemAdornment>
+                    <ItemAdornment>
+                      <ItemDescription numberOfLines={1}>R$ {formaters.money(product.price, 2)}</ItemDescription>
+                    </ItemAdornment>
+                  </ItemAdornment>
+                </ItemPressable>
+              </MenuActions>
+            );
+          }}
+          ListFooterComponent={
+            isLoading ? (
+              <SkeletonList />
+            ) : hasMoreRef.current ? (
+              <Button
+                variant="ghost"
+                loading={isLoading || paginationLoading}
+                onPress={() => getAllProduct(page.current + 1, '', true)}
+              >
+                Carregar mais
+              </Button>
+            ) : null
+          }
+        />
+      </KeyboardAvoidingContent>
     </View>
   );
 };
