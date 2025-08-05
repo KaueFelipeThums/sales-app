@@ -105,7 +105,7 @@ const SaleFormProductSelect = ({
           />
         </DialogHeader>
         <Separator />
-        <DialogBodyScroll contentContainerStyle={styles.body}>
+        <DialogBodyScroll contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           {loadingProducts && <SkeletonList />}
           {products.length === 0 && <Empty title="Nenhum produto encontrado!" />}
           {!loadingProducts &&

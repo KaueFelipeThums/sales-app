@@ -62,6 +62,9 @@ const saleStyles = ({ sizes, colors }: ThemeValue) =>
     required: {
       borderColor: colors.destructive,
     },
+    textDanger: {
+      color: colors.destructive,
+    },
   });
 
 const SaleForm = () => {
@@ -272,7 +275,11 @@ const SaleForm = () => {
                       (R$ {formaters.money(parseToInt(products[index].quantity) * products[index].products_price)})
                     </ItemDescription>
                   </ItemDescription>
-                  <ItemDescription weight="normal" numberOfLines={1}>
+                  <ItemDescription
+                    weight="normal"
+                    numberOfLines={1}
+                    style={field.products_quantity === 0 && styles.textDanger}
+                  >
                     Estoque: {field.products_quantity}
                   </ItemDescription>
                 </ItemContent>

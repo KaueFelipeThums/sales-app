@@ -47,13 +47,13 @@ const SaleFormPaymentMethodSelect = ({ disabled, value, loading, ...props }: Sal
   );
 
   const handlePaymentMethodSearch = React.useCallback(
-    (value: string) => {
+    (valueSearch: string) => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
 
       debounceRef.current = setTimeout(() => {
-        getAllPaymentMethods(value);
+        getAllPaymentMethods(valueSearch);
       }, 400);
     },
     [getAllPaymentMethods],

@@ -108,7 +108,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
             $params['search'] = "%".$search."%";
         }
 
-        $sql .= " ORDER BY payment_methods.id = :id, payment_methods.name, payment_methods.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
+        $sql .= " ORDER BY payment_methods.id = :id DESC, payment_methods.name, payment_methods.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
         $params['id'] = $id;
 
         $query = $this->database->query($sql, $params);

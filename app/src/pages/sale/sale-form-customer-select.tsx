@@ -32,13 +32,13 @@ const SaleFormCustomerSelect = ({ disabled, loading, value, ...props }: SaleForm
   );
 
   const handleCustomerSearch = React.useCallback(
-    (value: string) => {
+    (valueSearch: string) => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
 
       debounceRef.current = setTimeout(() => {
-        getAllCustomers(value);
+        getAllCustomers(valueSearch);
       }, 400);
     },
     [getAllCustomers],

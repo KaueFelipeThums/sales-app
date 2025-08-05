@@ -131,7 +131,7 @@ class CustomerRepository implements CustomerRepositoryInterface
             $params['search'] = "%".$search."%";
         }
 
-        $sql .= " ORDER BY customers.id = :id, customers.name, customers.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
+        $sql .= " ORDER BY customers.id = :id DESC, customers.name, customers.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
         $params['id'] = $id;
 
         $query = $this->database->query($sql, $params);
