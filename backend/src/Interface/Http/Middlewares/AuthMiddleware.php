@@ -6,7 +6,6 @@ use Exception;
 use SalesAppApi\Shared\Auth\Auth;
 use SalesAppApi\Shared\Auth\JwtService;
 use SalesAppApi\Shared\Request;
-use SalesAppApi\Shared\Response;
 
 class AuthMiddleware
 {
