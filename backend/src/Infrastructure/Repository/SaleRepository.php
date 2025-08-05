@@ -83,8 +83,7 @@ class SaleRepository implements SaleRepositoryInterface
                 customers.name LIKE :search OR 
                 customers.cpf LIKE :search OR 
                 payment_methods.name LIKE :search OR
-                DATE_FORMAT(sales.created_at, '%d/%m/%Y') LIKE :search OR
-                
+                DATE_FORMAT(sales.created_at, '%d/%m/%Y') LIKE :search
             )";
             $params['search'] = "%".$search."%";
         }
