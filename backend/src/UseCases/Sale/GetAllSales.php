@@ -21,7 +21,7 @@ class GetAllSales{
      *      'search' => string,
      *      'page' => int,
      *      'page_count' => int,
-     *      'customers_dd' => int
+     *      'customers_id' => int
      *  ]
      * @return array
      */
@@ -31,7 +31,7 @@ class GetAllSales{
             $data['search'], 
             $data['page'], 
             $data['page_count'], 
-            $data['customers_dd']
+            $data['customers_id']
         );
 
         $arraySales = [];

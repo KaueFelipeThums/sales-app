@@ -28,7 +28,7 @@ class SaleController
             'search' => 'nullable',
             'page' => 'required|integer',
             'page_count' => 'required|integer',
-            'customers_dd' => 'nullable|integer'
+            'customers_id' => 'nullable|integer'
         ]);
         
         $errors = $request->getErrors();
@@ -41,7 +41,7 @@ class SaleController
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
                 'page_count' => $validatedData['page_count'],
-                'customers_dd' => !empty($validatedData['customers_dd']) ? $validatedData['customers_dd'] : null
+                'customers_id' => !empty($validatedData['customers_id']) ? $validatedData['customers_id'] : null
             ]);
             
             return Response::json($response, 200);
@@ -76,7 +76,7 @@ class SaleController
     {   
         $validatedData = $request->validate([
             'payment_methods_id' => 'required|integer',
-            'customers_dd' => 'required|integer',
+            'customers_id' => 'required|integer',
             'products' => 'required|array'
         ]);
 
@@ -92,7 +92,7 @@ class SaleController
         try {
             $response = $this->createSale->execute([
                 'payment_methods_id' => $validatedData['payment_methods_id'],
-                'customers_dd' => $validatedData['customers_dd'],
+                'customers_id' => $validatedData['customers_id'],
                 'products' => $validatedData['products']
             ]);
 
@@ -113,7 +113,7 @@ class SaleController
         $validatedData = $request->validate([
             'id' => 'required|integer',
             'payment_methods_id' => 'required|integer',
-            'customers_dd' => 'required|integer',
+            'customers_id' => 'required|integer',
             'products' => 'required|array'
         ]);
 
@@ -130,7 +130,7 @@ class SaleController
             $response = $this->updateSale->execute([
                 'id' => $validatedData['id'],
                 'payment_methods_id' => $validatedData['payment_methods_id'],
-                'customers_dd' => $validatedData['customers_dd'],
+                'customers_id' => $validatedData['customers_id'],
                 'products' => $validatedData['products']
             ]);
 

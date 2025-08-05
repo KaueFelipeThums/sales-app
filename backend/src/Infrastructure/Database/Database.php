@@ -45,4 +45,22 @@ class Database {
     {
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function beginTransaction(): void
+    {
+        $this->dbInstance->beginTransaction();
+    }
+
+    public function commit(): void
+    {
+        $this->dbInstance->commit();
+    }
+
+    public function rollBack(): void
+    {
+        if ($this->dbInstance->inTransaction()) {
+            $this->dbInstance->rollBack();
+        }
+    }
 }
+

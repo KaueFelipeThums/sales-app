@@ -6,7 +6,7 @@ type PaginationProps = {
   search: string | null;
   page: number;
   page_count: number;
-  customers_dd: number | null;
+  customers_id: number | null;
 };
 
 const getAllSalesRequest = async (pagination: PaginationProps): Promise<ApiResponse<Sale[]>> => {
@@ -17,7 +17,7 @@ const getAllSalesRequest = async (pagination: PaginationProps): Promise<ApiRespo
       search: pagination.search,
       page: pagination.page,
       page_count: pagination.page_count,
-      customers_dd: pagination.customers_dd,
+      customers_id: pagination.customers_id,
     },
   });
   return response;

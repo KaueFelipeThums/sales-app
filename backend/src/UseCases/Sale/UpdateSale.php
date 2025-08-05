@@ -30,7 +30,7 @@ class UpdateSale{
      * @param array $data
      *  [
      *      'payment_methods_id' => int,
-     *      'customers_dd' => int,
+     *      'customers_id' => int,
      *      'total_value' => float,
      *      'products' => array
      *          [
@@ -48,7 +48,7 @@ class UpdateSale{
             throw new Exception("Venda não encontrada", 422);
         }
 
-        $customer = $this->customerRepository->getCustomerById($data['customers_dd']);
+        $customer = $this->customerRepository->getCustomerById($data['customers_id']);
         if(empty($customer) || $customer->getIsActive() == 0) {
             throw new Exception("Cliente não encontrado ou inativo", 422);
         }

@@ -88,8 +88,8 @@ class SaleRepository implements SaleRepositoryInterface
         }
 
         if(!empty($customersId)) {
-            $sql .= " AND sales.customers_id = :customers_dd";
-            $params['customers_dd'] = $customersId;
+            $sql .= " AND sales.customers_id = :customers_id";
+            $params['customers_id'] = $customersId;
         }
 
         $sql .= " ORDER BY sales.id DESC LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;

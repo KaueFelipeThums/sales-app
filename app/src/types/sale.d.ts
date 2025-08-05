@@ -6,7 +6,7 @@ type Sale = {
   id: number;
   payment_methods_id: number;
   users_id: number;
-  customers_dd: number;
+  customers_id: number;
   total_value: number;
   created_at: string;
   updated_at: string | null;
