@@ -242,12 +242,6 @@ Em outro terminal:
 npm run android
 ```
 
-> Isso iniciará o Metro Bundler e lançará o app no emulador Android configurado.
-
-Perfeito! Para adicionar essa informação ao seu `README.md`, você pode criar uma seção ou inserir um link direto para a documentação localizada em `/docs/api-documentation.md`.
-
-Aqui está como fazer isso em Markdown:
-
 ---
 
 ### 📚 Documentação da API
@@ -255,10 +249,6 @@ Aqui está como fazer isso em Markdown:
 A documentação completa da API pode ser acessada no link abaixo:
 
 ➡️ [Acessar documentação da API](/docs/api-documentation.md)
-
-> Este arquivo contém detalhes sobre os endpoints, autenticação, payloads e exemplos de requisição/resposta.
-
-Aqui está a continuação do seu texto com a seção solicitada:
 
 ---
 
