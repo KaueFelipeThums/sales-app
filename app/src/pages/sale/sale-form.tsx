@@ -82,7 +82,7 @@ const SaleForm = () => {
     },
   });
 
-  const { fields, remove } = useFieldArray({
+  const { fields, remove, append } = useFieldArray({
     control: form.control,
     name: 'products',
   });
@@ -176,20 +176,27 @@ const SaleForm = () => {
       }
 
       debounceRef.current = setTimeout(() => {
-        form.setValue('products', [
-          ...fields,
-          {
-            products_id: product.id.toString(),
-            quantity: '1',
-            products_name: product.name,
-            products_price: product.price,
-            products_quantity: product.quantity,
-          },
-        ]);
-      }, 100);
+        let quantity = product.quantity;
+
+        if (sale) {
+          const productExists = sale.sale_products.find((sale_product) => sale_product.product.id === product.id);
+          if (productExists) {
+            quantity = productExists.product.quantity + productExists.quantity;
+          }
+        }
+
+        append({
+          products_id: product.id.toString(),
+          quantity: '1',
+          products_name: product.name,
+          products_price: product.price,
+          products_quantity: quantity,
+        });
+      }, 200);
     },
-    [fields, form],
+    [append, sale],
   );
+
   const products = form.watch('products');
   const total = products.reduce((acc, product) => acc + parseToInt(product.quantity) * product.products_price, 0);
 

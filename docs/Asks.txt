@@ -16,12 +16,12 @@
   Um dos maiores desafios que não consegui resolver completamente foi durante a refatoração de um sistema antigo. 
   A ideia era modernizar a estrutura e migrar os dados para um novo formato, fiz uma análise inicial e parecia viável, 
   mas na prática surgiram várias incompatibilidades que tornaram a migração automatizada muito complexa e arriscada. 
-  No fim, optei por fazer os ajustes manualmente, o que foi mais seguro naquele momento. Apesar de não ter seguido com a solução ideal, 
-  foi uma experiência que me ensinou muito sobre como mudanças estruturais exigem análises ainda mais profundas.
+  No fim optei por fazer os ajustes manualmente, o que foi mais seguro naquele momento. Apesar de não ter seguido com a solução ideal, 
+  foi uma experiência que me ensinou sobre como mudanças estruturais exigem análises mais profundas.
 
 3 - Qual o projeto atual que você está trabalhando, quais problemas enfrenta e como você os resolveria?
 
-  No momento, estou trabalhando em um app para os eventos realizados por cooperativas do grupo Sescoop. 
+  No momento estou trabalhando em um app para os eventos realizados por cooperativas do grupo Sescoop. 
   O app tem algumas funcionalidades como acompanhar os esportes, ver postagens e acessar informações sobre o evento.
   Um dos problemas que enfrentei foi no carregamento das mídias dessas postagens. Como elas vinham direto da API e em grande quantidade, 
   isso acabava pesando muito na memória do celular, em alguns casos o app até travava. A solução que encontrei foi usar carregamento paginado e 
@@ -31,12 +31,12 @@
 4 - Se hoje você tivesse a missão de desenvolver um sistema fiscal, como você faria? Desde o entendimento do domínio até a decisão de tecnologias.
 
   Primeiro eu começaria entendendo bem o domínio fiscal conversando com quem realmente entende da área, como contadores ou especialistas fiscais. 
-  A ideia seria levantar as regras, obrigações legais, cálculos, integrações com sistemas e tudo o que o sistema precisa atender.
+  A ideia seria levantar as regras, obrigações legais, cálculos, integrações com outros sistemas e tudo o que o sistema precisa atender.
   Depois de entender o que o sistema precisa resolver, eu separaria os módulos principais como emissão de notas fiscais, apuração de impostos, relatórios, etc. 
   Com isso já daria pra pensar em uma arquitetura mais escalável, talvez começando com uma abordagem modular e dependendo da complexidade até microserviços.
 
   Sobre as tecnologias eu usaria o que já domino e que oferece um bom equilíbrio entre produtividade e qualidade. 
-  No backend seguiria os princípios do Clean Architecture e SOLID, usando PHP, que é uma linguagem que tenho bastante familiaridade. 
+  No backend seguiria os princípios do Clean Architecture e SOLID usando PHP, que é uma linguagem que tenho bastante familiaridade. 
   No frontend usaria React que também conheço bem. 
   O banco seria um relacional, como PostgreSQL, por ser confiável e atender bem esse tipo de sistema. 
   Além disso, desde o início pensaria em autenticação segura já que um sistema fiscal precisa ser extremamente estável e confiável.
@@ -71,15 +71,15 @@
 8.1    - Como você utiliza inversão de dependencias no dia a dia?
 
   No meu dia a dia, utilizo o princípio da inversão de dependências para deixar o código mais flexível.
-  Por exemplo, em projetos PHP, costumo depender de interfaces ou contratos em vez de classes concretas, 
+  Por exemplo, em projetos PHP costumo depender de interfaces ou contratos em vez de classes concretas, 
   isso permite trocar implementações sem afetar o restante do sistema.
-  No front-end, em React, aplico inversão de dependências ao desacoplar componentes através de props, hooks e contextos.
+  No front-end em React, aplico inversão de dependências ao desacoplar componentes através de props, hooks e contextos.
 
 8.2    - Como você define responsabilidade única?
 
   Pra mim responsabilidade única é basicamente garantir que cada módulo, classe ou função seja responsável por uma única coisa.
   Isso ajuda muito a evitar bagunça, porque quando um componente ou função tenta fazer várias coisas, fica difícil de entender, manter e mudar.
-  No dia a dia, tento criar componentes que cuidem só da interface, e deixo a lógica de negócio ou manipulação de dados para outros arquivos, como hooks ou serviços. 
+  No dia a dia, tento criar componentes que cuidem só da interface e deixo a lógica de negócio ou manipulação de dados para outros arquivos, como hooks ou serviços. 
 
 8.3    - Por que você acha clean architecture uma boa abordagem?
 

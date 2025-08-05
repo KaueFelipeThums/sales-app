@@ -42,7 +42,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (payment_methods.name LIKE :search)";
+            $sql .= " AND (payment_methods.name LIKE :search OR payment_methods.installments LIKE :search)";
             $params['search'] = "%".$search."%";
         }
 
@@ -104,7 +104,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (payment_methods.name LIKE :search OR payment_methods.id = :id)";
+            $sql .= " AND ((payment_methods.name LIKE :search  OR payment_methods.installments LIKE :search) OR payment_methods.id = :id)";
             $params['search'] = "%".$search."%";
         }
 

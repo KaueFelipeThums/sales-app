@@ -10,7 +10,6 @@
   }
   ```
 
-
 # Grupo Auth - Rotas de Autenticação
 
 ### POST /auth/login
