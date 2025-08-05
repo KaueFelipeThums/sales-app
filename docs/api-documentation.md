@@ -70,7 +70,8 @@
 
   ```json
   {
-    "password": "123456"
+    "password": "123456",
+    "new_password": "123456"
   }
   ```
 
