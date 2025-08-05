@@ -73,7 +73,6 @@ const Login = () => {
     (data: LoginType) => {
       startTransition(async () => {
         const response = await loginRequest(data);
-        console.log(response);
         if (response.success) {
           createSession(
             {
@@ -82,6 +81,7 @@ const Login = () => {
               user_name: response.data.user.name,
             },
             response.data.access_token,
+            response.data.refresh_token,
           );
           form.reset();
         } else {

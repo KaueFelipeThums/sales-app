@@ -40,7 +40,7 @@ const customerStyles = ({ sizes, colors }: ThemeValue) =>
       flex: 1,
     },
     search: {
-      height: sizes.dimension.lg * 1.1,
+      height: sizes.dimension.lg,
     },
   });
 
@@ -154,13 +154,13 @@ const Customer = () => {
 
   const toggleSearch = useCallback(
     (show: boolean) => {
-      if (!show) {
+      if (!show && search !== '') {
         setSearch('');
         getAllCustomer();
       }
       setShowSearch(show);
     },
-    [getAllCustomer],
+    [getAllCustomer, search],
   );
 
   return (
@@ -172,9 +172,15 @@ const Customer = () => {
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
-            <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
+            <InputText
+              autoFocus
+              style={styles.search}
+              placeholder="Pesquisar..."
+              value={search}
+              onChangeText={handleSearch}
+            />
           ) : (
-            <HeaderTitle align="center">Clientes</HeaderTitle>
+            <HeaderTitle align="left">Clientes</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>

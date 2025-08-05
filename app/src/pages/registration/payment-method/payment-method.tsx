@@ -39,7 +39,7 @@ const paymentMethodStyles = ({ sizes, colors }: ThemeValue) =>
       flex: 1,
     },
     search: {
-      height: sizes.dimension.lg * 1.1,
+      height: sizes.dimension.lg,
     },
   });
 
@@ -153,13 +153,13 @@ const PaymentMethod = () => {
 
   const toggleSearch = useCallback(
     (show: boolean) => {
-      if (!show) {
-        setSearch('');
+      if (!show && search !== '') {
         getAllPaymentMethod();
+        setSearch('');
       }
       setShowSearch(show);
     },
-    [getAllPaymentMethod],
+    [getAllPaymentMethod, search],
   );
 
   return (
@@ -171,9 +171,15 @@ const PaymentMethod = () => {
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
-            <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
+            <InputText
+              autoFocus
+              style={styles.search}
+              placeholder="Pesquisar..."
+              value={search}
+              onChangeText={handleSearch}
+            />
           ) : (
-            <HeaderTitle align="center">Mét. de Pagamento</HeaderTitle>
+            <HeaderTitle align="left">Mét. de Pagamento</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>

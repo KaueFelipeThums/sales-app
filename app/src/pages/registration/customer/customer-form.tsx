@@ -99,7 +99,7 @@ const CustomerForm = () => {
       street: '',
       zip_code: '',
       complement: '',
-      is_active: '',
+      is_active: '1',
     },
   });
 
@@ -142,6 +142,7 @@ const CustomerForm = () => {
       startAddressTransition(async () => {
         const response = await getAddressRequest(cep.replace(/\D/g, ''));
         if (response.success) {
+          if (!response.data) return;
           form.setValue('street', response.data.logradouro ?? '');
           form.setValue('neighborhood', response.data.bairro ?? '');
           form.setValue('city', response.data.localidade ?? '');
@@ -221,13 +222,8 @@ const CustomerForm = () => {
               <InputText
                 placeholder="Digite o nome..."
                 disabled={loading}
+                onChangeText={field.onChange}
                 value={field.value}
-                onChangeText={(value) => {
-                  if (value.length === 9) {
-                    getAddressByCep(value);
-                  }
-                  field.onChange(value);
-                }}
               />
             )}
           />
@@ -272,7 +268,12 @@ const CustomerForm = () => {
                 placeholder="Digite o CEP..."
                 disabled={loading || loadingAddress}
                 value={field.value}
-                onChangeText={field.onChange}
+                onChangeText={(value) => {
+                  if (value.length === 9) {
+                    getAddressByCep(value);
+                  }
+                  field.onChange(value);
+                }}
               />
             )}
           />
@@ -370,6 +371,7 @@ const CustomerForm = () => {
             rules={rules.is_active}
             render={({ field }) => (
               <Select
+                placeholder="Selecione o status..."
                 showSearch={false}
                 options={[
                   { label: 'Ativo', value: '1' },

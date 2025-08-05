@@ -7,7 +7,7 @@ type AuthProviderState = {
   isAuthenticated: boolean;
   isLoadingSession: boolean;
   session: Session | null;
-  createSession: (user: Session, authToken: string) => Promise<void>;
+  createSession: (user: Session, authToken: string, refreshToken: string) => Promise<void>;
   createSymbolicSession: (user: Session) => Promise<void>;
   fetchUser: () => Promise<void>;
   endSession: () => Promise<void>;
@@ -46,15 +46,17 @@ const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
     setSession(newSession);
   }, []);
 
-  const createSession = useCallback(async (newSession: Session, authToken: string) => {
+  const createSession = useCallback(async (newSession: Session, authToken: string, refreshToken: string) => {
     await storage.set('sales-app-user', newSession);
     await storage.set('sales-app-auth-token', authToken);
+    await storage.set('sales-app-refresh-token', refreshToken);
     setSession(newSession);
   }, []);
 
   const endSession = useCallback(async () => {
     await storage.remove('sales-app-user');
     await storage.remove('sales-app-auth-token');
+    await storage.remove('sales-app-refresh-token');
     setSession(null);
   }, []);
 

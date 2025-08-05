@@ -191,6 +191,7 @@ const UsersForm = () => {
             rules={rules.is_active}
             render={({ field }) => (
               <Select
+                placeholder="Selecione o status..."
                 showSearch={false}
                 options={[
                   { label: 'Ativo', value: '1' },

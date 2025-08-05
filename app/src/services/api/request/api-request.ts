@@ -16,10 +16,10 @@ const apiRequest = async <T>(config: AxiosRequestConfig): Promise<ApiResponse<T>
       data: response.data,
     };
   } catch (error: any) {
-    if (error.response) {
+    if (error?.response?.data) {
       return {
         success: false,
-        error: error.response,
+        error: error.response.data,
       };
     } else {
       return {

@@ -40,7 +40,7 @@ const productStyles = ({ sizes, colors }: ThemeValue) =>
       flex: 1,
     },
     search: {
-      height: sizes.dimension.lg * 1.1,
+      height: sizes.dimension.lg,
     },
   });
 
@@ -154,13 +154,13 @@ const Product = () => {
 
   const toggleSearch = useCallback(
     (show: boolean) => {
-      if (!show) {
+      if (!show && search !== '') {
         setSearch('');
         getAllProduct();
       }
       setShowSearch(show);
     },
-    [getAllProduct],
+    [getAllProduct, search],
   );
 
   return (
@@ -172,9 +172,15 @@ const Product = () => {
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
-            <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
+            <InputText
+              autoFocus
+              style={styles.search}
+              placeholder="Pesquisar..."
+              value={search}
+              onChangeText={handleSearch}
+            />
           ) : (
-            <HeaderTitle align="center">Produtos</HeaderTitle>
+            <HeaderTitle align="left">Produtos</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>

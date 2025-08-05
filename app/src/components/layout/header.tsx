@@ -19,7 +19,7 @@ const headerStyles = ({ sizes, colors }: ThemeValue) =>
     header: {
       alignItems: 'center',
       flexDirection: 'row',
-      gap: sizes.gap.sm,
+      gap: sizes.gap.md,
       overflow: 'hidden',
       paddingHorizontal: sizes.padding.xl,
       paddingVertical: sizes.padding.lg,
@@ -105,8 +105,8 @@ const HeaderDescription = ({ style, ...props }: React.ComponentPropsWithRef<type
 const headerButtonStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     headerButton: {
-      height: sizes.dimension.xl / 1.1,
-      width: sizes.dimension.xl / 1.1,
+      height: sizes.dimension.xl / 1.2,
+      width: sizes.dimension.xl / 1.2,
     },
   });
 

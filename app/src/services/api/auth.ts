@@ -42,4 +42,18 @@ const updatePasswordRequest = async (
   return response;
 };
 
-export { getUserRequest, loginRequest, updatePasswordRequest };
+type RefreshTokenResponse = {
+  access_token: string;
+  refresh_token: string;
+};
+
+const refreshTokenRequest = async (refreshToken: string): Promise<ApiResponse<RefreshTokenResponse>> => {
+  const response = await apiRequest<RefreshTokenResponse>({
+    method: 'POST',
+    url: 'v1/auth/refresh',
+    data: { refresh_token: refreshToken },
+  });
+  return response;
+};
+
+export { getUserRequest, loginRequest, updatePasswordRequest, refreshTokenRequest };

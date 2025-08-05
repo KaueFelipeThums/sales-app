@@ -54,7 +54,7 @@ class App{
             $errorCode = $th->getCode();
             $httpStatus = ($errorCode >= 100 && $errorCode <= 599) ? $errorCode : 500;
             $ex = new EnvironmentAwareException($th->getMessage(), $httpStatus);
-            return Response::json(['message' => $ex->getMessage(), 'code' => $httpStatus], 500);
+            return Response::json(['message' => $ex->getMessage(), 'code' => $httpStatus], $httpStatus);
         }
     }
 }

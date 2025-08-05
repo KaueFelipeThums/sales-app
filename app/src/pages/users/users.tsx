@@ -39,7 +39,7 @@ const usersStyles = ({ sizes, colors }: ThemeValue) =>
       flex: 1,
     },
     search: {
-      height: sizes.dimension.lg * 1.1,
+      height: sizes.dimension.lg,
     },
   });
 
@@ -153,30 +153,32 @@ const Users = () => {
 
   const toggleSearch = useCallback(
     (show: boolean) => {
-      if (!show) {
+      if (!show && search !== '') {
         setSearch('');
         getAllUsers();
       }
       setShowSearch(show);
     },
-    [getAllUsers],
+    [getAllUsers, search],
   );
 
   return (
     <View style={styles.layout}>
       <Header withInsets variant="ghost">
         <HeaderAdornment>
-          <HeaderButton
-            icon={!showSearch ? 'Search' : 'X'}
-            variant="outline"
-            onPress={() => toggleSearch(!showSearch)}
-          />
+          <HeaderButton icon={!showSearch ? 'Search' : 'X'} variant="ghost" onPress={() => toggleSearch(!showSearch)} />
         </HeaderAdornment>
         <HeaderContent>
           {showSearch ? (
-            <InputText style={styles.search} placeholder="Pesquisar..." value={search} onChangeText={handleSearch} />
+            <InputText
+              autoFocus
+              style={styles.search}
+              placeholder="Pesquisar..."
+              value={search}
+              onChangeText={handleSearch}
+            />
           ) : (
-            <HeaderTitle align="center">Usuários</HeaderTitle>
+            <HeaderTitle align="left">Usuários</HeaderTitle>
           )}
         </HeaderContent>
         <HeaderAdornment>
@@ -196,7 +198,7 @@ const Users = () => {
         onEndReachedThreshold={0}
         onEndReached={() => {
           if (isLoading || paginationLoading) return;
-          hasMoreRef.current && !isLoading && getAllUsers(page.current + 1, '', true);
+          hasMoreRef.current && !isLoading && getAllUsers(page.current + 1, search, true);
         }}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={() => getAllUsers(1, '', false)} />}
         ListEmptyComponent={!isLoading ? <Empty title="Nenhum usuário encontrado!" /> : null}
