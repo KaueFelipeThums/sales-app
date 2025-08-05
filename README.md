@@ -258,4 +258,13 @@ A documentação completa da API pode ser acessada no link abaixo:
 
 > Este arquivo contém detalhes sobre os endpoints, autenticação, payloads e exemplos de requisição/resposta.
 
+Aqui está a continuação do seu texto com a seção solicitada:
+
 ---
+
+### 👤 Usuário inicial para testes
+
+Um usuário padrão é automaticamente inserido no banco de dados para facilitar o acesso inicial ao sistema:
+
+* **Email:** `test@example.com`
+* **Senha:** `123456`
