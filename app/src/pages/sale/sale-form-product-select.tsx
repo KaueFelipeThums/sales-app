@@ -45,9 +45,16 @@ type SaleFormProductSelectProps = {
   onProductSelect: (product: Product) => void;
   onOpenChange: (open: boolean) => void;
   open?: boolean;
+  selectedArrayId?: number[];
 };
 
-const SaleFormProductSelect = ({ children, onOpenChange, onProductSelect, open }: SaleFormProductSelectProps) => {
+const SaleFormProductSelect = ({
+  children,
+  onOpenChange,
+  onProductSelect,
+  open,
+  selectedArrayId = [],
+}: SaleFormProductSelectProps) => {
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const styles = useStyles(saleFormProductSelectStyles);
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -58,6 +65,8 @@ const SaleFormProductSelect = ({ children, onOpenChange, onProductSelect, open }
       const response = await getAllActiveProductsRequest({ page: 1, page_count: 10, search });
       if (response.success) {
         setProducts(response.data);
+      } else {
+        console.log(response);
       }
     });
   }, []);
@@ -101,7 +110,11 @@ const SaleFormProductSelect = ({ children, onOpenChange, onProductSelect, open }
           {products.length === 0 && <Empty title="Nenhum produto encontrado!" />}
           {!loadingProducts &&
             products.map((product) => (
-              <ItemPressable key={product.id} onPress={() => onProductSelect(product)}>
+              <ItemPressable
+                disabled={!open || selectedArrayId.includes(product.id)}
+                key={product.id}
+                onPress={() => onProductSelect(product)}
+              >
                 <ItemAdornment>
                   <Icon name="Package" />
                 </ItemAdornment>
@@ -109,6 +122,9 @@ const SaleFormProductSelect = ({ children, onOpenChange, onProductSelect, open }
                   <ItemTitle numberOfLines={1}>{product.name}</ItemTitle>
                   <ItemDescription numberOfLines={1}>R$ {formaters.money(product.price)}</ItemDescription>
                 </ItemContent>
+                <ItemAdornment>
+                  <Icon name={selectedArrayId.includes(product.id) ? 'Check' : 'Plus'} />
+                </ItemAdornment>
               </ItemPressable>
             ))}
         </DialogBodyScroll>

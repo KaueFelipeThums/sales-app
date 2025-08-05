@@ -18,7 +18,7 @@ const cardStyles = ({ colors, sizes }: ThemeValue) =>
       paddingVertical: sizes.padding.lg,
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     pressed: {

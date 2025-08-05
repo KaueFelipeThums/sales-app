@@ -90,7 +90,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $arrayCustomers;
     }
 
-    public function getAllActiveCustomers(string $search = '', int $page = 1, int $pageCount = 10): array
+    public function getAllActiveCustomers(string $search = '', int $page = 1, int $pageCount = 10, int $id): array
     {
         $offset = ($page - 1) * $pageCount;
         $sql = "SELECT 
@@ -127,11 +127,12 @@ class CustomerRepository implements CustomerRepositoryInterface
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (customers.name LIKE :search OR customers.cpf LIKE :search)";
+            $sql .= " AND ((customers.name LIKE :search OR customers.cpf LIKE :search) OR customers.id = :id)";
             $params['search'] = "%".$search."%";
         }
 
-        $sql .= " ORDER BY customers.name, customers.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
+        $sql .= " ORDER BY customers.id = :id, customers.name, customers.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
+        $params['id'] = $id;
 
         $query = $this->database->query($sql, $params);
 

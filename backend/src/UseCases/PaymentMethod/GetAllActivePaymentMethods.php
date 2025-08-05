@@ -19,12 +19,13 @@ class GetAllActivePaymentMethods{
      *      'search' => string,
      *      'page' => int,
      *      'page_count' => int
+     *      'id' => int
      *  ]
      * @return array
      */
     public function execute(array $data): array
     {
-        $paymentMethods = $this->paymentMethodRepository->getAllActivePaymentMethods($data['search'], $data['page'], $data['page_count']);
+        $paymentMethods = $this->paymentMethodRepository->getAllActivePaymentMethods($data['search'], $data['page'], $data['page_count'], $data['id']);
 
         $arrayPaymentMethods = [];
 

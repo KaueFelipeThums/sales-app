@@ -29,7 +29,7 @@ const formFieldStyles = ({ sizes, colors }: ThemeValue) =>
       fontSize: sizes.fontSize.xs,
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
     error: {
       color: colors.destructive,

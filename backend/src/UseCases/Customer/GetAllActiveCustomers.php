@@ -18,13 +18,14 @@ class GetAllActiveCustomers{
      *  [
      *      'search' => string,
      *      'page' => int,
-     *      'page_count' => int
+     *      'page_count' => int,
+     *      'id' => int
      *  ]
      * @return array
      */
     public function execute(array $data): array
     {
-        $customers = $this->customerRepository->getAllActiveCustomers($data['search'], $data['page'], $data['page_count']);
+        $customers = $this->customerRepository->getAllActiveCustomers($data['search'], $data['page'], $data['page_count'], $data['id']);
 
         $arrayCustomers = [];
 

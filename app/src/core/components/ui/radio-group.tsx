@@ -65,7 +65,7 @@ const RadioIndicator = ({
 const radioGroupItemStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     groupItem: {
@@ -111,7 +111,7 @@ type RadioGroupProps = React.ComponentPropsWithRef<typeof RadioGroupPrimitve.Roo
 const radioGroupStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     group: {

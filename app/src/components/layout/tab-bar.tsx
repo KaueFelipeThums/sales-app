@@ -93,7 +93,7 @@ const tabBarButtonStyles = ({ sizes, colors }: ThemeValue) =>
       padding: sizes.padding.lg,
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     invalid: {

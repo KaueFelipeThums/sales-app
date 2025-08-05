@@ -7,7 +7,7 @@ import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 const itemStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     item: {

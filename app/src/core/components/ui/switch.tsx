@@ -10,7 +10,7 @@ type SwitchProps = React.ComponentProps<typeof SwitchPrimitve.Root>;
 const switchStyles = ({ colors, sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
 
     root: {

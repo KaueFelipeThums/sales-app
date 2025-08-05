@@ -34,7 +34,7 @@ type AccordionTriggerProps = Omit<React.ComponentPropsWithRef<typeof AccordionPr
 const accordionTriggerStyle = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
     header: {
       flexDirection: 'row',

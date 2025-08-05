@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useTransition } from 'react';
 import { Select } from '@/core/components/ui-presets/select';
+import { parseToInt } from '@/functions/parsers';
 import { getAllActiveCustomersRequest } from '@/services/api/customer';
 import { Customer } from '@/types/customer';
 
@@ -8,19 +9,27 @@ type SaleFormCustomerSelectProps = Omit<
   'onInputChange' | 'filter' | 'placeholder' | 'options'
 >;
 
-const SaleFormCustomerSelect = ({ disabled, loading, ...props }: SaleFormCustomerSelectProps) => {
+const SaleFormCustomerSelect = ({ disabled, loading, value, ...props }: SaleFormCustomerSelectProps) => {
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [paymentMethods, setCustomers] = React.useState<Customer[]>([]);
   const [loadingCustomers, startCustomersTransition] = useTransition();
 
-  const getAllCustomers = React.useCallback((search: string) => {
-    startCustomersTransition(async () => {
-      const response = await getAllActiveCustomersRequest({ page: 1, page_count: 10, search });
-      if (response.success) {
-        setCustomers(response.data);
-      }
-    });
-  }, []);
+  const getAllCustomers = React.useCallback(
+    (search: string) => {
+      startCustomersTransition(async () => {
+        const response = await getAllActiveCustomersRequest({
+          page: 1,
+          page_count: 10,
+          search,
+          id: value ? parseToInt(value) : 0,
+        });
+        if (response.success) {
+          setCustomers(response.data);
+        }
+      });
+    },
+    [value],
+  );
 
   const handleCustomerSearch = React.useCallback(
     (value: string) => {
@@ -41,6 +50,7 @@ const SaleFormCustomerSelect = ({ disabled, loading, ...props }: SaleFormCustome
 
   return (
     <Select
+      value={value}
       onInputChange={handleCustomerSearch}
       filter={false}
       loading={loadingCustomers || loading}
@@ -49,7 +59,7 @@ const SaleFormCustomerSelect = ({ disabled, loading, ...props }: SaleFormCustome
         label: customer.name,
         value: customer.id.toString(),
       }))}
-      disabled={loadingCustomers || disabled}
+      disabled={disabled}
       {...props}
     />
   );

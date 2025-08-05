@@ -3,7 +3,7 @@ namespace SalesAppApi\Domain;
 
 interface PaymentMethodRepositoryInterface{
     public function getAllPaymentMethods(string $search, int $page, int $pageCount): array;
-    public function getAllActivePaymentMethods(string $search, int $page, int $pageCount): array;
+    public function getAllActivePaymentMethods(string $search, int $page, int $pageCount, int $id): array;
     public function getPaymentMethodById(int $id): ?PaymentMethod;
 
     public function update(PaymentMethod $paymentMethod): void;

@@ -1,4 +1,4 @@
-import React, { useEffect, useTransition } from 'react';
+import React, { useEffect, useRef, useTransition } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { SaleFormCustomerSelect } from './sale-form-customer-select';
@@ -37,7 +37,6 @@ const rules = {
   customers_id: { required: 'O cliente é obrigatório!' },
   payment_methods_id: { required: 'O meio de pagamento é obrigatório!' },
   products: { required: 'O produto é obrigatório!' },
-  quantity: { required: 'obrigatório!', validate: (value: string) => validator.number(value, 1) },
 };
 
 const saleStyles = ({ sizes, colors }: ThemeValue) =>
@@ -73,6 +72,7 @@ const SaleForm = () => {
   const sale = params.sale;
   const { setSync } = useSync();
   const navigation = useSaleNavigation();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const form = useForm<SaleFormType>({
     defaultValues: {
       id: '',
@@ -129,12 +129,12 @@ const SaleForm = () => {
       form.setValue('customers_id', sale.customers_id.toString());
       form.setValue('payment_methods_id', sale.payment_methods_id.toString());
 
-      const products = sale.sale_products.map((product) => ({
-        products_id: product.products_id.toString(),
-        quantity: product.quantity.toString(),
-        products_name: product.product.name,
-        products_price: product.product.price,
-        products_quantity: product.product.quantity,
+      const products = sale.sale_products.map((saleProduct) => ({
+        products_id: saleProduct.products_id.toString(),
+        quantity: saleProduct.quantity.toString(),
+        products_name: saleProduct.product.name,
+        products_price: saleProduct.product.price,
+        products_quantity: saleProduct.product.quantity + saleProduct.quantity,
       }));
       form.setValue('products', products);
     }
@@ -170,17 +170,23 @@ const SaleForm = () => {
 
   const onProductSelect = React.useCallback(
     (product: Product) => {
-      form.setValue('products', [
-        ...fields,
-        {
-          products_id: product.id.toString(),
-          quantity: '1',
-          products_name: product.name,
-          products_price: product.price,
-          products_quantity: product.quantity,
-        },
-      ]);
       setOpen(false);
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+
+      debounceRef.current = setTimeout(() => {
+        form.setValue('products', [
+          ...fields,
+          {
+            products_id: product.id.toString(),
+            quantity: '1',
+            products_name: product.name,
+            products_price: product.price,
+            products_quantity: product.quantity,
+          },
+        ]);
+      }, 100);
     },
     [fields, form],
   );
@@ -232,7 +238,12 @@ const SaleForm = () => {
               <ItemTitle>Produtos</ItemTitle>
             </ItemContent>
             <ItemAdornment>
-              <SaleFormProductSelect open={open} onOpenChange={setOpen} onProductSelect={onProductSelect}>
+              <SaleFormProductSelect
+                selectedArrayId={products.map((product) => parseToInt(product.products_id))}
+                open={open}
+                onOpenChange={setOpen}
+                onProductSelect={onProductSelect}
+              >
                 <Button size="icon" style={styles.button} variant="default" icon="Plus" />
               </SaleFormProductSelect>
             </ItemAdornment>
@@ -247,14 +258,25 @@ const SaleForm = () => {
             renderItem={({ item: field, index }) => (
               <Item>
                 <ItemContent>
-                  <ItemTitle>{field.products_name}</ItemTitle>
-                  <ItemDescription>R$ {formaters.money(field.products_price)}</ItemDescription>
+                  <ItemTitle numberOfLines={1}>{field.products_name}</ItemTitle>
+                  <ItemDescription>
+                    R$ {formaters.money(field.products_price)}{' '}
+                    <ItemDescription weight="bold" numberOfLines={1}>
+                      (R$ {formaters.money(parseToInt(products[index].quantity) * products[index].products_price)})
+                    </ItemDescription>
+                  </ItemDescription>
+                  <ItemDescription weight="normal" numberOfLines={1}>
+                    Estoque: {field.products_quantity}
+                  </ItemDescription>
                 </ItemContent>
                 <ItemAdornment>
                   <FormField
                     control={form.control}
                     name={`products.${index}.quantity`}
-                    rules={rules.quantity}
+                    rules={{
+                      required: 'obrigatório!',
+                      validate: (value: string) => validator.number(value, 1, field.products_quantity),
+                    }}
                     hideErrorMessage
                     render={({ field, fieldState }) => (
                       <InputNumber

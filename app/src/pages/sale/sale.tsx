@@ -170,7 +170,6 @@ const Sale = () => {
     <View style={styles.layout}>
       <Header withInsets variant="ghost">
         <HeaderAdornment>
-          <HeaderButton icon="ChevronLeft" variant="outline" onPress={() => navigation.goBack()} />
           <HeaderButton icon={!showSearch ? 'Search' : 'X'} variant="ghost" onPress={() => toggleSearch(!showSearch)} />
         </HeaderAdornment>
         <HeaderContent>
@@ -221,7 +220,7 @@ const Sale = () => {
                     label: 'Detalhes',
                     icon: <Icon name="ListCollapse" />,
                     shortcut: <Icon name="ChevronRight" />,
-                    onPress: () => navigation.navigate('SaleForm', { sale: sale }),
+                    onPress: () => navigation.navigate('SaleDetails', { sale: sale }),
                   },
                   {
                     key: 'edit',

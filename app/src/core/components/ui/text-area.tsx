@@ -33,7 +33,7 @@ type TextAreaBaseProps = React.ComponentPropsWithRef<typeof Pressable> & {
 const textAreaBaseStyles = ({ colors, sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     focused: {

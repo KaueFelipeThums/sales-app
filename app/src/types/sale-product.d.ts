@@ -1,3 +1,5 @@
+import { Product } from './product';
+
 type SaleProduct = {
   id: number;
   products_id: number;

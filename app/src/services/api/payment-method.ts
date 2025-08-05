@@ -22,8 +22,15 @@ const getAllPaymentMethodsRequest = async (pagination: PaginationProps): Promise
   return response;
 };
 
+type PaginationActiveProps = {
+  search: string | null;
+  page: number;
+  page_count: number;
+  id: number;
+};
+
 const getAllActivePaymentMethodsRequest = async (
-  pagination: PaginationProps,
+  pagination: PaginationActiveProps,
 ): Promise<ApiResponse<PaymentMethod[]>> => {
   const response = await apiRequest<PaymentMethod[]>({
     method: 'GET',
@@ -32,6 +39,7 @@ const getAllActivePaymentMethodsRequest = async (
       search: pagination.search,
       page: pagination.page,
       page_count: pagination.page_count,
+      id: pagination.id,
     },
   });
   return response;

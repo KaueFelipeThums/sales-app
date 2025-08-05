@@ -69,7 +69,7 @@ const segmentTriggerStyles = ({ sizes, colors }: ThemeValue) =>
       boxShadow: sizes.shadow.md,
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
     pressed: {
       opacity: 0.8,

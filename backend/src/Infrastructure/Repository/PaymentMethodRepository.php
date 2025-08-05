@@ -75,7 +75,7 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         return $arrayPaymentMethods;
     }
 
-    public function getAllActivePaymentMethods(string $search = '', int $page = 1, int $pageCount = 10): array
+    public function getAllActivePaymentMethods(string $search = '', int $page = 1, int $pageCount = 10, int $id): array
     {
         $offset = ($page - 1) * $pageCount;
         $sql = "SELECT 
@@ -104,11 +104,12 @@ class PaymentMethodRepository implements PaymentMethodRepositoryInterface
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (payment_methods.name LIKE :search)";
+            $sql .= " AND (payment_methods.name LIKE :search OR payment_methods.id = :id)";
             $params['search'] = "%".$search."%";
         }
 
-        $sql .= " ORDER BY payment_methods.name, payment_methods.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
+        $sql .= " ORDER BY payment_methods.id = :id, payment_methods.name, payment_methods.id LIMIT ".(int)$pageCount." OFFSET ".(int)$offset;
+        $params['id'] = $id;
 
         $query = $this->database->query($sql, $params);
 

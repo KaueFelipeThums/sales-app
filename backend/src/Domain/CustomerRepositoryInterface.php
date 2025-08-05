@@ -3,7 +3,7 @@ namespace SalesAppApi\Domain;
 
 interface CustomerRepositoryInterface{
     public function getAllCustomers(string $search, int $page, int $pageCount): array;
-    public function getAllActiveCustomers(string $search, int $page, int $pageCount): array;
+    public function getAllActiveCustomers(string $search, int $page, int $pageCount, int $id): array;
     public function getCustomerById(int $id): ?Customer;
     public function getCustomerByCpf(string $cpf): ?Customer;
 

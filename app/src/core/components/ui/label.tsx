@@ -6,7 +6,7 @@ import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 const labelStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
     label: {
       alignItems: 'center',

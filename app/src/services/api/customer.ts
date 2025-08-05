@@ -22,7 +22,14 @@ const getAllCustomersRequest = async (pagination: PaginationProps): Promise<ApiR
   return response;
 };
 
-const getAllActiveCustomersRequest = async (pagination: PaginationProps): Promise<ApiResponse<Customer[]>> => {
+type PaginationActiveProps = {
+  search: string | null;
+  page: number;
+  page_count: number;
+  id: number;
+};
+
+const getAllActiveCustomersRequest = async (pagination: PaginationActiveProps): Promise<ApiResponse<Customer[]>> => {
   const response = await apiRequest<Customer[]>({
     method: 'GET',
     url: 'v1/customer/get-all-active',
@@ -30,6 +37,7 @@ const getAllActiveCustomersRequest = async (pagination: PaginationProps): Promis
       search: pagination.search,
       page: pagination.page,
       page_count: pagination.page_count,
+      id: pagination.id,
     },
   });
   return response;

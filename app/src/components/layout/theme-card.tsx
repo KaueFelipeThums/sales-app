@@ -21,7 +21,7 @@ const themeCardStyles = ({ sizes, colors }: ThemeValue) =>
       borderColor: colors.gray[700],
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     light: {

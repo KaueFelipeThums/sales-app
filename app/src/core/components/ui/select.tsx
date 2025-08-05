@@ -18,7 +18,7 @@ const Select = ({ ...props }: React.ComponentPropsWithRef<typeof SelectPrimitive
 const selectTriggerStyles = ({ colors, sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     focused: {
@@ -324,7 +324,7 @@ const SelectGroup = ({
 const selectItemStyles = ({ sizes, colors }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
     item: {
       alignItems: 'center',

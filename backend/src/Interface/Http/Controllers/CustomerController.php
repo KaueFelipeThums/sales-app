@@ -60,7 +60,8 @@ class CustomerController
         $validatedData = $request->validate([
             'search' => 'nullable',
             'page' => 'required|integer',
-            'page_count' => 'required|integer'
+            'page_count' => 'required|integer',
+            'id' => 'required|integer'
         ]);
         
         $errors = $request->getErrors();
@@ -72,7 +73,8 @@ class CustomerController
             $response = $this->getAllActiveCustomers->execute([
                 'search' => !empty($validatedData['search']) ? $validatedData['search'] : '',
                 'page' => $validatedData['page'],
-                'page_count' => $validatedData['page_count']
+                'page_count' => $validatedData['page_count'],
+                'id' => $validatedData['id']
             ]);
             return Response::json($response, 200);
         } catch(Exception $e){

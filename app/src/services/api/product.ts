@@ -22,7 +22,13 @@ const getAllProductsRequest = async (pagination: PaginationProps): Promise<ApiRe
   return response;
 };
 
-const getAllActiveProductsRequest = async (pagination: PaginationProps): Promise<ApiResponse<Product[]>> => {
+type PaginationActiveProps = {
+  search: string | null;
+  page: number;
+  page_count: number;
+};
+
+const getAllActiveProductsRequest = async (pagination: PaginationActiveProps): Promise<ApiResponse<Product[]>> => {
   const response = await apiRequest<Product[]>({
     method: 'GET',
     url: 'v1/product/get-all-active',

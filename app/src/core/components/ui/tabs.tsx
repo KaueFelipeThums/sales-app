@@ -64,7 +64,7 @@ const tabsTriggerStyles = ({ sizes, colors }: ThemeValue) =>
       borderBottomWidth: sizes.border.sm,
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
     },
     pressed: {
       opacity: 0.8,

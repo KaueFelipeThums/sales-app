@@ -21,7 +21,7 @@ const toggleStyles = ({ sizes, colors }: ThemeValue) =>
       backgroundColor: colors.accent,
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     invalid: {

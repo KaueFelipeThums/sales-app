@@ -7,12 +7,14 @@ import { useStyles } from '@/core/theme/hooks/use-styles';
 import { useTheme } from '@/core/theme/theme-provider/theme-provider';
 import { ThemeValue } from '@/core/theme/theme-provider/theme-provider-types';
 import Sale from '@/pages/sale/sale';
+import SaleDetails from '@/pages/sale/sale-details';
 import SaleForm from '@/pages/sale/sale-form';
 import type { Sale as SaleType } from '@/types/sale';
 
 export type SaleStackParamList = {
   SaleList: undefined;
   SaleForm: { sale?: SaleType };
+  SaleDetails: { sale: SaleType };
 };
 
 const SaleStack = createNativeStackNavigator<SaleStackParamList>();
@@ -44,6 +46,7 @@ const SaleStackRoutes = () => {
     >
       <SaleStack.Screen name="SaleList" component={Sale} />
       <SaleStack.Screen name="SaleForm" component={SaleForm} />
+      <SaleStack.Screen name="SaleDetails" component={SaleDetails} />
     </SaleStack.Navigator>
   );
 };

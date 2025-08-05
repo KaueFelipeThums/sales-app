@@ -67,7 +67,7 @@ const CheckboxIndicator = ({
 const checkboxGroupItemStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     groupItem: {
@@ -113,7 +113,7 @@ type CheckboxGroupProps = React.ComponentPropsWithRef<typeof CheckboxGroupPrimit
 const checkboxGroupStyles = ({ sizes }: ThemeValue) =>
   StyleSheet.create({
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     group: {

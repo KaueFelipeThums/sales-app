@@ -42,7 +42,7 @@ const inputMaskContentStyles = ({ colors, sizes }: ThemeValue) =>
       width: '100%',
     },
     disabled: {
-      opacity: 0.8,
+      opacity: 0.7,
       pointerEvents: 'none',
     },
     focused: {
