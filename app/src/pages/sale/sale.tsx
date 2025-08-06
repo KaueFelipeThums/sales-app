@@ -271,7 +271,7 @@ const Sale = () => {
               <Button
                 variant="ghost"
                 loading={isLoading || paginationLoading}
-                onPress={() => getAllSale(page.current + 1, '', true)}
+                onPress={() => getAllSale(page.current + 1, search, true)}
               >
                 Carregar mais
               </Button>

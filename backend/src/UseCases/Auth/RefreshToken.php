@@ -50,7 +50,7 @@ class RefreshToken{
             $refreshToken->getId(),
             $refreshToken->getUsersId(),
             $newRefreshToken,
-            new DateTime(date('Y-m-d H:i:s', strtotime('+7 days'))),
+            new DateTime(date('Y-m-d H:i:s', strtotime('+30 days'))),
             new DateTime(date('Y-m-d H:i:s'))
         ));
 

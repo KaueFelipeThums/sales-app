@@ -49,7 +49,7 @@ class Login{
             null,
             $user->getId(),
             $refreshToken,
-            new DateTime(date('Y-m-d H:i:s', strtotime('+7 days'))),
+            new DateTime(date('Y-m-d H:i:s', strtotime('+30 days'))),
             new DateTime(date('Y-m-d H:i:s'))
         ));
 

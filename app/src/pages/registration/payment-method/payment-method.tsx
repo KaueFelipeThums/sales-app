@@ -258,7 +258,7 @@ const PaymentMethod = () => {
               <Button
                 variant="ghost"
                 loading={isLoading || paginationLoading}
-                onPress={() => getAllPaymentMethod(page.current + 1, '', true)}
+                onPress={() => getAllPaymentMethod(page.current + 1, search, true)}
               >
                 Carregar mais
               </Button>

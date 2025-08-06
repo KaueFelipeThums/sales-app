@@ -259,7 +259,7 @@ const Product = () => {
               <Button
                 variant="ghost"
                 loading={isLoading || paginationLoading}
-                onPress={() => getAllProduct(page.current + 1, '', true)}
+                onPress={() => getAllProduct(page.current + 1, search, true)}
               >
                 Carregar mais
               </Button>

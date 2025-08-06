@@ -266,7 +266,7 @@ const Customer = () => {
               <Button
                 variant="ghost"
                 loading={isLoading || paginationLoading}
-                onPress={() => getAllCustomer(page.current + 1, '', true)}
+                onPress={() => getAllCustomer(page.current + 1, search, true)}
               >
                 Carregar mais
               </Button>
