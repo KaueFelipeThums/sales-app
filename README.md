@@ -242,6 +242,19 @@ Em outro terminal:
 npm run android
 ```
 
+Claro! Aqui está o trecho ajustado do seu `README.md` com a instrução de testes no frontend antes da seção da documentação:
+
+---
+
+
+#### ✅ Testes no Frontend
+
+Para executar os testes no frontend, utilize o comando abaixo:
+
+```bash
+npm test
+````
+
 ---
 
 ### 📚 Documentação da API
